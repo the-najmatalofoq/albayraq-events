@@ -16,10 +16,8 @@ jobs:
       - name: Prepare SSH
         run: |
           mkdir -p ~/.ssh
-          # printf preserves actual newlines; strips Windows CRLF artifacts
           printf '%s\n' "${{ secrets.HOSTINGER_SSH_KEY }}" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
-          # Avoid ssh-keyscan entirely — use StrictHostKeyChecking=no instead
           cat >> ~/.ssh/config <<EOF
           Host ${{ secrets.HOSTINGER_HOST }}
               StrictHostKeyChecking no
@@ -57,7 +55,7 @@ jobs:
 
             /opt/alt/php84/usr/bin/php artisan down --no-interaction || true
 
-            /opt/alt/php84/usr/bin/php /usr/bin/composer install \
+            /opt/alt/php84/usr/bin/php /usr/local/bin/composer install \
               --no-dev --optimize-autoloader --no-interaction
 
             /opt/alt/php84/usr/bin/php artisan migrate --force --no-interaction
