@@ -8,10 +8,6 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    env:
-      RELEASES_DIR: ${{ secrets.HOSTINGER_DIR }}/releases
-      CURRENT_DIR: ${{ secrets.HOSTINGER_DIR }}/current
-      KEEP_RELEASES: 5
 
     steps:
       - name: Checkout code
@@ -24,38 +20,38 @@ jobs:
           chmod 600 ~/.ssh/id_ed25519
           ssh-keyscan -p ${{ secrets.HOSTINGER_PORT }} ${{ secrets.HOSTINGER_HOST }} >> ~/.ssh/known_hosts
 
-      - name: Upload release via rsync
+      - name: Ensure remote target directory exists
         run: |
-          TIMESTAMP=$(date -u +"%Y%m%d%H%M%S")
-          rsync -az --delete --exclude='.git' --exclude='node_modules' \
-            -e "ssh -i ~/.ssh/id_ed25519 -p ${{ secrets.HOSTINGER_PORT }}" \
-            ./ ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }}:${{ env.RELEASES_DIR }}/$TIMESTAMP/
-
-      - name: Activate release and run server tasks
-        run: |
-          TIMESTAMP=$(date -u +"%Y%m%d%H%M%S")
           ssh -i ~/.ssh/id_ed25519 -p ${{ secrets.HOSTINGER_PORT }} ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }} "
-            set -e
-            mkdir -p '${{ env.RELEASES_DIR }}'
-            RELEASE='${{ env.RELEASES_DIR }}/'$TIMESTAMP
-            # ensure release exists
-            if [ ! -d \"\$RELEASE\" ]; then echo 'Release missing' >&2; exit 1; fi
-
-            # put app into maintenance mode, run migrations and composer safely
-            ln -sfn \"\$RELEASE\" '${{ env.CURRENT_DIR }}.tmp' &&
-            # switch symlink atomically
-            mv -T '${{ env.CURRENT_DIR }}.tmp' '${{ env.CURRENT_DIR }}' || true
-
-            cd '${{ env.CURRENT_DIR }}'
-            /opt/alt/php84/usr/bin/php artisan down --no-interaction || true
-            /opt/alt/php84/usr/bin/php /usr/bin/composer install --no-dev --optimize-autoloader --no-interaction
-            /opt/alt/php84/usr/bin/php artisan migrate --force --no-interaction
-            /opt/alt/php84/usr/bin/php artisan up --no-interaction
-
-            chmod -R 775 storage bootstrap/cache
-
-            # cleanup old releases
-            cd '${{ env.RELEASES_DIR }}'
-            ls -1dt */ | tail -n +$(( ${{ env.KEEP_RELEASES }} + 1 )) | xargs -r rm -rf
+            mkdir -p '${{ secrets.HOSTINGER_DIR }}'
+            chown -R ${{ secrets.HOSTINGER_USER }}:'$(id -gn ${{ secrets.HOSTINGER_USER }})' '${{ secrets.HOSTINGER_DIR }}' || true
           "
 
+      - name: Rsync files directly into target dir (overwrite, delete removed)
+        run: |
+          rsync -az --delete --exclude='.git' --exclude='node_modules' \
+            -e "ssh -i ~/.ssh/id_ed25519 -p ${{ secrets.HOSTINGER_PORT }}" \
+            ./ ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }}:${{ secrets.HOSTINGER_DIR }}/
+
+      - name: Run remote deployment commands (PHP 8.4)
+        run: |
+          ssh -i ~/.ssh/id_ed25519 -p ${{ secrets.HOSTINGER_PORT }} ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }} "
+            set -e
+
+            cd '${{ secrets.HOSTINGER_DIR }}'
+
+            # Optional: put app into maintenance mode (best-effort)
+            /opt/alt/php84/usr/bin/php artisan down --no-interaction || true
+
+            # Install PHP dependencies and optimize autoloader
+            /opt/alt/php84/usr/bin/php /usr/bin/composer install --no-dev --optimize-autoloader --no-interaction
+
+            # Run database migrations
+            /opt/alt/php84/usr/bin/php artisan migrate --force --no-interaction
+
+            # Bring app back up
+            /opt/alt/php84/usr/bin/php artisan up --no-interaction || true
+
+            # Fix permissions for storage and cache
+            chmod -R 775 storage bootstrap/cache || true
+          "
