@@ -16,42 +16,58 @@ jobs:
       - name: Prepare SSH
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.HOSTINGER_SSH_KEY }}" > ~/.ssh/id_ed25519
+          # printf preserves actual newlines; strips Windows CRLF artifacts
+          printf '%s\n' "${{ secrets.HOSTINGER_SSH_KEY }}" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
-          ssh-keyscan -p ${{ secrets.HOSTINGER_PORT }} ${{ secrets.HOSTINGER_HOST }} >> ~/.ssh/known_hosts
+          # Avoid ssh-keyscan entirely — use StrictHostKeyChecking=no instead
+          cat >> ~/.ssh/config <<EOF
+          Host ${{ secrets.HOSTINGER_HOST }}
+              StrictHostKeyChecking no
+              UserKnownHostsFile /dev/null
+              Port ${{ secrets.HOSTINGER_PORT }}
+          EOF
 
       - name: Ensure remote target directory exists
         run: |
-          ssh -i ~/.ssh/id_ed25519 -p ${{ secrets.HOSTINGER_PORT }} ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }} "
-            mkdir -p '${{ secrets.HOSTINGER_DIR }}'
-            chown -R ${{ secrets.HOSTINGER_USER }}:'$(id -gn ${{ secrets.HOSTINGER_USER }})' '${{ secrets.HOSTINGER_DIR }}' || true
-          "
+          ssh -i ~/.ssh/id_ed25519 \
+            -p ${{ secrets.HOSTINGER_PORT }} \
+            ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }} \
+            "mkdir -p ${{ secrets.HOSTINGER_DIR }}"
 
-      - name: Rsync files directly into target dir (overwrite, delete removed)
+      - name: Rsync files to server
         run: |
-          rsync -az --delete --exclude='.git' --exclude='node_modules' \
-            -e "ssh -i ~/.ssh/id_ed25519 -p ${{ secrets.HOSTINGER_PORT }}" \
+          rsync -az --delete \
+            --exclude='.git' \
+            --exclude='node_modules' \
+            --exclude='.env' \
+            -e "ssh -i ~/.ssh/id_ed25519 -p ${{ secrets.HOSTINGER_PORT }} -o StrictHostKeyChecking=no" \
             ./ ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }}:${{ secrets.HOSTINGER_DIR }}/
 
-      - name: Run remote deployment commands (PHP 8.4)
+      - name: Run remote deployment commands
+        env:
+          DEPLOY_DIR: ${{ secrets.HOSTINGER_DIR }}
         run: |
-          ssh -i ~/.ssh/id_ed25519 -p ${{ secrets.HOSTINGER_PORT }} ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }} "
+          ssh -i ~/.ssh/id_ed25519 \
+            -p ${{ secrets.HOSTINGER_PORT }} \
+            -o StrictHostKeyChecking=no \
+            ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }} \
+            "bash -s" <<ENDSSH
             set -e
+            cd "${DEPLOY_DIR}"
 
-            cd '${{ secrets.HOSTINGER_DIR }}'
-
-            # Optional: put app into maintenance mode (best-effort)
             /opt/alt/php84/usr/bin/php artisan down --no-interaction || true
 
-            # Install PHP dependencies and optimize autoloader
-            /opt/alt/php84/usr/bin/php /usr/bin/composer install --no-dev --optimize-autoloader --no-interaction
+            /opt/alt/php84/usr/bin/php /usr/bin/composer install \
+              --no-dev --optimize-autoloader --no-interaction
 
-            # Run database migrations
             /opt/alt/php84/usr/bin/php artisan migrate --force --no-interaction
 
-            # Bring app back up
-            /opt/alt/php84/usr/bin/php artisan up --no-interaction || true
+            /opt/alt/php84/usr/bin/php artisan optimize:clear
+            /opt/alt/php84/usr/bin/php artisan config:cache
+            /opt/alt/php84/usr/bin/php artisan route:cache
+            /opt/alt/php84/usr/bin/php artisan view:cache
 
-            # Fix permissions for storage and cache
-            chmod -R 775 storage bootstrap/cache || true
-          "
+            chmod -R 775 storage bootstrap/cache
+
+            /opt/alt/php84/usr/bin/php artisan up --no-interaction || true
+          ENDSSH
