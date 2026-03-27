@@ -26,13 +26,13 @@ jobs:
             -e "ssh -i ~/.ssh/id_ed25519 -p ${{ secrets.HOSTINGER_PORT }}" \
             ./ ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }}:${{ secrets.HOSTINGER_DIR }}/tmp_deploy/
 
-      - name: Run remote deployment commands
+      - name: Run remote deployment commands (PHP 8.4)
         run: |
           ssh -i ~/.ssh/id_ed25519 -p ${{ secrets.HOSTINGER_PORT }} \
             ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }} "
               cd ${{ secrets.HOSTINGER_DIR }} &&
               mv tmp_deploy/* . &&
-              composer install --no-dev --optimize-autoloader &&
-              php artisan migrate --force &&
+              /opt/alt/php84/usr/bin/php /usr/bin/composer install --no-dev --optimize-autoloader &&
+              /opt/alt/php84/usr/bin/php artisan migrate --force &&
               chmod -R 775 storage bootstrap/cache
             "
