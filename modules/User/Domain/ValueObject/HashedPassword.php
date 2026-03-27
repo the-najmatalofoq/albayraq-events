@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Modules\IAM\Domain\ValueObject;
+namespace Modules\User\Domain\ValueObject;
 
 use Modules\Shared\Domain\ValueObject;
 

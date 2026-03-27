@@ -1,13 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace Modules\IAM\Infrastructure\Persistence;
+namespace Modules\User\Infrastructure\Persistence;
 
-use Modules\IAM\Domain\User;
-use Modules\IAM\Domain\ValueObject\UserId;
-use Modules\IAM\Domain\ValueObject\HashedPassword;
-use Modules\IAM\Domain\ValueObject\RoleId;
-use Modules\IAM\Infrastructure\Persistence\Eloquent\UserModel;
+use Modules\User\Domain\User;
+use Modules\User\Domain\ValueObject\UserId;
+use Modules\User\Domain\ValueObject\HashedPassword;
+use Modules\Role\Domain\ValueObject\RoleId;
+use Modules\User\Infrastructure\Persistence\Eloquent\UserModel;
 
 final class UserReflector
 {
@@ -37,7 +37,7 @@ final class UserReflector
 
         $roleIds = [];
         foreach ($model->roles as $roleModel) {
-            $roleIds[] = RoleId::fromString($roleModel->id);
+            $roleIds[] = RoleId::fromString($roleModel->uuid ?? $roleModel->id);
         }
         $prop = $reflection->getProperty('roleIds');
         $prop->setValue($user, $roleIds);

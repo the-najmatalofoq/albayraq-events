@@ -25,5 +25,6 @@ return [
     Modules\ParticipationEvaluation\Infrastructure\Providers\ParticipationEvaluationServiceProvider::class,
     Modules\ParticipationViolation\Infrastructure\Providers\ParticipationViolationServiceProvider::class,
     Modules\EventOperationalReport\Infrastructure\Providers\EventOperationalReportServiceProvider::class,
+    Modules\Role\Infrastructure\Providers\RoleServiceProvider::class,
 ];
 

@@ -1,12 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace Modules\IAM\Infrastructure\Persistence\Eloquent;
+namespace Modules\User\Infrastructure\Persistence\Eloquent;
 
-use Modules\IAM\Domain\Repository\UserRepositoryInterface;
-use Modules\IAM\Domain\User;
-use Modules\IAM\Domain\ValueObject\UserId;
-use Modules\IAM\Infrastructure\Persistence\UserReflector;
+use Modules\User\Domain\Repository\UserRepositoryInterface;
+use Modules\User\Domain\User;
+use Modules\User\Domain\ValueObject\UserId;
+use Modules\User\Infrastructure\Persistence\UserReflector;
 
 final class EloquentUserRepository implements UserRepositoryInterface
 {

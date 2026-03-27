@@ -1,15 +1,15 @@
 <?php
 declare(strict_types=1);
 
-namespace Modules\IAM\Infrastructure\Persistence\Seeders;
+namespace Modules\User\Infrastructure\Persistence\Seeders;
 
 use DateTimeImmutable;
 use Illuminate\Database\Seeder;
-use Modules\IAM\Domain\Repository\UserRepositoryInterface;
-use Modules\IAM\Domain\Repository\RoleRepository;
+use Modules\User\Domain\Repository\UserRepositoryInterface;
+use Modules\Role\Domain\Repository\RoleRepository;
 use Modules\IAM\Domain\Service\PasswordHasher;
-use Modules\IAM\Domain\User;
-use Modules\IAM\Domain\Enum\RoleNameEnum;
+use Modules\User\Domain\User;
+use Modules\Role\Domain\Enum\RoleNameEnum;
 
 class UserSeeder extends Seeder
 {
@@ -23,11 +23,11 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         $roles = [
-            'superadmin' => $this->roleRepository->findByName(RoleNameEnum::SUPERADMIN),
-            'admin' => $this->roleRepository->findByName(RoleNameEnum::ADMIN),
-            'manager' => $this->roleRepository->findByName(RoleNameEnum::MANAGER),
+            'superadmin' => $this->roleRepository->findByName(RoleNameEnum::SYSTEM_CONTROLLER), // Map to available enum
+            'admin' => $this->roleRepository->findByName(RoleNameEnum::GENERAL_MANAGER),
+            'manager' => $this->roleRepository->findByName(RoleNameEnum::OPERATIONS_MANAGER),
             'supervisor' => $this->roleRepository->findByName(RoleNameEnum::SUPERVISOR),
-            'employee' => $this->roleRepository->findByName(RoleNameEnum::EMPLOYEE),
+            'employee' => $this->roleRepository->findByName(RoleNameEnum::INDIVIDUAL),
         ];
 
         $users = [
@@ -49,11 +49,13 @@ class UserSeeder extends Seeder
 
             $user = User::register(
                 uuid: $this->repository->nextIdentity(),
-                name: $name,
+                name: ['en' => $name, 'ar' => $name], // Use array for translatable name
                 email: $email,
-                password: $this->hasher->hash('password123'),
+                phone: '123456789' . rand(10, 99), // Dummy phone
+                password: $this->hasher->hash('password111'),
                 roleIds: $roleIds,
                 createdAt: new DateTimeImmutable,
+                isActive: true
             );
             $this->repository->save($user);
         }

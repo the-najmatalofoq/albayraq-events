@@ -14,6 +14,10 @@ final class UserServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(UserProfileRepositoryInterface::class, EloquentUserProfileRepository::class);
+        $this->app->bind(
+            \Modules\User\Domain\Repository\UserRepositoryInterface::class,
+            \Modules\User\Infrastructure\Persistence\Eloquent\EloquentUserRepository::class
+        );
     }
 
     public function boot(): void

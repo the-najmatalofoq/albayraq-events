@@ -1,14 +1,14 @@
 <?php
-// modules/IAM/Infrastructure/Persistence/Eloquent/UserModel.php
 declare(strict_types=1);
 
-namespace Modules\IAM\Infrastructure\Persistence\Eloquent;
+namespace Modules\User\Infrastructure\Persistence\Eloquent;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Notifications\Notifiable;
+use Modules\Role\Infrastructure\Persistence\Eloquent\RoleModel;
 
 final class UserModel extends Model implements JWTSubject
 {

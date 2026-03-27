@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Modules\IAM\Domain\ValueObject;
+namespace Modules\Role\Domain\ValueObject;
 
 use Modules\Shared\Domain\Identity;
 

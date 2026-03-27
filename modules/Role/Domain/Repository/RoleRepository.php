@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Modules\IAM\Domain\Repository;
+namespace Modules\Role\Domain\Repository;
 
-use Modules\IAM\Domain\Role;
-use Modules\IAM\Domain\Enum\RoleNameEnum;
-use Modules\IAM\Domain\ValueObject\RoleId;
+use Modules\Role\Domain\Role;
+use Modules\Role\Domain\Enum\RoleNameEnum;
+use Modules\Role\Domain\ValueObject\RoleId;
 
 interface RoleRepository
 {

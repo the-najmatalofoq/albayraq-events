@@ -1,13 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace Modules\IAM\Domain;
+namespace Modules\User\Domain;
 
 use DateTimeImmutable;
 use Modules\IAM\Domain\Event\UserRegistered;
-use Modules\IAM\Domain\ValueObject\HashedPassword;
-use Modules\IAM\Domain\ValueObject\UserId;
-use Modules\IAM\Domain\ValueObject\RoleId;
+use Modules\User\Domain\ValueObject\HashedPassword;
+use Modules\User\Domain\ValueObject\UserId;
+use Modules\Role\Domain\ValueObject\RoleId;
 use Modules\Shared\Domain\AggregateRoot;
 use Modules\Shared\Domain\Identity;
 

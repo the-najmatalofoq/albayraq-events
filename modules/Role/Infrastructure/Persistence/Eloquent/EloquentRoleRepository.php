@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Modules\IAM\Infrastructure\Persistence\Eloquent;
+namespace Modules\Role\Infrastructure\Persistence\Eloquent;
 
-use Modules\IAM\Domain\Repository\RoleRepository;
-use Modules\IAM\Domain\Role;
-use Modules\IAM\Domain\Enum\RoleNameEnum;
-use Modules\IAM\Domain\ValueObject\RoleId;
+use Modules\Role\Domain\Repository\RoleRepository;
+use Modules\Role\Domain\Role;
+use Modules\Role\Domain\Enum\RoleNameEnum;
+use Modules\Role\Domain\ValueObject\RoleId;
 
 final class EloquentRoleRepository implements RoleRepository
 {

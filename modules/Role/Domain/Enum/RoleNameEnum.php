@@ -1,9 +1,9 @@
 <?php
-// modules/IAM/Domain/Enum/RoleNameEnum.php
+// modules/Role/Domain/Enum/RoleNameEnum.php
 
 declare(strict_types=1);
 
-namespace Modules\IAM\Domain\Enum;
+namespace Modules\Role\Domain\Enum;
 
 enum RoleNameEnum: string
 {

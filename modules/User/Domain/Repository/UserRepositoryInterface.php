@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace Modules\IAM\Domain\Repository;
+namespace Modules\User\Domain\Repository;
 
-use Modules\IAM\Domain\User;
-use Modules\IAM\Domain\ValueObject\UserId;
+use Modules\User\Domain\User;
+use Modules\User\Domain\ValueObject\UserId;
 
 interface UserRepositoryInterface
 {
