@@ -1,0 +1,23 @@
+<?php
+// modules/ReportType/Infrastructure/Persistence/Migrations/2026_03_26_000003_create_report_types_table.php
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration {
+    public function up(): void
+    {
+        Schema::create('report_types', function (Blueprint $table) {
+            $table->uuid('id')->primary();
+            $table->json('name');
+            $table->string('code')->unique();
+            $table->boolean('is_active')->default(true);
+            $table->timestamps();
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('report_types');
+    }
+};
