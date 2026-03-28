@@ -8,16 +8,13 @@ use Modules\User\Domain\User;
 
 final class UserPresenter
 {
-    public function present(User $user): array
+    public static function fromDomain(User $user): array
     {
         return [
             'id' => $user->uuid->value,
-            'name' => $user->name->toArray(),
+            'name' => $user->name,
             'email' => $user->email,
             'phone' => $user->phone,
-            'avatar' => $user->avatar,
-            'is_active' => $user->isActive,
-            'created_at' => $user->createdAt->format(\DateTimeInterface::ATOM),
         ];
     }
 }

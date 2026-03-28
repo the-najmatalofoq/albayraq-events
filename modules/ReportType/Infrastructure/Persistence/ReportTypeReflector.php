@@ -17,10 +17,10 @@ final class ReportTypeReflector
         $reportType = $reflection->newInstanceWithoutConstructor();
 
         $properties = [
-            'uuid' => ReportTypeId::fromString($model->id),
-            'name' => TranslatableText::fromArray($model->name),
-            'code' => $model->code,
-            'isActive' => $model->is_active,
+            'uuid'      => ReportTypeId::fromString($model->id),
+            'name'      => TranslatableText::fromArray($model->name),
+            'code'      => $model->slug,
+            'isActive'  => (bool) $model->is_active,
         ];
 
         foreach ($properties as $field => $value) {

@@ -4,21 +4,19 @@ declare(strict_types=1);
 
 namespace Modules\EventAnnouncement\Infrastructure\Persistence\Eloquent;
 
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Modules\Event\Infrastructure\Persistence\Eloquent\EventModel;
 use Modules\User\Infrastructure\Persistence\Eloquent\UserModel;
+use Modules\Event\Infrastructure\Persistence\Eloquent\EventModel;
 
 final class EventAnnouncementModel extends Model
 {
     use HasUuids;
 
     protected $table = 'event_announcements';
-
-    protected $keyType = 'string';
-
     public $incrementing = false;
+    protected $keyType = 'string';
 
     protected $fillable = [
         'event_id',
@@ -41,17 +39,11 @@ final class EventAnnouncementModel extends Model
 
     public function event(): BelongsTo
     {
-        return $this->belongsTo(
-            EventModel::class,
-            'event_id',
-        );
+        return $this->belongsTo(EventModel::class, 'event_id');
     }
 
     public function sender(): BelongsTo
     {
-        return $this->belongsTo(
-            UserModel::class,
-            'sender_id',
-        );
+        return $this->belongsTo(UserModel::class, 'sender_id');
     }
 }

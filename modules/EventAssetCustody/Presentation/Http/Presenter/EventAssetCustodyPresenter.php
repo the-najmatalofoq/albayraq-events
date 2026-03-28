@@ -5,21 +5,35 @@ declare(strict_types=1);
 namespace Modules\EventAssetCustody\Presentation\Http\Presenter;
 
 use Modules\EventAssetCustody\Domain\EventAssetCustody;
+use Modules\EventParticipation\Presentation\Http\Presenter\EventParticipationPresenter;
+use Modules\EventParticipation\Domain\EventParticipation;
+// todo: use deep presenters
 
 final class EventAssetCustodyPresenter
 {
-    public static function fromDomain(EventAssetCustody $custody): array
+    public function present(EventAssetCustody $custody, ?EventParticipation $participation = null): array
     {
         return [
-            'id' => $custody->uuid->value,
-            'event_participation_id' => $custody->participationId->value,
+            'uuid' => $custody->uuid->value,
+            'participation_id' => $custody->participationId->value,
             'item_name' => $custody->itemName->toArray(),
             'description' => $custody->description?->toArray(),
-            'handed_at' => $custody->handedAt->format('Y-m-d H:i:s'),
-            'returned_at' => $custody->returnedAt?->format('Y-m-d H:i:s'),
             'status' => $custody->status->value,
-            'status_label' => $custody->status->label(),
-            'handed_by' => $custody->handedBy->value,
+            'handed' => [
+                'at' => $custody->handedAt->format(DATE_ATOM),
+                'by' => $custody->handedBy->value,
+            ],
+            'returned_at' => $custody->returnedAt?->format(DATE_ATOM),
+            'participation' => $participation ? EventParticipationPresenter::fromDomain($participation) : null,
         ];
+    }
+
+    public function presentCollection(iterable $custodies): array
+    {
+        $data = [];
+        foreach ($custodies as $custody) {
+            $data[] = $this->present($custody);
+        }
+        return $data;
     }
 }

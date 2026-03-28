@@ -1,0 +1,28 @@
+<?php
+// modules/DigitalSignature/Infrastructure/Persistence/Migrations/2026_03_25_106100_create_digital_signatures_table.php
+declare(strict_types=1);
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::create('digital_signatures', function (Blueprint $table): void {
+            $table->uuid('id')->primary();
+            $table->foreignUuid('contract_id')->constrained('event_contracts')->cascadeOnDelete();
+            $table->text('signature_svg');
+            $table->string('ip_address')->nullable();
+            $table->string('user_agent')->nullable();
+            $table->timestamp('signed_at');
+            $table->timestamps();
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('digital_signatures');
+    }
+};

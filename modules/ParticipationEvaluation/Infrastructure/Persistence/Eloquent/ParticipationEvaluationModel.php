@@ -4,21 +4,19 @@ declare(strict_types=1);
 
 namespace Modules\ParticipationEvaluation\Infrastructure\Persistence\Eloquent;
 
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Modules\EventParticipation\Infrastructure\Persistence\Eloquent\EventParticipationModel;
 use Modules\User\Infrastructure\Persistence\Eloquent\UserModel;
+use Modules\EventParticipation\Infrastructure\Persistence\Eloquent\EventParticipationModel;
 
 final class ParticipationEvaluationModel extends Model
 {
     use HasUuids;
 
     protected $table = 'participation_evaluations';
-
-    protected $keyType = 'string';
-
     public $incrementing = false;
+    protected $keyType = 'string';
 
     protected $fillable = [
         'event_participation_id',
@@ -34,7 +32,7 @@ final class ParticipationEvaluationModel extends Model
     {
         return [
             'date' => 'date',
-            'score' => 'decimal:1',
+            'score' => 'float',
             'is_locked' => 'boolean',
             'locked_at' => 'datetime',
         ];
@@ -42,17 +40,11 @@ final class ParticipationEvaluationModel extends Model
 
     public function participation(): BelongsTo
     {
-        return $this->belongsTo(
-            EventParticipationModel::class,
-            'event_participation_id',
-        );
+        return $this->belongsTo(EventParticipationModel::class, 'event_participation_id');
     }
 
     public function evaluator(): BelongsTo
     {
-        return $this->belongsTo(
-            UserModel::class,
-            'evaluator_id',
-        );
+        return $this->belongsTo(UserModel::class, 'evaluator_id');
     }
 }

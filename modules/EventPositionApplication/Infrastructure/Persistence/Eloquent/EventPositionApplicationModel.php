@@ -16,7 +16,6 @@ final class EventPositionApplicationModel extends Model
     public $incrementing = false;
 
     protected $fillable = [
-        'id',
         'user_id',
         'position_id',
         'status',
@@ -26,9 +25,12 @@ final class EventPositionApplicationModel extends Model
         'reviewed_by',
     ];
 
-    protected $casts = [
-        'ranking_score' => 'float',
-        'applied_at' => 'datetime',
-        'reviewed_at' => 'datetime',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'ranking_score' => 'float',
+            'applied_at' => 'datetime',
+            'reviewed_at' => 'datetime',
+        ];
+    }
 }

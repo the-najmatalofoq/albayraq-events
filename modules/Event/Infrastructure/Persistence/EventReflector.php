@@ -7,10 +7,9 @@ namespace Modules\Event\Infrastructure\Persistence;
 use Modules\Event\Domain\Event;
 use Modules\Event\Domain\ValueObject\EventId;
 use Modules\Shared\Domain\ValueObject\TranslatableText;
-use Modules\Shared\Domain\ValueObject\GeoPoint;
-use Modules\Shared\Domain\ValueObject\Money;
 use Modules\Event\Domain\Enum\EventStatusEnum;
 use Modules\Event\Infrastructure\Persistence\Eloquent\EventModel;
+use Modules\User\Domain\ValueObject\UserId;
 
 final class EventReflector
 {
@@ -20,17 +19,23 @@ final class EventReflector
         $event = $reflection->newInstanceWithoutConstructor();
 
         $properties = [
-            'uuid' => EventId::fromString($model->id),
-            'name' => TranslatableText::fromArray($model->name),
-            'slug' => $model->slug,
-            'description' => TranslatableText::fromArray($model->description),
-            'type' => $model->type,
-            'startDate' => $model->start_date,
-            'endDate' => $model->end_date,
-            'location' => new GeoPoint($model->latitude, $model->longitude),
-            'price' => new Money($model->price_amount, $model->price_currency),
-            'status' => EventStatusEnum::from($model->status),
-            'bannerId' => $model->banner_id,
+            'uuid'              => EventId::fromString($model->id),
+            'name'              => TranslatableText::fromArray($model->name),
+            'description'       => $model->description ? TranslatableText::fromArray($model->description) : null,
+            'latitude'          => (float) $model->latitude,
+            'longitude'         => (float) $model->longitude,
+            'geofenceRadius'    => (int) $model->geofence_radius,
+            'address'           => $model->address,
+            'startDate'         => $model->start_date->toDateTimeImmutable(),
+            'endDate'           => $model->end_date->toDateTimeImmutable(),
+            'dailyStartTime'    => $model->daily_start_time,
+            'dailyEndTime'      => $model->daily_end_time,
+            'employmentTerms'   => $model->employment_terms ? TranslatableText::fromArray($model->employment_terms) : null,
+            'status'            => EventStatusEnum::from($model->status),
+            'createdBy'         => UserId::fromString($model->created_by),
+            'createdAt'         => $model->created_at->toDateTimeImmutable(),
+            'updatedAt'         => $model->updated_at?->toDateTimeImmutable(),
+            'deletedAt'         => $model->deleted_at?->toDateTimeImmutable(),
         ];
 
         foreach ($properties as $field => $value) {

@@ -7,17 +7,29 @@ namespace Modules\EventParticipation\Infrastructure\Persistence\Eloquent;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Modules\User\Infrastructure\Persistence\Eloquent\UserModel;
+use Modules\Event\Infrastructure\Persistence\Eloquent\EventModel;
+use Modules\EventStaffingPosition\Infrastructure\Persistence\Eloquent\EventStaffingPositionModel;
+use Modules\EventStaffingGroup\Infrastructure\Persistence\Eloquent\EventStaffingGroupModel;
+use Modules\EventContract\Infrastructure\Persistence\Eloquent\EventContractModel;
+use Modules\EventAttendance\Infrastructure\Persistence\Eloquent\EventAttendanceModel;
+use Modules\ParticipationEvaluation\Infrastructure\Persistence\Eloquent\ParticipationEvaluationModel;
+use Modules\ParticipationViolation\Infrastructure\Persistence\Eloquent\ParticipationViolationModel;
+use Modules\EventParticipationBadge\Infrastructure\Persistence\Eloquent\EventParticipationBadgeModel;
+use Modules\EventExperienceCertificate\Infrastructure\Persistence\Eloquent\EventExperienceCertificateModel;
 
 final class EventParticipationModel extends Model
 {
     use HasUuids, SoftDeletes;
 
     protected $table = 'event_participations';
-    protected $keyType = 'string';
     public $incrementing = false;
+    protected $keyType = 'string';
 
     protected $fillable = [
-        'id',
         'user_id',
         'event_id',
         'position_id',
@@ -28,8 +40,61 @@ final class EventParticipationModel extends Model
         'ended_at',
     ];
 
-    protected $casts = [
-        'started_at' => 'datetime',
-        'ended_at' => 'datetime',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'started_at' => 'date',
+            'ended_at' => 'date',
+        ];
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(UserModel::class, 'user_id');
+    }
+
+    public function event(): BelongsTo
+    {
+        return $this->belongsTo(EventModel::class, 'event_id');
+    }
+
+    public function position(): BelongsTo
+    {
+        return $this->belongsTo(EventStaffingPositionModel::class, 'position_id');
+    }
+
+    public function group(): BelongsTo
+    {
+        return $this->belongsTo(EventStaffingGroupModel::class, 'group_id');
+    }
+
+    public function contract(): HasOne
+    {
+        return $this->hasOne(EventContractModel::class, 'event_participation_id');
+    }
+
+    public function attendanceRecords(): HasMany
+    {
+        return $this->hasMany(EventAttendanceModel::class, 'event_participation_id');
+    }
+
+    public function evaluations(): HasMany
+    {
+        return $this->hasMany(ParticipationEvaluationModel::class, 'event_participation_id');
+    }
+
+    public function violations(): HasMany
+    {
+        return $this->hasMany(ParticipationViolationModel::class, 'event_participation_id');
+    }
+
+    public function badge(): HasOne
+    {
+        return $this->hasOne(EventParticipationBadgeModel::class, 'event_participation_id');
+    }
+
+    public function certificate(): HasOne
+    {
+        return $this->hasOne(EventExperienceCertificateModel::class, 'event_participation_id');
+    }
 }

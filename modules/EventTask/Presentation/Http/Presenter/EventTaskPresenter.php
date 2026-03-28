@@ -5,22 +5,35 @@ declare(strict_types=1);
 namespace Modules\EventTask\Presentation\Http\Presenter;
 
 use Modules\EventTask\Domain\EventTask;
+use Modules\User\Presentation\Http\Presenter\UserPresenter;
+use Modules\User\Domain\User;
 
 final class EventTaskPresenter
 {
-    public static function fromDomain(EventTask $task): array
+    public function present(EventTask $task, ?User $assignee = null): array
     {
         return [
-            'id' => $task->uuid->value,
-            'event_id' => $task->eventId->value,
-            'group_id' => $task->groupId?->value,
-            'assigned_to' => $task->assignedTo?->value,
-            'title' => $task->title->toArray(),
-            'description' => $task->description?->toArray(),
-            'status' => $task->status->value,
-            'status_label' => $task->status->label(),
-            'due_at' => $task->dueAt?->format('Y-m-d H:i:s'),
-            'created_by' => $task->createdBy->value,
+            'uuid'          => $task->uuid->value,
+            'event_id'       => $task->eventId->value,
+            'title'         => $task->title->toArray(),
+            'description'   => $task->description?->toArray(),
+            'status'        => $task->status->value,
+            'assignment'    => [
+                'group_id'    => $task->groupId?->value,
+                'assigned_to' => $task->assignedTo?->value,
+            ],
+            'due_at'        => $task->dueAt?->format(DATE_ATOM),
+            'created_by'    => $task->createdBy->value,
+            'assignee'      => $assignee ? UserPresenter::fromDomain($assignee) : null,
         ];
+    }
+
+    public function presentCollection(iterable $tasks): array
+    {
+        $data = [];
+        foreach ($tasks as $task) {
+            $data[] = $this->present($task);
+        }
+        return $data;
     }
 }

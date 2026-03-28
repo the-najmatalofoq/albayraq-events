@@ -12,17 +12,19 @@ final class ContractRejectionReasonModel extends Model
     use HasUuids;
 
     protected $table = 'contract_rejection_reasons';
-    protected $keyType = 'string';
     public $incrementing = false;
+    protected $keyType = 'string';
 
     protected $fillable = [
-        'id',
         'reason',
         'is_active',
     ];
 
-    protected $casts = [
-        'reason' => 'array',
-        'is_active' => 'boolean',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'reason' => 'array',
+            'is_active' => 'boolean',
+        ];
+    }
 }

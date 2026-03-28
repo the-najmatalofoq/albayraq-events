@@ -23,9 +23,12 @@ final class RoleModel extends Model
         'level',
     ];
 
-    protected $casts = [
-        'name' => 'array',
-        'is_global' => 'boolean',
-        'level' => RoleLevelEnum::class,
-    ];
+    protected function casts(): array
+    {
+        return [
+            'name' => 'array',
+            'is_global' => 'boolean',
+            'level' => RoleLevelEnum::class,
+        ];
+    }
 }

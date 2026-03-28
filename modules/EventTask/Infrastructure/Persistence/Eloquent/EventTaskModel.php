@@ -6,30 +6,62 @@ namespace Modules\EventTask\Infrastructure\Persistence\Eloquent;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Modules\EventTask\Domain\Enum\TaskStatusEnum;
+use Modules\User\Infrastructure\Persistence\Eloquent\UserModel;
+use Modules\Event\Infrastructure\Persistence\Eloquent\EventModel;
+use Modules\EventStaffingGroup\Infrastructure\Persistence\Eloquent\EventStaffingGroupModel;
 
 final class EventTaskModel extends Model
 {
     use HasUuids;
 
     protected $table = 'event_tasks';
-    protected $keyType = 'string';
     public $incrementing = false;
+    protected $keyType = 'string';
 
     protected $fillable = [
-        'id',
         'event_id',
-        'group_id',
         'assigned_to',
+        'group_id',
         'title',
         'description',
-        'status',
         'due_at',
+        'location_latitude',
+        'location_longitude',
+        'status',
         'created_by',
     ];
 
-    protected $casts = [
-        'title' => 'array',
-        'description' => 'array',
-        'due_at' => 'datetime',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'title' => 'array',
+            'description' => 'array',
+            'due_at' => 'datetime',
+            'location_latitude' => 'float',
+            'location_longitude' => 'float',
+            'status' => TaskStatusEnum::class,
+        ];
+    }
+
+    public function event(): BelongsTo
+    {
+        return $this->belongsTo(EventModel::class, 'event_id');
+    }
+
+    public function assignee(): BelongsTo
+    {
+        return $this->belongsTo(UserModel::class, 'assigned_to');
+    }
+
+    public function group(): BelongsTo
+    {
+        return $this->belongsTo(EventStaffingGroupModel::class, 'group_id');
+    }
+
+    public function creator(): BelongsTo
+    {
+        return $this->belongsTo(UserModel::class, 'created_by');
+    }
 }

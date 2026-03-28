@@ -6,12 +6,13 @@ namespace Modules\EventTask\Infrastructure\Persistence;
 
 use Modules\EventTask\Domain\EventTask;
 use Modules\EventTask\Domain\ValueObject\TaskId;
-use Modules\EventTask\Domain\ValueObject\TaskStatusEnum;
+use Modules\EventTask\Domain\Enum\TaskStatusEnum;
 use Modules\Event\Domain\ValueObject\EventId;
-use Modules\EventStaffingGroup\Domain\ValueObject\GroupId;
 use Modules\User\Domain\ValueObject\UserId;
+use Modules\EventStaffingGroup\Domain\ValueObject\GroupId;
 use Modules\Shared\Domain\ValueObject\TranslatableText;
 use Modules\EventTask\Infrastructure\Persistence\Eloquent\EventTaskModel;
+use DateTimeImmutable;
 
 final class EventTaskReflector
 {
@@ -21,15 +22,15 @@ final class EventTaskReflector
         $task = $reflection->newInstanceWithoutConstructor();
 
         $properties = [
-            'uuid' => TaskId::fromString($model->id),
-            'eventId' => EventId::fromString($model->event_id),
-            'title' => TranslatableText::fromArray($model->title),
-            'status' => TaskStatusEnum::from($model->status),
-            'description' => $model->description ? TranslatableText::fromArray($model->description) : null,
-            'groupId' => $model->group_id ? GroupId::fromString($model->group_id) : null,
-            'assignedTo' => $model->assigned_to ? UserId::fromString($model->assigned_to) : null,
-            'createdBy' => UserId::fromString($model->created_by),
-            'dueAt' => $model->due_at ? \DateTimeImmutable::createFromMutable($model->due_at) : null,
+            'uuid'          => TaskId::fromString($model->id),
+            'eventId'       => EventId::fromString($model->event_id),
+            'title'         => TranslatableText::fromArray($model->title),
+            'status'        => TaskStatusEnum::from($model->status),
+            'description'   => $model->description ? TranslatableText::fromArray($model->description) : null,
+            'groupId'       => $model->group_id ? GroupId::fromString($model->group_id) : null,
+            'assignedTo'    => $model->assigned_to ? UserId::fromString($model->assigned_to) : null,
+            'createdBy'     => UserId::fromString($model->created_by),
+            'dueAt'         => $model->due_at ? DateTimeImmutable::createFromInterface($model->due_at) : null,
         ];
 
         foreach ($properties as $field => $value) {

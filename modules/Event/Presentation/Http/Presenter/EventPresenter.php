@@ -5,26 +5,45 @@ declare(strict_types=1);
 namespace Modules\Event\Presentation\Http\Presenter;
 
 use Modules\Event\Domain\Event;
-use Modules\Shared\Presentation\Http\Presenter\GeoPointPresenter;
-use Modules\Shared\Presentation\Http\Presenter\PricePresenter;
 
+// todo: make presneter for the location ,schedule, terms
 final class EventPresenter
 {
-    public static function fromDomain(Event $event): array
+    public function present(Event $event): array
     {
         return [
-            'id' => $event->uuid->value,
-            'name' => $event->name->toArray(),
-            'slug' => $event->slug,
-            'description' => $event->description->toArray(),
-            'type' => $event->type,
-            'start_date' => $event->startDate->format('Y-m-d H:i:s'),
-            'end_date' => $event->endDate->format('Y-m-d H:i:s'),
-            'location' => GeoPointPresenter::fromDomain($event->location),
-            'price' => PricePresenter::fromDomain($event->price),
-            'status' => $event->status->value,
-            'status_label' => $event->status->label(),
-            'banner_id' => $event->bannerId,
+            'uuid'          => $event->uuid->value(),
+            'title'         => $event->title->toArray(),
+            'description'   => $event->description?->toArray(),
+            'location'      => [
+                'latitude'  => $event->latitude,
+                'longitude' => $event->longitude,
+                'radius'    => $event->radius,
+                'address'   => $event->address,
+            ],
+            'schedule'      => [
+                'start_date' => $event->startDate->format('Y-m-d'),
+                'end_date'   => $event->endDate->format('Y-m-d'),
+                'start_time' => $event->startTime,
+                'end_time'   => $event->endTime,
+            ],
+            'terms'         => [
+                'employment_type' => $event->employmentType,
+                'min_age'         => $event->minAge,
+                'gender_rule'     => $event->genderRule,
+            ],
+            'status'        => $event->status->value,
+            'is_published'  => $event->isPublished,
+            'created_at'    => $event->createdAt->format(DATE_ATOM),
         ];
+    }
+
+    public function presentCollection(iterable $events): array
+    {
+        $data = [];
+        foreach ($events as $event) {
+            $data[] = $this->present($event);
+        }
+        return $data;
     }
 }

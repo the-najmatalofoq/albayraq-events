@@ -6,23 +6,31 @@ namespace Modules\EventRoleCapability\Infrastructure\Persistence\Eloquent;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Modules\User\Infrastructure\Persistence\Eloquent\UserModel;
+use Modules\Event\Infrastructure\Persistence\Eloquent\EventModel;
 
 final class EventRoleCapabilityModel extends Model
 {
     use HasUuids;
 
     protected $table = 'event_role_capabilities';
-    protected $keyType = 'string';
     public $incrementing = false;
+    protected $keyType = 'string';
 
     protected $fillable = [
-        'id',
-        'assignment_id',
-        'capability_key',
-        'is_granted',
+        'event_id',
+        'user_id',
+        'capability',
     ];
 
-    protected $casts = [
-        'is_granted' => 'boolean',
-    ];
+    public function event(): BelongsTo
+    {
+        return $this->belongsTo(EventModel::class, 'event_id');
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(UserModel::class, 'user_id');
+    }
 }

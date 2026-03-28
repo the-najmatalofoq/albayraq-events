@@ -12,11 +12,10 @@ final class ViolationTypeModel extends Model
     use HasUuids;
 
     protected $table = 'violation_types';
-    protected $keyType = 'string';
     public $incrementing = false;
+    protected $keyType = 'string';
 
     protected $fillable = [
-        'id',
         'name',
         'default_deduction_amount',
         'default_deduction_currency',
@@ -24,9 +23,12 @@ final class ViolationTypeModel extends Model
         'is_active',
     ];
 
-    protected $casts = [
-        'name' => 'array',
-        'default_deduction_amount' => 'float',
-        'is_active' => 'boolean',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'name' => 'array',
+            'default_deduction_amount' => 'decimal:2',
+            'is_active' => 'boolean',
+        ];
+    }
 }

@@ -10,6 +10,7 @@ use Modules\EventPositionApplication\Domain\ValueObject\ApplicationStatusEnum;
 use Modules\User\Domain\ValueObject\UserId;
 use Modules\EventStaffingPosition\Domain\ValueObject\PositionId;
 use Modules\EventPositionApplication\Infrastructure\Persistence\Eloquent\EventPositionApplicationModel;
+use DateTimeImmutable;
 
 final class EventPositionApplicationReflector
 {
@@ -19,14 +20,14 @@ final class EventPositionApplicationReflector
         $application = $reflection->newInstanceWithoutConstructor();
 
         $properties = [
-            'uuid' => ApplicationId::fromString($model->id),
-            'userId' => UserId::fromString($model->user_id),
-            'positionId' => PositionId::fromString($model->position_id),
-            'status' => ApplicationStatusEnum::from($model->status),
-            'rankingScore' => (float) $model->ranking_score,
-            'appliedAt' => \DateTimeImmutable::createFromMutable($model->applied_at),
-            'reviewedAt' => $model->reviewed_at ? \DateTimeImmutable::createFromMutable($model->reviewed_at) : null,
-            'reviewedBy' => $model->reviewed_by ? UserId::fromString($model->reviewed_by) : null,
+            'uuid'          => ApplicationId::fromString($model->id),
+            'userId'        => UserId::fromString($model->user_id),
+            'positionId'    => PositionId::fromString($model->position_id),
+            'status'        => ApplicationStatusEnum::from($model->status),
+            'rankingScore'  => (float) $model->ranking_score,
+            'appliedAt'     => DateTimeImmutable::createFromInterface($model->applied_at),
+            'reviewedAt'    => $model->reviewed_at ? DateTimeImmutable::createFromInterface($model->reviewed_at) : null,
+            'reviewedBy'    => $model->reviewed_by ? UserId::fromString($model->reviewed_by) : null,
         ];
 
         foreach ($properties as $field => $value) {

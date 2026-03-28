@@ -12,6 +12,7 @@ use Modules\Event\Domain\ValueObject\EventId;
 use Modules\EventStaffingPosition\Domain\ValueObject\PositionId;
 use Modules\EventStaffingGroup\Domain\ValueObject\GroupId;
 use Modules\EventParticipation\Infrastructure\Persistence\Eloquent\EventParticipationModel;
+use DateTimeImmutable;
 
 final class EventParticipationReflector
 {
@@ -21,15 +22,15 @@ final class EventParticipationReflector
         $participation = $reflection->newInstanceWithoutConstructor();
 
         $properties = [
-            'uuid' => ParticipationId::fromString($model->id),
-            'userId' => UserId::fromString($model->user_id),
-            'eventId' => EventId::fromString($model->event_id),
-            'positionId' => PositionId::fromString($model->position_id),
-            'groupId' => $model->group_id ? GroupId::fromString($model->group_id) : null,
-            'employeeNumber' => $model->employee_number,
-            'status' => ParticipationStatusEnum::from($model->status),
-            'startedAt' => \DateTimeImmutable::createFromMutable($model->started_at),
-            'endedAt' => $model->ended_at ? \DateTimeImmutable::createFromMutable($model->ended_at) : null,
+            'uuid'              => ParticipationId::fromString($model->id),
+            'userId'            => UserId::fromString($model->user_id),
+            'eventId'           => EventId::fromString($model->event_id),
+            'positionId'        => PositionId::fromString($model->position_id),
+            'groupId'           => $model->group_id ? GroupId::fromString($model->group_id) : null,
+            'employeeNumber'    => $model->employee_number,
+            'status'            => ParticipationStatusEnum::from($model->status),
+            'startedAt'         => $model->started_at ? DateTimeImmutable::createFromInterface($model->started_at) : new DateTimeImmutable(),
+            'endedAt'           => $model->ended_at ? DateTimeImmutable::createFromInterface($model->ended_at) : null,
         ];
 
         foreach ($properties as $field => $value) {

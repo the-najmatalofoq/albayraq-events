@@ -8,6 +8,7 @@ use Modules\EventStaffingPosition\Domain\EventStaffingPosition;
 use Modules\EventStaffingPosition\Domain\ValueObject\PositionId;
 use Modules\Event\Domain\ValueObject\EventId;
 use Modules\Shared\Domain\ValueObject\TranslatableText;
+use Modules\Shared\Domain\ValueObject\Money;
 use Modules\EventStaffingPosition\Infrastructure\Persistence\Eloquent\EventStaffingPositionModel;
 
 final class EventStaffingPositionReflector
@@ -18,12 +19,13 @@ final class EventStaffingPositionReflector
         $position = $reflection->newInstanceWithoutConstructor();
 
         $properties = [
-            'uuid' => PositionId::fromString($model->id),
-            'eventId' => EventId::fromString($model->event_id),
-            'title' => TranslatableText::fromArray($model->title),
-            'requirements' => TranslatableText::fromArray($model->requirements),
-            'quantity' => $model->quantity,
-            'isActive' => $model->is_active,
+            'uuid'          => PositionId::fromString($model->id),
+            'eventId'       => EventId::fromString($model->event_id),
+            'title'         => TranslatableText::fromArray($model->title),
+            'requirements'  => TranslatableText::fromArray($model->requirements),
+            'headcount'     => (int) $model->headcount,
+            'wage'          => $model->wage_amount ? new Money((float)$model->wage_amount, $model->currency) : null,
+            'isActive'      => (bool) $model->is_active,
         ];
 
         foreach ($properties as $field => $value) {

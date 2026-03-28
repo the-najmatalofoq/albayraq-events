@@ -9,40 +9,49 @@ use Modules\Shared\Domain\Identity;
 use Modules\Shared\Domain\ValueObject\TranslatableText;
 use Modules\Shared\Domain\ValueObject\HexColor;
 use Modules\Event\Domain\ValueObject\EventId;
-use Modules\User\Domain\ValueObject\UserId;
 use Modules\EventStaffingGroup\Domain\ValueObject\GroupId;
 
 final class EventStaffingGroup extends AggregateRoot
 {
-    public function __construct(
+    private function __construct(
         public readonly GroupId $uuid,
         public readonly EventId $eventId,
         public private(set) TranslatableText $name,
-        public private(set) UserId $leaderId,
         public private(set) HexColor $color,
-        public private(set) bool $isActive = true
-    ) {
-    }
+        public private(set) bool $isLocked = false,
+        public private(set) bool $isActive = true,
+    ) {}
 
     public static function create(
         GroupId $uuid,
         EventId $eventId,
         TranslatableText $name,
-        UserId $leaderId,
         HexColor $color,
-        bool $isActive = true
+        bool $isActive = true,
+        bool $isLocked = false
     ): self {
-        return new self($uuid, $eventId, $name, $leaderId, $color, $isActive);
+        return new self($uuid, $eventId, $name, $color, $isLocked, $isActive);
     }
 
     public function update(
         TranslatableText $name,
-        UserId $leaderId,
         HexColor $color
     ): void {
+        if ($this->isLocked) {
+            throw new \DomainException("Cannot update a locked staffing group.");
+        }
         $this->name = $name;
-        $this->leaderId = $leaderId;
         $this->color = $color;
+    }
+
+    public function lock(): void
+    {
+        $this->isLocked = true;
+    }
+
+    public function unlock(): void
+    {
+        $this->isLocked = false;
     }
 
     public function activate(): void

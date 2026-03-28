@@ -8,15 +8,27 @@ use Modules\ParticipationEvaluation\Domain\ParticipationEvaluation;
 
 final class ParticipationEvaluationPresenter
 {
-    public static function fromDomain(ParticipationEvaluation $evaluation): array
+    public function present(ParticipationEvaluation $evaluation): array
     {
         return [
-            'id' => $evaluation->uuid->value,
-            'event_participation_id' => $evaluation->participationId->value,
-            'rating' => $evaluation->rating,
-            'feedback' => $evaluation->feedback?->toArray(),
-            'evaluated_by' => $evaluation->evaluatedBy->value,
-            'created_at' => $evaluation->createdAt->format('Y-m-d H:i:s'),
+            'uuid'              => $evaluation->uuid->value(),
+            'participation_id'   => $evaluation->participationId->value(),
+            'evaluator_id'       => $evaluation->evaluatorId->value(),
+            'date'              => $evaluation->date->format('Y-m-d'),
+            'score'             => $evaluation->score,
+            'notes'             => $evaluation->notes,
+            'is_locked'         => $evaluation->isLocked,
+            'locked_at'         => $evaluation->lockedAt?->format(DATE_ATOM),
+            'created_at'        => $evaluation->createdAt->format(DATE_ATOM),
         ];
+    }
+
+    public function presentCollection(iterable $evaluations): array
+    {
+        $data = [];
+        foreach ($evaluations as $evaluation) {
+            $data[] = $this->present($evaluation);
+        }
+        return $data;
     }
 }

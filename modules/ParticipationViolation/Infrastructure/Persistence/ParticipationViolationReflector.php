@@ -6,11 +6,12 @@ namespace Modules\ParticipationViolation\Infrastructure\Persistence;
 
 use Modules\ParticipationViolation\Domain\ParticipationViolation;
 use Modules\ParticipationViolation\Domain\ValueObject\ViolationId;
+use Modules\ParticipationViolation\Domain\Enum\ViolationStatusEnum;
 use Modules\ViolationType\Domain\ValueObject\ViolationTypeId;
-use Modules\EventParticipation\Domain\ValueObject\ParticipationId;
 use Modules\User\Domain\ValueObject\UserId;
-use Modules\Shared\Domain\ValueObject\TranslatableText;
+use Modules\EventParticipation\Domain\ValueObject\ParticipationId;
 use Modules\ParticipationViolation\Infrastructure\Persistence\Eloquent\ParticipationViolationModel;
+use DateTimeImmutable;
 
 final class ParticipationViolationReflector
 {
@@ -20,13 +21,18 @@ final class ParticipationViolationReflector
         $violation = $reflection->newInstanceWithoutConstructor();
 
         $properties = [
-            'uuid' => ViolationId::fromString($model->id),
-            'participationId' => ParticipationId::fromString($model->event_participation_id),
-            'violationTypeId' => ViolationTypeId::fromString($model->violation_type_id),
-            'description' => TranslatableText::fromArray($model->description),
-            'issuedBy' => UserId::fromString($model->issued_by),
-            'occurredAt' => \DateTimeImmutable::createFromMutable($model->occurred_at),
-            'createdAt' => \DateTimeImmutable::createFromMutable($model->created_at),
+            'uuid'              => ViolationId::fromString($model->id),
+            'participationId'   => ParticipationId::fromString($model->event_participation_id),
+            'violationTypeId'   => ViolationTypeId::fromString($model->violation_type_id),
+            'reportedBy'        => UserId::fromString($model->reported_by),
+            'description'       => $model->description,
+            'date'              => DateTimeImmutable::createFromInterface($model->date),
+            'currentTier'       => (int) $model->current_tier,
+            'status'            => ViolationStatusEnum::from($model->status),
+            'deductionAmount'   => $model->deduction_amount ? (float) $model->deduction_amount : null,
+            'createdAt'         => $model->created_at->toDateTimeImmutable(),
+            'approvedBy'        => $model->approved_by ? UserId::fromString($model->approved_by) : null,
+            'approvedAt'        => $model->approved_at ? DateTimeImmutable::createFromInterface($model->approved_at) : null,
         ];
 
         foreach ($properties as $field => $value) {

@@ -7,8 +7,8 @@ namespace Modules\EventRoleAssignment\Infrastructure\Persistence;
 use Modules\EventRoleAssignment\Domain\EventRoleAssignment;
 use Modules\EventRoleAssignment\Domain\ValueObject\AssignmentId;
 use Modules\Event\Domain\ValueObject\EventId;
-use Modules\Role\Domain\ValueObject\RoleId;
 use Modules\User\Domain\ValueObject\UserId;
+use Modules\Role\Domain\ValueObject\RoleId;
 use Modules\EventRoleAssignment\Infrastructure\Persistence\Eloquent\EventRoleAssignmentModel;
 
 final class EventRoleAssignmentReflector
@@ -19,10 +19,10 @@ final class EventRoleAssignmentReflector
         $assignment = $reflection->newInstanceWithoutConstructor();
 
         $properties = [
-            'uuid' => AssignmentId::fromString($model->id),
-            'eventId' => EventId::fromString($model->event_id),
-            'userId' => UserId::fromString($model->user_id),
-            'roleId' => RoleId::fromString($model->role_id),
+            'uuid'      => AssignmentId::fromString($model->id),
+            'eventId'   => EventId::fromString($model->event_id),
+            'userId'    => UserId::fromString($model->user_id),
+            'roleId'    => RoleId::fromString($model->role_id),
         ];
 
         foreach ($properties as $field => $value) {

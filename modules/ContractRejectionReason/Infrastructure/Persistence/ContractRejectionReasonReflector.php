@@ -17,9 +17,9 @@ final class ContractRejectionReasonReflector
         $reason = $reflection->newInstanceWithoutConstructor();
 
         $properties = [
-            'uuid' => ContractRejectionReasonId::fromString($model->id),
-            'reason' => TranslatableText::fromArray($model->reason),
-            'isActive' => $model->is_active,
+            'uuid'      => ContractRejectionReasonId::fromString($model->id),
+            'reason'    => TranslatableText::fromArray($model->reason),
+            'isActive'  => (bool) $model->is_active,
         ];
 
         foreach ($properties as $field => $value) {

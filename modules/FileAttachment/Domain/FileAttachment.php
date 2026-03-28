@@ -6,30 +6,32 @@ namespace Modules\FileAttachment\Domain;
 
 use Modules\Shared\Domain\AggregateRoot;
 use Modules\Shared\Domain\Identity;
-use Modules\User\Domain\ValueObject\UserId;
 use Modules\FileAttachment\Domain\ValueObject\AttachmentId;
 
 final class FileAttachment extends AggregateRoot
 {
-    public function __construct(
+    private function __construct(
         public readonly AttachmentId $uuid,
-        public readonly string $originalName,
-        public readonly string $storagePath,
-        public readonly string $mimeType,
-        public readonly int $size,
-        public readonly UserId $uploaderId
-    ) {
-    }
+        public readonly string $attachableId,
+        public readonly string $attachableType,
+        public readonly string $filePath,
+        public readonly string $fileName,
+        public readonly string $fileType,
+        public readonly int $fileSize,
+        public readonly string $collection,
+    ) {}
 
     public static function create(
         AttachmentId $uuid,
-        string $originalName,
-        string $storagePath,
-        string $mimeType,
-        int $size,
-        UserId $uploaderId
+        string $attachableId,
+        string $attachableType,
+        string $filePath,
+        string $fileName,
+        string $fileType,
+        int $fileSize,
+        string $collection = 'default',
     ): self {
-        return new self($uuid, $originalName, $storagePath, $mimeType, $size, $uploaderId);
+        return new self($uuid, $attachableId, $attachableType, $filePath, $fileName, $fileType, $fileSize, $collection);
     }
 
     public function id(): Identity

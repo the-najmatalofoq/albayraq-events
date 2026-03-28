@@ -7,39 +7,69 @@ namespace Modules\Event\Infrastructure\Persistence\Eloquent;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Modules\User\Infrastructure\Persistence\Eloquent\UserModel;
+use Modules\EventStaffingPosition\Infrastructure\Persistence\Eloquent\EventStaffingPositionModel;
+use Modules\EventStaffingGroup\Infrastructure\Persistence\Eloquent\EventStaffingGroupModel;
+use Modules\EventParticipation\Infrastructure\Persistence\Eloquent\EventParticipationModel;
 
 final class EventModel extends Model
 {
     use HasUuids, SoftDeletes;
 
     protected $table = 'events';
-    protected $keyType = 'string';
     public $incrementing = false;
+    protected $keyType = 'string';
 
     protected $fillable = [
-        'id',
         'name',
-        'slug',
         'description',
-        'type',
-        'start_date',
-        'end_date',
         'latitude',
         'longitude',
-        'price_amount',
-        'price_currency',
+        'geofence_radius',
+        'address',
+        'start_date',
+        'end_date',
+        'daily_start_time',
+        'daily_end_time',
+        'employment_terms',
         'status',
-        'banner_id',
+        'created_by',
     ];
 
-    protected $casts = [
-        'name' => 'array',
-        'description' => 'array',
-        'start_date' => 'immutable_datetime',
-        'end_date' => 'immutable_datetime',
-        'latitude' => 'float',
-        'longitude' => 'float',
-        'price_amount' => 'integer',
-        'status' => 'string',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'name' => 'array',
+            'description' => 'array',
+            'address' => 'array',
+            'employment_terms' => 'array',
+            'latitude' => 'float',
+            'longitude' => 'float',
+            'geofence_radius' => 'integer',
+            'start_date' => 'date',
+            'end_date' => 'date',
+        ];
+    }
+
+    public function creator(): BelongsTo
+    {
+        return $this->belongsTo(UserModel::class, 'created_by');
+    }
+
+    public function staffingPositions(): HasMany
+    {
+        return $this->hasMany(EventStaffingPositionModel::class, 'event_id');
+    }
+
+    public function staffingGroups(): HasMany
+    {
+        return $this->hasMany(EventStaffingGroupModel::class, 'event_id');
+    }
+
+    public function participations(): HasMany
+    {
+        return $this->hasMany(EventParticipationModel::class, 'event_id');
+    }
 }

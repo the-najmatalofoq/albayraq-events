@@ -6,26 +6,41 @@ namespace Modules\EventStaffingGroup\Infrastructure\Persistence\Eloquent;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Modules\Event\Infrastructure\Persistence\Eloquent\EventModel;
+use Modules\EventParticipation\Infrastructure\Persistence\Eloquent\EventParticipationModel;
 
 final class EventStaffingGroupModel extends Model
 {
     use HasUuids;
 
     protected $table = 'event_staffing_groups';
-    protected $keyType = 'string';
     public $incrementing = false;
+    protected $keyType = 'string';
 
     protected $fillable = [
-        'id',
         'event_id',
         'name',
-        'leader_id',
         'color',
-        'is_active',
+        'is_locked',
     ];
 
-    protected $casts = [
-        'name' => 'array',
-        'is_active' => 'boolean',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'name' => 'array',
+            'is_locked' => 'boolean',
+        ];
+    }
+
+    public function event(): BelongsTo
+    {
+        return $this->belongsTo(EventModel::class, 'event_id');
+    }
+
+    public function participations(): HasMany
+    {
+        return $this->hasMany(EventParticipationModel::class, 'group_id');
+    }
 }

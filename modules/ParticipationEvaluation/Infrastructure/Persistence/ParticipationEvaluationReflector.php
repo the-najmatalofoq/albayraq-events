@@ -6,10 +6,10 @@ namespace Modules\ParticipationEvaluation\Infrastructure\Persistence;
 
 use Modules\ParticipationEvaluation\Domain\ParticipationEvaluation;
 use Modules\ParticipationEvaluation\Domain\ValueObject\EvaluationId;
-use Modules\EventParticipation\Domain\ValueObject\ParticipationId;
 use Modules\User\Domain\ValueObject\UserId;
-use Modules\Shared\Domain\ValueObject\TranslatableText;
+use Modules\EventParticipation\Domain\ValueObject\ParticipationId;
 use Modules\ParticipationEvaluation\Infrastructure\Persistence\Eloquent\ParticipationEvaluationModel;
+use DateTimeImmutable;
 
 final class ParticipationEvaluationReflector
 {
@@ -19,12 +19,16 @@ final class ParticipationEvaluationReflector
         $evaluation = $reflection->newInstanceWithoutConstructor();
 
         $properties = [
-            'uuid' => EvaluationId::fromString($model->id),
-            'participationId' => ParticipationId::fromString($model->event_participation_id),
-            'rating' => $model->rating,
-            'feedback' => $model->feedback ? TranslatableText::fromArray($model->feedback) : null,
-            'evaluatedBy' => UserId::fromString($model->evaluated_by),
-            'createdAt' => \DateTimeImmutable::createFromMutable($model->created_at),
+            'uuid'              => EvaluationId::fromString($model->id),
+            'participationId'   => ParticipationId::fromString($model->event_participation_id),
+            'evaluatorId'       => UserId::fromString($model->evaluator_id),
+            'date'              => DateTimeImmutable::createFromInterface($model->date),
+            'score'             => (float) $model->score,
+            'notes'             => $model->notes,
+            'isLocked'          => (bool) $model->is_locked,
+            'lockedAt'          => $model->locked_at ? DateTimeImmutable::createFromInterface($model->locked_at) : null,
+            'createdAt'         => $model->created_at->toDateTimeImmutable(),
+            'updatedAt'         => $model->updated_at?->toDateTimeImmutable(),
         ];
 
         foreach ($properties as $field => $value) {

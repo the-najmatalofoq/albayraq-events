@@ -12,18 +12,20 @@ final class ReportTypeModel extends Model
     use HasUuids;
 
     protected $table = 'report_types';
-    protected $keyType = 'string';
     public $incrementing = false;
+    protected $keyType = 'string';
 
     protected $fillable = [
-        'id',
+        'slug',
         'name',
-        'code',
         'is_active',
     ];
 
-    protected $casts = [
-        'name' => 'array',
-        'is_active' => 'boolean',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'name' => 'array',
+            'is_active' => 'boolean',
+        ];
+    }
 }

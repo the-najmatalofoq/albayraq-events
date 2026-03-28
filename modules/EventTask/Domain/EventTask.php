@@ -10,7 +10,7 @@ use Modules\Shared\Domain\ValueObject\TranslatableText;
 use Modules\Event\Domain\ValueObject\EventId;
 use Modules\EventStaffingGroup\Domain\ValueObject\GroupId;
 use Modules\EventTask\Domain\ValueObject\TaskId;
-use Modules\EventTask\Domain\ValueObject\TaskStatusEnum;
+use Modules\EventTask\Domain\Enum\TaskStatusEnum;
 use Modules\User\Domain\ValueObject\UserId;
 
 final class EventTask extends AggregateRoot
@@ -19,7 +19,7 @@ final class EventTask extends AggregateRoot
         public readonly TaskId $uuid,
         public readonly EventId $eventId,
         public private(set) TranslatableText $title,
-        public private(set) TaskStatusEnum $status = TaskStatusEnum::TODO,
+        public private(set) TaskStatusEnum $status = TaskStatusEnum::PENDING,
         public private(set) ?TranslatableText $description = null,
         public private(set) ?GroupId $groupId = null,
         public private(set) ?UserId $assignedTo = null,
@@ -33,7 +33,7 @@ final class EventTask extends AggregateRoot
         EventId $eventId,
         TranslatableText $title,
         UserId $createdBy,
-        TaskStatusEnum $status = TaskStatusEnum::TODO,
+        TaskStatusEnum $status = TaskStatusEnum::PENDING,
         ?TranslatableText $description = null,
         ?GroupId $groupId = null,
         ?UserId $assignedTo = null,
