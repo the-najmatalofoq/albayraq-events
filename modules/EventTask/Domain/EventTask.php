@@ -9,9 +9,9 @@ use Modules\Shared\Domain\Identity;
 use Modules\Shared\Domain\ValueObject\TranslatableText;
 use Modules\Event\Domain\ValueObject\EventId;
 use Modules\EventStaffingGroup\Domain\ValueObject\GroupId;
-use Modules\IAM\Domain\ValueObject\UserId;
 use Modules\EventTask\Domain\ValueObject\TaskId;
-use Modules\EventTask\Domain\ValueObject\TaskStatus;
+use Modules\EventTask\Domain\ValueObject\TaskStatusEnum;
+use Modules\User\Domain\ValueObject\UserId;
 
 final class EventTask extends AggregateRoot
 {
@@ -19,7 +19,7 @@ final class EventTask extends AggregateRoot
         public readonly TaskId $uuid,
         public readonly EventId $eventId,
         public private(set) TranslatableText $title,
-        public private(set) TaskStatus $status = TaskStatus::TODO,
+        public private(set) TaskStatusEnum $status = TaskStatusEnum::TODO,
         public private(set) ?TranslatableText $description = null,
         public private(set) ?GroupId $groupId = null,
         public private(set) ?UserId $assignedTo = null,
@@ -33,7 +33,7 @@ final class EventTask extends AggregateRoot
         EventId $eventId,
         TranslatableText $title,
         UserId $createdBy,
-        TaskStatus $status = TaskStatus::TODO,
+        TaskStatusEnum $status = TaskStatusEnum::TODO,
         ?TranslatableText $description = null,
         ?GroupId $groupId = null,
         ?UserId $assignedTo = null,
@@ -56,7 +56,7 @@ final class EventTask extends AggregateRoot
         $this->dueAt = $dueAt;
     }
 
-    public function changeStatus(TaskStatus $status): void
+    public function changeStatus(TaskStatusEnum $status): void
     {
         $this->status = $status;
     }

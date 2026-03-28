@@ -1,10 +1,10 @@
 <?php
-// modules/EventAssetCustody/Domain/ValueObject/CustodyStatus.php
+// modules/EventAssetCustody/Domain/ValueObject/CustodyStatusEnum.php
 declare(strict_types=1);
 
 namespace Modules\EventAssetCustody\Domain\ValueObject;
 
-enum CustodyStatus: string
+enum CustodyStatusEnum: string
 {
     case HANDED_OVER = 'handed_over';
     case RETURNED = 'returned';

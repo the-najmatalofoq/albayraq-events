@@ -8,7 +8,7 @@ use Modules\ParticipationViolation\Domain\ParticipationViolation;
 use Modules\ParticipationViolation\Domain\ValueObject\ViolationId;
 use Modules\ViolationType\Domain\ValueObject\ViolationTypeId;
 use Modules\EventParticipation\Domain\ValueObject\ParticipationId;
-use Modules\IAM\Domain\ValueObject\UserId;
+use Modules\User\Domain\ValueObject\UserId;
 use Modules\Shared\Domain\ValueObject\TranslatableText;
 use Modules\ParticipationViolation\Infrastructure\Persistence\Eloquent\ParticipationViolationModel;
 

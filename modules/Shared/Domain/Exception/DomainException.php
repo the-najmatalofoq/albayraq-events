@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Modules\Shared\Domain\Exception;
 
-use Modules\Shared\Domain\Enum\ErrorCode;
+use Modules\Shared\Domain\Enum\ErrorCodeEnum;
 
 abstract class DomainException extends \Exception
 {
-    abstract public function getErrorCode(): ErrorCode;
+    abstract public function getErrorCode(): ErrorCodeEnum;
 
     public function getStatusCode(): int
     {

@@ -7,7 +7,7 @@ namespace Modules\EventStaffingGroup\Infrastructure\Persistence;
 use Modules\EventStaffingGroup\Domain\EventStaffingGroup;
 use Modules\EventStaffingGroup\Domain\ValueObject\GroupId;
 use Modules\Event\Domain\ValueObject\EventId;
-use Modules\IAM\Domain\ValueObject\UserId;
+use Modules\User\Domain\ValueObject\UserId;
 use Modules\Shared\Domain\ValueObject\TranslatableText;
 use Modules\Shared\Domain\ValueObject\HexColor;
 use Modules\EventStaffingGroup\Infrastructure\Persistence\Eloquent\EventStaffingGroupModel;

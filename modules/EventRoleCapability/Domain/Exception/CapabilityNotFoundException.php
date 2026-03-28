@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Modules\EventRoleCapability\Domain\Exception;
 
 use Modules\Shared\Domain\Exception\DomainException;
-use Modules\Shared\Domain\Enum\ErrorCode;
+use Modules\Shared\Domain\Enum\ErrorCodeEnum;
 use Modules\EventRoleCapability\Domain\ValueObject\CapabilityId;
 
 final class CapabilityNotFoundException extends DomainException
@@ -15,8 +15,8 @@ final class CapabilityNotFoundException extends DomainException
         return new self("Capability with ID '{$id->value}' not found.");
     }
 
-    public function getErrorCode(): ErrorCode
+    public function getErrorCode(): ErrorCodeEnum
     {
-        return ErrorCode::NOT_FOUND;
+        return ErrorCodeEnum::NOT_FOUND;
     }
 }

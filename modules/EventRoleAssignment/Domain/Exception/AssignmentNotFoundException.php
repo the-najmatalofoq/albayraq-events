@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Modules\EventRoleAssignment\Domain\Exception;
 
 use Modules\Shared\Domain\Exception\DomainException;
-use Modules\Shared\Domain\Enum\ErrorCode;
+use Modules\Shared\Domain\Enum\ErrorCodeEnum;
 use Modules\EventRoleAssignment\Domain\ValueObject\AssignmentId;
 
 final class AssignmentNotFoundException extends DomainException
@@ -15,8 +15,8 @@ final class AssignmentNotFoundException extends DomainException
         return new self("Role assignment with ID '{$id->value}' not found.");
     }
 
-    public function getErrorCode(): ErrorCode
+    public function getErrorCode(): ErrorCodeEnum
     {
-        return ErrorCode::NOT_FOUND;
+        return ErrorCodeEnum::NOT_FOUND;
     }
 }

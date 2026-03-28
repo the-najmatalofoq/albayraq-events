@@ -9,8 +9,8 @@ use Modules\Shared\Domain\Identity;
 use Modules\Shared\Domain\ValueObject\GeoPoint;
 use Modules\EventParticipation\Domain\ValueObject\ParticipationId;
 use Modules\EventAttendance\Domain\ValueObject\AttendanceId;
-use Modules\EventAttendance\Domain\ValueObject\AttendanceMethod;
-use Modules\IAM\Domain\ValueObject\UserId;
+use Modules\EventAttendance\Domain\ValueObject\AttendanceMethodEnum;
+use Modules\User\Domain\ValueObject\UserId;
 
 final class EventAttendance extends AggregateRoot
 {
@@ -22,7 +22,7 @@ final class EventAttendance extends AggregateRoot
         public private(set) ?\DateTimeImmutable $checkOutAt = null,
         public private(set) ?GeoPoint $checkInLocation = null,
         public private(set) ?GeoPoint $checkOutLocation = null,
-        public private(set) AttendanceMethod $method = AttendanceMethod::APP,
+        public private(set) AttendanceMethodEnum $method = AttendanceMethodEnum::APP,
         public private(set) ?UserId $verifiedBy = null
     ) {
     }
@@ -32,7 +32,7 @@ final class EventAttendance extends AggregateRoot
         ParticipationId $participationId,
         \DateTimeImmutable $checkInAt,
         ?GeoPoint $location = null,
-        AttendanceMethod $method = AttendanceMethod::APP
+        AttendanceMethodEnum $method = AttendanceMethodEnum::APP
     ): self {
         return new self(
             $uuid,

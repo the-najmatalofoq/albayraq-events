@@ -7,19 +7,18 @@ namespace Modules\EventAnnouncement\Infrastructure\Persistence\Eloquent;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Spatie\Translatable\HasTranslations;
+use Modules\Event\Infrastructure\Persistence\Eloquent\EventModel;
+use Modules\User\Infrastructure\Persistence\Eloquent\UserModel;
 
 final class EventAnnouncementModel extends Model
 {
-    use HasUuids, HasTranslations;
+    use HasUuids;
 
     protected $table = 'event_announcements';
 
     protected $keyType = 'string';
 
     public $incrementing = false;
-
-    public array $translatable = ['title', 'body'];
 
     protected $fillable = [
         'event_id',
@@ -43,7 +42,7 @@ final class EventAnnouncementModel extends Model
     public function event(): BelongsTo
     {
         return $this->belongsTo(
-            \Modules\Event\Infrastructure\Persistence\Eloquent\EventModel::class,
+            EventModel::class,
             'event_id',
         );
     }
@@ -51,7 +50,7 @@ final class EventAnnouncementModel extends Model
     public function sender(): BelongsTo
     {
         return $this->belongsTo(
-            \Modules\User\Infrastructure\Persistence\Eloquent\UserModel::class,
+            UserModel::class,
             'sender_id',
         );
     }

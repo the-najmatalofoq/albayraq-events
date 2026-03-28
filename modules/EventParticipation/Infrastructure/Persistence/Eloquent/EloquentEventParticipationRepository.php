@@ -6,7 +6,7 @@ namespace Modules\EventParticipation\Infrastructure\Persistence\Eloquent;
 
 use Modules\EventParticipation\Domain\EventParticipation;
 use Modules\EventParticipation\Domain\ValueObject\ParticipationId;
-use Modules\IAM\Domain\ValueObject\UserId;
+use Modules\User\Domain\ValueObject\UserId;
 use Modules\Event\Domain\ValueObject\EventId;
 use Modules\EventParticipation\Domain\Repository\EventParticipationRepositoryInterface;
 use Modules\EventParticipation\Infrastructure\Persistence\EventParticipationReflector;

@@ -1,10 +1,10 @@
 <?php
-// modules/EventAttendance/Domain/ValueObject/AttendanceMethod.php
+// modules/EventAttendance/Domain/ValueObject/AttendanceMethodEnum.php
 declare(strict_types=1);
 
 namespace Modules\EventAttendance\Domain\ValueObject;
 
-enum AttendanceMethod: string
+enum AttendanceMethodEnum: string
 {
     case APP = 'app';
     case QR = 'qr';

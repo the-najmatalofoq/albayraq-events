@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace Modules\IAM\Domain\Service;
 
-use Modules\IAM\Domain\ValueObject\HashedPassword;
+use Modules\User\Domain\ValueObject\HashedPassword;
+
 
 interface PasswordHasher
 {

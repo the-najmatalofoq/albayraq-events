@@ -6,7 +6,7 @@ namespace Modules\FileAttachment\Domain;
 
 use Modules\Shared\Domain\AggregateRoot;
 use Modules\Shared\Domain\Identity;
-use Modules\IAM\Domain\ValueObject\UserId;
+use Modules\User\Domain\ValueObject\UserId;
 use Modules\FileAttachment\Domain\ValueObject\AttachmentId;
 
 final class FileAttachment extends AggregateRoot
@@ -18,7 +18,8 @@ final class FileAttachment extends AggregateRoot
         public readonly string $mimeType,
         public readonly int $size,
         public readonly UserId $uploaderId
-    ) {}
+    ) {
+    }
 
     public static function create(
         AttachmentId $uuid,

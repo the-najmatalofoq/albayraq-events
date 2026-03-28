@@ -11,7 +11,7 @@ use Modules\FileAttachment\Domain\FileAttachment;
 use Modules\FileAttachment\Presentation\Http\Presenter\FileAttachmentPresenter;
 use Modules\Shared\Presentation\Http\JsonResponder;
 use Illuminate\Support\Facades\Storage;
-use Modules\IAM\Domain\ValueObject\UserId;
+use Modules\User\Domain\ValueObject\UserId;
 
 final readonly class UploadFileAction
 {

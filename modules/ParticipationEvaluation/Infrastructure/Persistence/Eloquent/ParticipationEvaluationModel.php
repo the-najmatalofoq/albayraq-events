@@ -7,6 +7,8 @@ namespace Modules\ParticipationEvaluation\Infrastructure\Persistence\Eloquent;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Modules\EventParticipation\Infrastructure\Persistence\Eloquent\EventParticipationModel;
+use Modules\User\Infrastructure\Persistence\Eloquent\UserModel;
 
 final class ParticipationEvaluationModel extends Model
 {
@@ -41,7 +43,7 @@ final class ParticipationEvaluationModel extends Model
     public function participation(): BelongsTo
     {
         return $this->belongsTo(
-            \Modules\EventParticipation\Infrastructure\Persistence\Eloquent\EventParticipationModel::class,
+            EventParticipationModel::class,
             'event_participation_id',
         );
     }
@@ -49,7 +51,7 @@ final class ParticipationEvaluationModel extends Model
     public function evaluator(): BelongsTo
     {
         return $this->belongsTo(
-            \Modules\User\Infrastructure\Persistence\Eloquent\UserModel::class,
+            UserModel::class,
             'evaluator_id',
         );
     }

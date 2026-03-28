@@ -7,7 +7,7 @@ namespace Modules\User\Domain;
 use Modules\Shared\Domain\AggregateRoot;
 use Modules\Shared\Domain\Identity;
 use Modules\Shared\Domain\ValueObject\TranslatableText;
-use Modules\IAM\Domain\ValueObject\UserId;
+use Modules\User\Domain\ValueObject\UserId;
 use Modules\User\Domain\ValueObject\UserProfileId;
 
 final class UserProfile extends AggregateRoot
@@ -20,7 +20,8 @@ final class UserProfile extends AggregateRoot
         public private(set) TranslatableText $department,
         public private(set) ?\DateTimeImmutable $hiringDate = null,
         public private(set) bool $isActive = true
-    ) {}
+    ) {
+    }
 
     public static function create(
         UserProfileId $uuid,

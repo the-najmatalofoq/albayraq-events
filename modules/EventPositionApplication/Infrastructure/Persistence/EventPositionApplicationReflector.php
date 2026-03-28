@@ -6,8 +6,8 @@ namespace Modules\EventPositionApplication\Infrastructure\Persistence;
 
 use Modules\EventPositionApplication\Domain\EventPositionApplication;
 use Modules\EventPositionApplication\Domain\ValueObject\ApplicationId;
-use Modules\EventPositionApplication\Domain\ValueObject\ApplicationStatus;
-use Modules\IAM\Domain\ValueObject\UserId;
+use Modules\EventPositionApplication\Domain\ValueObject\ApplicationStatusEnum;
+use Modules\User\Domain\ValueObject\UserId;
 use Modules\EventStaffingPosition\Domain\ValueObject\PositionId;
 use Modules\EventPositionApplication\Infrastructure\Persistence\Eloquent\EventPositionApplicationModel;
 
@@ -22,7 +22,7 @@ final class EventPositionApplicationReflector
             'uuid' => ApplicationId::fromString($model->id),
             'userId' => UserId::fromString($model->user_id),
             'positionId' => PositionId::fromString($model->position_id),
-            'status' => ApplicationStatus::from($model->status),
+            'status' => ApplicationStatusEnum::from($model->status),
             'rankingScore' => (float) $model->ranking_score,
             'appliedAt' => \DateTimeImmutable::createFromMutable($model->applied_at),
             'reviewedAt' => $model->reviewed_at ? \DateTimeImmutable::createFromMutable($model->reviewed_at) : null,

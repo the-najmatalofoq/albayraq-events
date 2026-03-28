@@ -1,10 +1,10 @@
 <?php
-// modules/EventTask/Domain/ValueObject/TaskStatus.php
+// modules/EventTask/Domain/ValueObject/TaskStatusEnum.php
 declare(strict_types=1);
 
 namespace Modules\EventTask\Domain\ValueObject;
 
-enum TaskStatus: string
+enum TaskStatusEnum: string
 {
     case TODO = 'todo';
     case IN_PROGRESS = 'in_progress';
@@ -16,7 +16,7 @@ enum TaskStatus: string
         return match ($this) {
             self::TODO => 'To Do',
             self::IN_PROGRESS => 'In Progress',
-            self::DONE => 'Done',
+            self::DONE => 'Completed',
             self::CANCELLED => 'Cancelled',
         };
     }

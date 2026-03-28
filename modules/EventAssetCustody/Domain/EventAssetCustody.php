@@ -9,8 +9,8 @@ use Modules\Shared\Domain\Identity;
 use Modules\Shared\Domain\ValueObject\TranslatableText;
 use Modules\EventParticipation\Domain\ValueObject\ParticipationId;
 use Modules\EventAssetCustody\Domain\ValueObject\CustodyId;
-use Modules\EventAssetCustody\Domain\ValueObject\CustodyStatus;
-use Modules\IAM\Domain\ValueObject\UserId;
+use Modules\EventAssetCustody\Domain\ValueObject\CustodyStatusEnum;
+use Modules\User\Domain\ValueObject\UserId;
 
 final class EventAssetCustody extends AggregateRoot
 {
@@ -18,7 +18,7 @@ final class EventAssetCustody extends AggregateRoot
         public readonly CustodyId $uuid,
         public readonly ParticipationId $participationId,
         public private(set) TranslatableText $itemName,
-        public private(set) CustodyStatus $status = CustodyStatus::HANDED_OVER,
+        public private(set) CustodyStatusEnum $status = CustodyStatusEnum::HANDED_OVER,
         public private(set) ?TranslatableText $description = null,
         public readonly \DateTimeImmutable $handedAt = new \DateTimeImmutable(),
         public private(set) ?\DateTimeImmutable $returnedAt = null,
@@ -31,7 +31,7 @@ final class EventAssetCustody extends AggregateRoot
         ParticipationId $participationId,
         TranslatableText $itemName,
         UserId $handedBy,
-        CustodyStatus $status = CustodyStatus::HANDED_OVER,
+        CustodyStatusEnum $status = CustodyStatusEnum::HANDED_OVER,
         ?TranslatableText $description = null
     ): self {
         return new self($uuid, $participationId, $itemName, $status, $description, new \DateTimeImmutable(), null, handedBy: $handedBy);
@@ -39,13 +39,13 @@ final class EventAssetCustody extends AggregateRoot
 
     public function returnAsset(): void
     {
-        $this->status = CustodyStatus::RETURNED;
+        $this->status = CustodyStatusEnum::RETURNED;
         $this->returnedAt = new \DateTimeImmutable();
     }
 
     public function markAsLost(): void
     {
-        $this->status = CustodyStatus::LOST;
+        $this->status = CustodyStatusEnum::LOST;
     }
 
     public function id(): Identity

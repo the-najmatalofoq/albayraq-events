@@ -6,7 +6,7 @@ namespace Modules\User\Domain\Repository;
 
 use Modules\User\Domain\UserProfile;
 use Modules\User\Domain\ValueObject\UserProfileId;
-use Modules\IAM\Domain\ValueObject\UserId;
+use Modules\User\Domain\ValueObject\UserId;
 
 interface UserProfileRepositoryInterface
 {

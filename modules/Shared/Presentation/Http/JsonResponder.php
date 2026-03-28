@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Modules\Shared\Presentation\Http;
 
 use Modules\Shared\Domain\Service\TranslatorInterface;
-use Modules\Shared\Domain\Enum\ErrorCode;
+use Modules\Shared\Domain\Enum\ErrorCodeEnum;
 use Nyholm\Psr7\Response;
 use Psr\Http\Message\ResponseInterface;
 
@@ -74,7 +74,7 @@ final readonly class JsonResponder
     public function validationError(array $errors, string $messageKey = 'messages.errors.validation_failed'): ResponseInterface
     {
         return $this->error(
-            errorCode: ErrorCode::VALIDATION_FAILED->value,
+            errorCode: ErrorCodeEnum::VALIDATION_FAILED->value,
             status: 422,
             messageKey: $messageKey,
             errors: $errors

@@ -6,7 +6,7 @@ namespace Modules\EventPositionApplication\Domain\Repository;
 
 use Modules\EventPositionApplication\Domain\EventPositionApplication;
 use Modules\EventPositionApplication\Domain\ValueObject\ApplicationId;
-use Modules\IAM\Domain\ValueObject\UserId;
+use Modules\User\Domain\ValueObject\UserId;
 use Modules\EventStaffingPosition\Domain\ValueObject\PositionId;
 
 interface EventPositionApplicationRepositoryInterface

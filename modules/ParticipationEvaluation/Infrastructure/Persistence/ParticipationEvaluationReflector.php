@@ -7,7 +7,7 @@ namespace Modules\ParticipationEvaluation\Infrastructure\Persistence;
 use Modules\ParticipationEvaluation\Domain\ParticipationEvaluation;
 use Modules\ParticipationEvaluation\Domain\ValueObject\EvaluationId;
 use Modules\EventParticipation\Domain\ValueObject\ParticipationId;
-use Modules\IAM\Domain\ValueObject\UserId;
+use Modules\User\Domain\ValueObject\UserId;
 use Modules\Shared\Domain\ValueObject\TranslatableText;
 use Modules\ParticipationEvaluation\Infrastructure\Persistence\Eloquent\ParticipationEvaluationModel;
 

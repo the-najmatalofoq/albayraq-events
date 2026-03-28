@@ -6,7 +6,7 @@ namespace Modules\IAM\Domain\Exception;
 
 use Modules\Shared\Domain\Exception\DomainException;
 
-use Modules\Shared\Domain\Enum\ErrorCode;
+use Modules\Shared\Domain\Enum\ErrorCodeEnum;
 
 final class UserAlreadyExistsException extends DomainException
 {
@@ -20,9 +20,9 @@ final class UserAlreadyExistsException extends DomainException
         return new self("A user with phone '{$phone}' already exists.");
     }
 
-    public function getErrorCode(): ErrorCode
+    public function getErrorCode(): ErrorCodeEnum
     {
-        return ErrorCode::USER_ALREADY_EXISTS;
+        return ErrorCodeEnum::USER_ALREADY_EXISTS;
     }
 }
 

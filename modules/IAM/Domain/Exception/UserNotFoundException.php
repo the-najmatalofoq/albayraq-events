@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Modules\IAM\Domain\Exception;
 
 use Modules\Shared\Domain\Exception\DomainException;
-use Modules\Shared\Domain\Enum\ErrorCode;
+use Modules\Shared\Domain\Enum\ErrorCodeEnum;
 
 final class UserNotFoundException extends DomainException
 {
@@ -14,9 +14,9 @@ final class UserNotFoundException extends DomainException
         return new self("User with email '{$email}' not found.");
     }
 
-    public function getErrorCode(): ErrorCode
+    public function getErrorCode(): ErrorCodeEnum
     {
-        return ErrorCode::NOT_FOUND;
+        return ErrorCodeEnum::NOT_FOUND;
     }
 }
 

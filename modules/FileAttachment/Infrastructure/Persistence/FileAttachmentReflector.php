@@ -6,7 +6,7 @@ namespace Modules\FileAttachment\Infrastructure\Persistence;
 
 use Modules\FileAttachment\Domain\FileAttachment;
 use Modules\FileAttachment\Domain\ValueObject\AttachmentId;
-use Modules\IAM\Domain\ValueObject\UserId;
+use Modules\User\Domain\ValueObject\UserId;
 use Modules\FileAttachment\Infrastructure\Persistence\Eloquent\FileAttachmentModel;
 
 final class FileAttachmentReflector

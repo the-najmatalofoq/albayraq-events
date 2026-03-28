@@ -6,10 +6,10 @@ namespace Modules\EventAttendance\Infrastructure\Persistence;
 
 use Modules\EventAttendance\Domain\EventAttendance;
 use Modules\EventAttendance\Domain\ValueObject\AttendanceId;
-use Modules\EventAttendance\Domain\ValueObject\AttendanceMethod;
+use Modules\EventAttendance\Domain\ValueObject\AttendanceMethodEnum;
 use Modules\EventParticipation\Domain\ValueObject\ParticipationId;
 use Modules\Shared\Domain\ValueObject\GeoPoint;
-use Modules\IAM\Domain\ValueObject\UserId;
+use Modules\User\Domain\ValueObject\UserId;
 use Modules\EventAttendance\Infrastructure\Persistence\Eloquent\EventAttendanceModel;
 
 final class EventAttendanceReflector
@@ -31,7 +31,7 @@ final class EventAttendanceReflector
             'checkOutLocation' => ($model->check_out_latitude && $model->check_out_longitude)
                 ? new GeoPoint($model->check_out_latitude, $model->check_out_longitude)
                 : null,
-            'method' => AttendanceMethod::from($model->method),
+            'method' => AttendanceMethodEnum::from($model->method),
             'verifiedBy' => $model->verified_by ? UserId::fromString($model->verified_by) : null,
         ];
 

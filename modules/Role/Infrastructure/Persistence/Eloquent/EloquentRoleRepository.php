@@ -6,49 +6,52 @@ namespace Modules\Role\Infrastructure\Persistence\Eloquent;
 
 use Modules\Role\Domain\Repository\RoleRepository;
 use Modules\Role\Domain\Role;
-use Modules\Role\Domain\Enum\RoleNameEnum;
+use Modules\Role\Domain\Enum\RoleSlugEnum;
 use Modules\Role\Domain\ValueObject\RoleId;
+use Modules\Shared\Domain\ValueObject\TranslatableText;
 
 final class EloquentRoleRepository implements RoleRepository
 {
     public function save(Role $role): void
     {
-        RoleModel::query()->updateOrInsert(
-            ['uuid' => $role->uuid->value],
-            ['name' => $role->name->value],
+        RoleModel::query()->updateOrCreate(
+            ['id' => $role->uuid->value],
+            [
+                'slug' => $role->slug->value,
+                'name' => $role->name->toArray(),
+                'is_global' => $role->isGlobal,
+                'level' => $role->level->value,
+            ]
         );
     }
 
     public function findById(RoleId $id): ?Role
     {
-        $record = RoleModel::where('uuid', $id->value)->first();
+        $record = RoleModel::find($id->value);
 
-        if (! $record) {
-            return null;
-        }
-
-        return Role::create(
-            uuid: RoleId::fromString($record->uuid),
-            name: RoleNameEnum::from($record->name),
-        );
+        return $record ? $this->toDomain($record) : null;
     }
 
-    public function findByName(RoleNameEnum $name): ?Role
+    public function findBySlug(RoleSlugEnum $slug): ?Role
     {
-        $record = RoleModel::where('name', $name->value)->first();
+        $record = RoleModel::where('slug', $slug->value)->first();
 
-        if (! $record) {
-            return null;
-        }
-
-        return Role::create(
-            uuid: RoleId::fromString($record->uuid),
-            name: RoleNameEnum::from($record->name),
-        );
+        return $record ? $this->toDomain($record) : null;
     }
 
     public function nextIdentity(): RoleId
     {
         return RoleId::generate();
+    }
+
+    private function toDomain(RoleModel $record): Role
+    {
+        return Role::create(
+            uuid: RoleId::fromString($record->id),
+            slug: RoleSlugEnum::from($record->slug),
+            name: TranslatableText::fromArray($record->name),
+            isGlobal: $record->is_global,
+            level: $record->level,
+        );
     }
 }

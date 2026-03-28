@@ -7,6 +7,7 @@ namespace Modules\EventParticipationBadge\Infrastructure\Persistence\Eloquent;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Modules\EventParticipation\Infrastructure\Persistence\Eloquent\EventParticipationModel;
 
 final class EventParticipationBadgeModel extends Model
 {
@@ -35,7 +36,7 @@ final class EventParticipationBadgeModel extends Model
     public function participation(): BelongsTo
     {
         return $this->belongsTo(
-            \Modules\EventParticipation\Infrastructure\Persistence\Eloquent\EventParticipationModel::class,
+            EventParticipationModel::class,
             'event_participation_id',
         );
     }

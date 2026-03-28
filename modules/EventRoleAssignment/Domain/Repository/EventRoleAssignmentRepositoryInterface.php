@@ -7,7 +7,7 @@ namespace Modules\EventRoleAssignment\Domain\Repository;
 use Modules\EventRoleAssignment\Domain\EventRoleAssignment;
 use Modules\EventRoleAssignment\Domain\ValueObject\AssignmentId;
 use Modules\Event\Domain\ValueObject\EventId;
-use Modules\IAM\Domain\ValueObject\UserId;
+use Modules\User\Domain\ValueObject\UserId;
 
 interface EventRoleAssignmentRepositoryInterface
 {

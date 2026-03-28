@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Modules\IAM\Infrastructure\Services;
 
 use Illuminate\Support\Facades\Hash;
+use Modules\User\Domain\ValueObject\HashedPassword;
 use Modules\IAM\Domain\Service\PasswordHasher;
-use Modules\IAM\Domain\ValueObject\HashedPassword;
 
 final class BcryptPasswordHasher implements PasswordHasher
 {

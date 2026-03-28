@@ -8,19 +8,19 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Spatie\Translatable\HasTranslations;
+use Modules\ContractAcceptanceStep\Infrastructure\Persistence\Eloquent\ContractAcceptanceStepModel;
+use Modules\ContractRejectionReason\Infrastructure\Persistence\Eloquent\ContractRejectionReasonModel;
+use Modules\EventParticipation\Infrastructure\Persistence\Eloquent\EventParticipationModel;
 
 final class EventContractModel extends Model
 {
-    use HasUuids, HasTranslations;
+    use HasUuids;
 
     protected $table = 'event_contracts';
 
     protected $keyType = 'string';
 
     public $incrementing = false;
-
-    public array $translatable = ['terms'];
 
     protected $fillable = [
         'event_participation_id',
@@ -49,7 +49,7 @@ final class EventContractModel extends Model
     public function participation(): BelongsTo
     {
         return $this->belongsTo(
-            \Modules\EventParticipation\Infrastructure\Persistence\Eloquent\EventParticipationModel::class,
+            EventParticipationModel::class,
             'event_participation_id',
         );
     }
@@ -57,7 +57,7 @@ final class EventContractModel extends Model
     public function rejectionReason(): BelongsTo
     {
         return $this->belongsTo(
-            \Modules\ContractRejectionReason\Infrastructure\Persistence\Eloquent\ContractRejectionReasonModel::class,
+            ContractRejectionReasonModel::class,
             'rejection_reason_id',
         );
     }
@@ -65,7 +65,7 @@ final class EventContractModel extends Model
     public function acceptanceSteps(): HasMany
     {
         return $this->hasMany(
-            \Modules\ContractAcceptanceStep\Infrastructure\Persistence\Eloquent\ContractAcceptanceStepModel::class,
+            ContractAcceptanceStepModel::class,
             'contract_id',
         );
     }

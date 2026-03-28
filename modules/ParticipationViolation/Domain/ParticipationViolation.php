@@ -10,7 +10,7 @@ use Modules\Shared\Domain\ValueObject\TranslatableText;
 use Modules\EventParticipation\Domain\ValueObject\ParticipationId;
 use Modules\ViolationType\Domain\ValueObject\ViolationTypeId;
 use Modules\ParticipationViolation\Domain\ValueObject\ViolationId;
-use Modules\IAM\Domain\ValueObject\UserId;
+use Modules\User\Domain\ValueObject\UserId;
 
 final class ParticipationViolation extends AggregateRoot
 {
@@ -22,7 +22,8 @@ final class ParticipationViolation extends AggregateRoot
         public readonly UserId $issuedBy,
         public readonly \DateTimeImmutable $occurredAt,
         public readonly \DateTimeImmutable $createdAt = new \DateTimeImmutable()
-    ) {}
+    ) {
+    }
 
     public static function create(
         ViolationId $uuid,

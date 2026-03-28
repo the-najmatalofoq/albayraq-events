@@ -7,8 +7,8 @@ namespace Modules\EventRoleAssignment\Infrastructure\Persistence;
 use Modules\EventRoleAssignment\Domain\EventRoleAssignment;
 use Modules\EventRoleAssignment\Domain\ValueObject\AssignmentId;
 use Modules\Event\Domain\ValueObject\EventId;
-use Modules\IAM\Domain\ValueObject\UserId;
-use Modules\IAM\Domain\ValueObject\RoleId;
+use Modules\Role\Domain\ValueObject\RoleId;
+use Modules\User\Domain\ValueObject\UserId;
 use Modules\EventRoleAssignment\Infrastructure\Persistence\Eloquent\EventRoleAssignmentModel;
 
 final class EventRoleAssignmentReflector

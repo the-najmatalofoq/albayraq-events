@@ -9,7 +9,7 @@ use Modules\Shared\Domain\Identity;
 use Modules\Shared\Domain\ValueObject\TranslatableText;
 use Modules\Shared\Domain\ValueObject\HexColor;
 use Modules\Event\Domain\ValueObject\EventId;
-use Modules\IAM\Domain\ValueObject\UserId;
+use Modules\User\Domain\ValueObject\UserId;
 use Modules\EventStaffingGroup\Domain\ValueObject\GroupId;
 
 final class EventStaffingGroup extends AggregateRoot
@@ -21,7 +21,8 @@ final class EventStaffingGroup extends AggregateRoot
         public private(set) UserId $leaderId,
         public private(set) HexColor $color,
         public private(set) bool $isActive = true
-    ) {}
+    ) {
+    }
 
     public static function create(
         GroupId $uuid,

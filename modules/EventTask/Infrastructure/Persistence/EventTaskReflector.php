@@ -6,10 +6,10 @@ namespace Modules\EventTask\Infrastructure\Persistence;
 
 use Modules\EventTask\Domain\EventTask;
 use Modules\EventTask\Domain\ValueObject\TaskId;
-use Modules\EventTask\Domain\ValueObject\TaskStatus;
+use Modules\EventTask\Domain\ValueObject\TaskStatusEnum;
 use Modules\Event\Domain\ValueObject\EventId;
 use Modules\EventStaffingGroup\Domain\ValueObject\GroupId;
-use Modules\IAM\Domain\ValueObject\UserId;
+use Modules\User\Domain\ValueObject\UserId;
 use Modules\Shared\Domain\ValueObject\TranslatableText;
 use Modules\EventTask\Infrastructure\Persistence\Eloquent\EventTaskModel;
 
@@ -24,7 +24,7 @@ final class EventTaskReflector
             'uuid' => TaskId::fromString($model->id),
             'eventId' => EventId::fromString($model->event_id),
             'title' => TranslatableText::fromArray($model->title),
-            'status' => TaskStatus::from($model->status),
+            'status' => TaskStatusEnum::from($model->status),
             'description' => $model->description ? TranslatableText::fromArray($model->description) : null,
             'groupId' => $model->group_id ? GroupId::fromString($model->group_id) : null,
             'assignedTo' => $model->assigned_to ? UserId::fromString($model->assigned_to) : null,

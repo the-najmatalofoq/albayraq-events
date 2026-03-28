@@ -6,12 +6,12 @@ namespace Modules\EventParticipation\Domain;
 
 use Modules\Shared\Domain\AggregateRoot;
 use Modules\Shared\Domain\Identity;
-use Modules\IAM\Domain\ValueObject\UserId;
+use Modules\User\Domain\ValueObject\UserId;
 use Modules\Event\Domain\ValueObject\EventId;
 use Modules\EventStaffingPosition\Domain\ValueObject\PositionId;
 use Modules\EventStaffingGroup\Domain\ValueObject\GroupId;
 use Modules\EventParticipation\Domain\ValueObject\ParticipationId;
-use Modules\EventParticipation\Domain\ValueObject\ParticipationStatus;
+use Modules\EventParticipation\Domain\ValueObject\ParticipationStatusEnum;
 
 final class EventParticipation extends AggregateRoot
 {
@@ -22,10 +22,11 @@ final class EventParticipation extends AggregateRoot
         public readonly PositionId $positionId,
         public private(set) ?GroupId $groupId = null,
         public private(set) ?string $employeeNumber = null,
-        public private(set) ParticipationStatus $status = ParticipationStatus::ACTIVE,
+        public private(set) ParticipationStatusEnum $status = ParticipationStatusEnum::ACTIVE,
         public readonly \DateTimeImmutable $startedAt = new \DateTimeImmutable(),
         public private(set) ?\DateTimeImmutable $endedAt = null
-    ) {}
+    ) {
+    }
 
     public static function create(
         ParticipationId $uuid,
@@ -34,7 +35,7 @@ final class EventParticipation extends AggregateRoot
         PositionId $positionId,
         ?GroupId $groupId = null,
         ?string $employeeNumber = null,
-        ParticipationStatus $status = ParticipationStatus::ACTIVE
+        ParticipationStatusEnum $status = ParticipationStatusEnum::ACTIVE
     ): self {
         return new self($uuid, $userId, $eventId, $positionId, $groupId, $employeeNumber, $status);
     }
@@ -51,13 +52,13 @@ final class EventParticipation extends AggregateRoot
 
     public function complete(): void
     {
-        $this->status = ParticipationStatus::COMPLETED;
+        $this->status = ParticipationStatusEnum::COMPLETED;
         $this->endedAt = new \DateTimeImmutable();
     }
 
     public function cancel(): void
     {
-        $this->status = ParticipationStatus::CANCELLED;
+        $this->status = ParticipationStatusEnum::CANCELLED;
         $this->endedAt = new \DateTimeImmutable();
     }
 

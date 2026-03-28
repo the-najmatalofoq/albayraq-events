@@ -10,7 +10,7 @@ use Modules\IAM\Domain\Repository\RoleRepository;
 use Modules\IAM\Domain\Service\PasswordHasher;
 use Modules\IAM\Domain\User;
 use Modules\IAM\Domain\Enum\RoleNameEnum;
-use Modules\IAM\Domain\ValueObject\UserId;
+use Modules\User\Domain\ValueObject\UserId;
 use Modules\Shared\Application\EventDispatcher;
 use Modules\Shared\Application\EventDispatchingHandler;
 

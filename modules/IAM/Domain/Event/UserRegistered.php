@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Modules\IAM\Domain\Event;
 
 use DateTimeImmutable;
-use Modules\IAM\Domain\ValueObject\UserId;
+use Modules\User\Domain\ValueObject\UserId;
 use Modules\Shared\Domain\DomainEvent;
 
 final class UserRegistered implements DomainEvent
@@ -13,7 +13,8 @@ final class UserRegistered implements DomainEvent
         public readonly UserId $userId,
         public readonly string $phone,
         public readonly DateTimeImmutable $occurredOn = new DateTimeImmutable,
-    ) {}
+    ) {
+    }
 
     public function occurredOn(): DateTimeImmutable
     {

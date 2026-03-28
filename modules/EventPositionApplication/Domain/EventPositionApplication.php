@@ -6,10 +6,10 @@ namespace Modules\EventPositionApplication\Domain;
 
 use Modules\Shared\Domain\AggregateRoot;
 use Modules\Shared\Domain\Identity;
-use Modules\IAM\Domain\ValueObject\UserId;
+use Modules\User\Domain\ValueObject\UserId;
 use Modules\EventStaffingPosition\Domain\ValueObject\PositionId;
 use Modules\EventPositionApplication\Domain\ValueObject\ApplicationId;
-use Modules\EventPositionApplication\Domain\ValueObject\ApplicationStatus;
+use Modules\EventPositionApplication\Domain\ValueObject\ApplicationStatusEnum;
 
 final class EventPositionApplication extends AggregateRoot
 {
@@ -17,18 +17,19 @@ final class EventPositionApplication extends AggregateRoot
         public readonly ApplicationId $uuid,
         public readonly UserId $userId,
         public readonly PositionId $positionId,
-        public private(set) ApplicationStatus $status,
+        public private(set) ApplicationStatusEnum $status,
         public private(set) float $rankingScore = 0.0,
         public readonly \DateTimeImmutable $appliedAt = new \DateTimeImmutable(),
         public private(set) ?\DateTimeImmutable $reviewedAt = null,
         public private(set) ?UserId $reviewedBy = null
-    ) {}
+    ) {
+    }
 
     public static function create(
         ApplicationId $uuid,
         UserId $userId,
         PositionId $positionId,
-        ApplicationStatus $status = ApplicationStatus::PENDING,
+        ApplicationStatusEnum $status = ApplicationStatusEnum::PENDING,
         float $rankingScore = 0.0
     ): self {
         return new self($uuid, $userId, $positionId, $status, $rankingScore);
@@ -36,21 +37,21 @@ final class EventPositionApplication extends AggregateRoot
 
     public function approve(UserId $reviewerId): void
     {
-        $this->status = ApplicationStatus::APPROVED;
+        $this->status = ApplicationStatusEnum::APPROVED;
         $this->reviewedAt = new \DateTimeImmutable();
         $this->reviewedBy = $reviewerId;
     }
 
     public function reject(UserId $reviewerId): void
     {
-        $this->status = ApplicationStatus::REJECTED;
+        $this->status = ApplicationStatusEnum::REJECTED;
         $this->reviewedAt = new \DateTimeImmutable();
         $this->reviewedBy = $reviewerId;
     }
 
     public function cancel(): void
     {
-        $this->status = ApplicationStatus::CANCELLED;
+        $this->status = ApplicationStatusEnum::CANCELLED;
     }
 
     public function id(): Identity

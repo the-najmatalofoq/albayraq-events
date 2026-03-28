@@ -1,11 +1,10 @@
 <?php
-// modules/EventPositionApplication/Domain/ValueObject/ApplicationStatus.php
+// modules/EventPositionApplication/Domain/ValueObject/ApplicationStatusEnum.php
 declare(strict_types=1);
 
 namespace Modules\EventPositionApplication\Domain\ValueObject;
 
-// todo: use Enum keyword
-enum ApplicationStatus: string
+enum ApplicationStatusEnum: string
 {
     case PENDING = 'pending';
     case APPROVED = 'approved';
@@ -16,9 +15,9 @@ enum ApplicationStatus: string
     {
         return match ($this) {
             self::PENDING => 'Pending Review',
-            self::APPROVED => 'Approved',
-            self::REJECTED => 'Rejected',
-            self::CANCELLED => 'Cancelled',
+            self::APPROVED => 'Application Approved',
+            self::REJECTED => 'Application Rejected',
+            self::CANCELLED => 'Application Cancelled',
         };
     }
 }

@@ -7,6 +7,7 @@ namespace Modules\ContractAcceptanceStep\Infrastructure\Persistence\Eloquent;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Modules\EventContract\Infrastructure\Persistence\Eloquent\EventContractModel;
 
 final class ContractAcceptanceStepModel extends Model
 {
@@ -36,7 +37,7 @@ final class ContractAcceptanceStepModel extends Model
     public function contract(): BelongsTo
     {
         return $this->belongsTo(
-            \Modules\EventContract\Infrastructure\Persistence\Eloquent\EventContractModel::class,
+            EventContractModel::class,
             'contract_id',
         );
     }

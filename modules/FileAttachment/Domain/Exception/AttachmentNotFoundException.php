@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Modules\FileAttachment\Domain\Exception;
 
 use Modules\Shared\Domain\Exception\DomainException;
-use Modules\Shared\Domain\Enum\ErrorCode;
+use Modules\Shared\Domain\Enum\ErrorCodeEnum;
 use Modules\FileAttachment\Domain\ValueObject\AttachmentId;
 
 final class AttachmentNotFoundException extends DomainException
@@ -15,8 +15,8 @@ final class AttachmentNotFoundException extends DomainException
         return new self("Attachment with ID '{$id->value}' not found.");
     }
 
-    public function getErrorCode(): ErrorCode
+    public function getErrorCode(): ErrorCodeEnum
     {
-        return ErrorCode::NOT_FOUND;
+        return ErrorCodeEnum::NOT_FOUND;
     }
 }

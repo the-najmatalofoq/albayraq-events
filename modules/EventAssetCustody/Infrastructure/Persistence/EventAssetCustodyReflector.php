@@ -6,11 +6,11 @@ namespace Modules\EventAssetCustody\Infrastructure\Persistence;
 
 use Modules\EventAssetCustody\Domain\EventAssetCustody;
 use Modules\EventAssetCustody\Domain\ValueObject\CustodyId;
-use Modules\EventAssetCustody\Domain\ValueObject\CustodyStatus;
+use Modules\EventAssetCustody\Domain\ValueObject\CustodyStatusEnum;
 use Modules\EventParticipation\Domain\ValueObject\ParticipationId;
-use Modules\IAM\Domain\ValueObject\UserId;
 use Modules\Shared\Domain\ValueObject\TranslatableText;
 use Modules\EventAssetCustody\Infrastructure\Persistence\Eloquent\EventAssetCustodyModel;
+use Modules\User\Domain\ValueObject\UserId;
 
 final class EventAssetCustodyReflector
 {
@@ -23,7 +23,7 @@ final class EventAssetCustodyReflector
             'uuid' => CustodyId::fromString($model->id),
             'participationId' => ParticipationId::fromString($model->event_participation_id),
             'itemName' => TranslatableText::fromArray($model->item_name),
-            'status' => CustodyStatus::from($model->status),
+            'status' => CustodyStatusEnum::from($model->status),
             'description' => $model->description ? TranslatableText::fromArray($model->description) : null,
             'handedAt' => \DateTimeImmutable::createFromMutable($model->handed_at),
             'returnedAt' => $model->returned_at ? \DateTimeImmutable::createFromMutable($model->returned_at) : null,

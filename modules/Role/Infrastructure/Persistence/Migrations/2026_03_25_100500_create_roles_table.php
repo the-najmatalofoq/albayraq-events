@@ -6,16 +6,15 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     public function up(): void
     {
         Schema::create('roles', function (Blueprint $table): void {
             $table->uuid('id')->primary();
-            $table->string('slug')->unique();
-            $table->json('name');
+            $table->string('slug')->unique(); // e.g. 'general_manager'
+            $table->json('name'); // {ar: "...", en: "..."}
             $table->boolean('is_global')->default(false);
-            $table->unsignedTinyInteger('level');
+            $table->string('level');   // system, executive, project, etc.
             $table->timestamps();
         });
     }
