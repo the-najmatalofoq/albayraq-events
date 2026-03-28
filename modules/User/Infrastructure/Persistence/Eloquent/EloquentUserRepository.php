@@ -1,4 +1,5 @@
 <?php
+// modules/User/Infrastructure/Persistence/Eloquent/EloquentUserRepository.php
 declare(strict_types=1);
 
 namespace Modules\User\Infrastructure\Persistence\Eloquent;
@@ -20,13 +21,15 @@ final class EloquentUserRepository implements UserRepositoryInterface
         $model = UserModel::updateOrCreate(
             ['id' => $user->uuid->value],
             [
-                'name' => $user->name,
+                'name' => $user->name->toArray(),
                 'email' => $user->email,
                 'phone' => $user->phone,
                 'password' => $user->password->value,
+                'avatar' => $user->avatar,
                 'is_active' => $user->isActive,
                 'created_at' => $user->createdAt,
                 'updated_at' => $user->updatedAt,
+                'deleted_at' => $user->deletedAt,
             ]
         );
 

@@ -1,5 +1,5 @@
 <?php
-// modules/IAM/Infrastructure/Persistence/Migrations/2026_02_10_000003_create_role_user_table.php
+// modules\User\Infrastructure\Persistence\Migrations\2026_03_25_100002_create_role_user_table.php
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;

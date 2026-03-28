@@ -5,7 +5,7 @@ namespace Modules\IAM\Application\Command\Authenticate;
 
 use Modules\IAM\Domain\Exception\InvalidCredentialsException;
 use Modules\IAM\Domain\Exception\UserNotFoundException;
-use Modules\IAM\Domain\Repository\UserRepositoryInterface;
+use Modules\User\Domain\Repository\UserRepositoryInterface;
 use Modules\IAM\Domain\Service\PasswordHasher;
 use Modules\IAM\Domain\Service\TokenManager;
 
@@ -15,7 +15,8 @@ final readonly class AuthenticateUserHandler
         private UserRepositoryInterface $repository,
         private PasswordHasher $hasher,
         private TokenManager $tokenManager,
-    ) {}
+    ) {
+    }
 
     public function handle(AuthenticateUserCommand $command): array
     {

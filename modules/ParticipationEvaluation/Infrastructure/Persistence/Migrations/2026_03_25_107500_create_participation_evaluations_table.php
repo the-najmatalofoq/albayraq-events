@@ -6,8 +6,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     public function up(): void
     {
         Schema::create('participation_evaluations', function (Blueprint $table): void {
@@ -21,8 +20,12 @@ return new class extends Migration
             $table->timestamp('locked_at')->nullable();
             $table->timestamps();
 
-            $table->unique(['event_participation_id', 'evaluator_id', 'date']);
+            $table->unique(
+                ['event_participation_id', 'evaluator_id', 'date'],
+                'pe_eval_unique'
+            );
         });
+
     }
 
     public function down(): void

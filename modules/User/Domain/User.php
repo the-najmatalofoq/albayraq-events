@@ -1,4 +1,5 @@
 <?php
+// modules/User/Domain/User.php
 declare(strict_types=1);
 
 namespace Modules\User\Domain;
@@ -10,12 +11,13 @@ use Modules\User\Domain\ValueObject\UserId;
 use Modules\Role\Domain\ValueObject\RoleId;
 use Modules\Shared\Domain\AggregateRoot;
 use Modules\Shared\Domain\Identity;
+use Modules\Shared\Domain\ValueObject\TranslatableText;
 
 final class User extends AggregateRoot
 {
     private function __construct(
         public readonly UserId $uuid,
-        public readonly array $name,
+        public readonly TranslatableText $name,
         public readonly ?string $email,
         public readonly string $phone,
         public private(set) HashedPassword $password,
@@ -23,6 +25,7 @@ final class User extends AggregateRoot
         public private(set) array $roleIds,
         public private(set) bool $isActive,
         public readonly DateTimeImmutable $createdAt,
+        public private(set) ?string $avatar = null,
         public private(set) ?DateTimeImmutable $updatedAt = null,
         public private(set) ?DateTimeImmutable $phoneVerifiedAt = null,
         public private(set) ?DateTimeImmutable $deletedAt = null,
@@ -30,7 +33,7 @@ final class User extends AggregateRoot
 
     public static function register(
         UserId $uuid,
-        array $name,
+        TranslatableText $name,
         ?string $email,
         string $phone,
         HashedPassword $password,
@@ -50,6 +53,12 @@ final class User extends AggregateRoot
         );
         $user->recordEvent(new UserRegistered($uuid, $phone));
         return $user;
+    }
+
+    public function updateAvatar(string $avatar): void
+    {
+        $this->avatar = $avatar;
+        $this->updatedAt = new DateTimeImmutable;
     }
 
     public function hasRole(RoleId $roleId): bool

@@ -1,15 +1,16 @@
 <?php
+// modules/IAM/Application/Command/RegisterUser/RegisterUserHandler.php
 declare(strict_types=1);
 
 namespace Modules\IAM\Application\Command\RegisterUser;
 
 use DateTimeImmutable;
 use Modules\IAM\Domain\Exception\UserAlreadyExistsException;
-use Modules\IAM\Domain\Repository\UserRepositoryInterface;
-use Modules\IAM\Domain\Repository\RoleRepository;
+use Modules\User\Domain\Repository\UserRepositoryInterface;
+use Modules\Role\Domain\Repository\RoleRepository;
+use Modules\Role\Domain\Enum\RoleSlugEnum;
 use Modules\IAM\Domain\Service\PasswordHasher;
-use Modules\IAM\Domain\User;
-use Modules\IAM\Domain\Enum\RoleNameEnum;
+use Modules\User\Domain\User;
 use Modules\User\Domain\ValueObject\UserId;
 use Modules\Shared\Application\EventDispatcher;
 use Modules\Shared\Application\EventDispatchingHandler;
@@ -31,9 +32,13 @@ final readonly class RegisterUserHandler extends EventDispatchingHandler
             throw UserAlreadyExistsException::withPhone($command->phone);
         }
 
-        $defaultRole = $this->roleRepository->findByName(RoleNameEnum::INDIVIDUAL);
+        if ($command->email && $this->repository->findByEmail($command->email)) {
+            throw UserAlreadyExistsException::withEmail($command->email);
+        }
+
+        $defaultRole = $this->roleRepository->findBySlug(RoleSlugEnum::INDIVIDUAL);
         if (!$defaultRole) {
-            throw new \RuntimeException('Default role not found');
+            throw new \RuntimeException('Default role (individual) not found');
         }
 
         $userId = $this->repository->nextIdentity();

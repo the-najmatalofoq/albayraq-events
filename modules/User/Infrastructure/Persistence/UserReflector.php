@@ -1,4 +1,5 @@
 <?php
+// modules/User/Infrastructure/Persistence/UserReflector.php
 declare(strict_types=1);
 
 namespace Modules\User\Infrastructure\Persistence;
@@ -8,6 +9,7 @@ use Modules\User\Domain\ValueObject\UserId;
 use Modules\User\Domain\ValueObject\HashedPassword;
 use Modules\Role\Domain\ValueObject\RoleId;
 use Modules\User\Infrastructure\Persistence\Eloquent\UserModel;
+use Modules\Shared\Domain\ValueObject\TranslatableText;
 
 final class UserReflector
 {
@@ -18,12 +20,13 @@ final class UserReflector
 
         $properties = [
             'uuid' => UserId::fromString($model->id),
-            'name' => $model->name,
+            'name' => TranslatableText::fromArray($model->name),
             'email' => $model->email,
             'phone' => $model->phone,
             'password' => new HashedPassword($model->password),
-            'roleIds' => [], // will be set separately
+            'roleIds' => [],
             'isActive' => $model->is_active,
+            'avatar' => $model->avatar,
             'createdAt' => $model->created_at->toDateTimeImmutable(),
             'updatedAt' => $model->updated_at?->toDateTimeImmutable(),
             'phoneVerifiedAt' => $model->phone_verified_at?->toDateTimeImmutable(),
