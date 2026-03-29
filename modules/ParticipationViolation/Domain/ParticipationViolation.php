@@ -48,7 +48,7 @@ final class ParticipationViolation extends AggregateRoot
             date: $date,
             currentTier: $currentTier,
             status: ViolationStatusEnum::PENDING,
-            deduction_amount: null,
+            deductionAmount: null,
             createdAt: new DateTimeImmutable(),
         );
     }
