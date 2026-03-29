@@ -7,65 +7,110 @@ on:
 
 jobs:
   deploy:
+    name: 🚀 Laravel Deployment Pipeline
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: 📥 Checkout repository
         uses: actions/checkout@v4
 
-      - name: Prepare SSH
+      - name: 📁 Initialize SSH
         run: |
+          echo "Initializing SSH directory..."
           mkdir -p ~/.ssh
-          printf '%s\n' "${{ secrets.HOSTINGER_SSH_KEY }}" > ~/.ssh/id_ed25519
-          chmod 600 ~/.ssh/id_ed25519
-          cat >> ~/.ssh/config <<EOF
-          Host ${{ secrets.HOSTINGER_HOST }}
-              StrictHostKeyChecking no
-              UserKnownHostsFile /dev/null
-              Port ${{ secrets.HOSTINGER_PORT }}
-          EOF
+          chmod 700 ~/.ssh
 
-      - name: Ensure remote target directory exists
+      - name: 🔐 Add SSH private key
         run: |
-          ssh -i ~/.ssh/id_ed25519 \
-            -p ${{ secrets.HOSTINGER_PORT }} \
-            ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }} \
-            "mkdir -p ${{ secrets.HOSTINGER_DIR }}"
+          echo "Injecting private key..."
+          echo "${{ secrets.HOSTINGER_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
 
-      - name: Rsync files to server
+      - name: 📝 Add host to known_hosts
         run: |
+          echo "Adding host to known_hosts..."
+          ssh-keyscan -p ${{ secrets.HOSTINGER_PORT }} ${{ secrets.HOSTINGER_HOST }} >> ~/.ssh/known_hosts 2>/dev/null
+
+      - name: 🔍 Test SSH connection
+        run: |
+          echo "Testing SSH connection..."
+          ssh -v -p ${{ secrets.HOSTINGER_PORT }} ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }} "echo '✅ SSH OK: Connected to $(hostname)'"
+
+      - name: 📁 Ensure remote directory
+        run: |
+          echo "Ensuring deployment directory exists..."
+          ssh -p ${{ secrets.HOSTINGER_PORT }} ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }} "mkdir -p ${{ secrets.HOSTINGER_DIR }}"
+
+      - name: 🔄 Rsync project files
+        run: |
+          echo "Syncing files to server..."
           rsync -az --delete \
-            --exclude='.git' \
-            --exclude='node_modules' \
-            --exclude='.env' \
-            -e "ssh -i ~/.ssh/id_ed25519 -p ${{ secrets.HOSTINGER_PORT }} -o StrictHostKeyChecking=no" \
-            ./ ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }}:${{ secrets.HOSTINGER_DIR }}/
+            --exclude=".git" \
+            --exclude="node_modules" \
+            --exclude=".env" \
+            --exclude="storage/logs/*" \
+            --exclude=".github" \
+            --exclude="tests" \
+            -e "ssh -p ${{ secrets.HOSTINGER_PORT }}" \
+            ./ ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }}:${{ secrets.HOSTINGER_DIR }}
 
-      - name: Run remote deployment commands
-        env:
-          DEPLOY_DIR: ${{ secrets.HOSTINGER_DIR }}
+      - name: 🚧 Enable maintenance mode
         run: |
-          ssh -i ~/.ssh/id_ed25519 \
-            -p ${{ secrets.HOSTINGER_PORT }} \
-            -o StrictHostKeyChecking=no \
-            ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }} \
-            "bash -s" <<ENDSSH
-            set -e
-            cd "${DEPLOY_DIR}"
+          echo "Enabling maintenance mode..."
+          ssh -p ${{ secrets.HOSTINGER_PORT }} ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }} "
+            cd ${{ secrets.HOSTINGER_DIR }} && \
+            php artisan down --retry=60 || true
+          "
 
-            /opt/alt/php84/usr/bin/php artisan down --no-interaction || true
+      - name: 📦 Install Composer dependencies
+        run: |
+          echo "Installing Composer dependencies..."
+          ssh -p ${{ secrets.HOSTINGER_PORT }} ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }} "
+            cd ${{ secrets.HOSTINGER_DIR }} && \
+            composer install --no-dev --optimize-autoloader --no-interaction
+          "
 
-            /opt/alt/php84/usr/bin/php /usr/local/bin/composer install \
-              --no-dev --optimize-autoloader --no-interaction
+      - name: 🧱 Run migrations
+        run: |
+          echo "Running migrations..."
+          ssh -p ${{ secrets.HOSTINGER_PORT }} ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }} "
+            cd ${{ secrets.HOSTINGER_DIR }} && \
+            php artisan migrate --force
+          "
 
-            /opt/alt/php84/usr/bin/php artisan migrate --force --no-interaction
+      - name: ⚡ Clear and rebuild caches
+        run: |
+          echo "Clearing and rebuilding caches..."
+          ssh -p ${{ secrets.HOSTINGER_PORT }} ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }} "
+            cd ${{ secrets.HOSTINGER_DIR }} && \
+            php artisan optimize:clear && \
+            php artisan config:cache && \
+            php artisan route:cache && \
+            php artisan view:cache
+          "
 
-            /opt/alt/php84/usr/bin/php artisan optimize:clear
-            /opt/alt/php84/usr/bin/php artisan config:cache
-            /opt/alt/php84/usr/bin/php artisan route:cache
-            /opt/alt/php84/usr/bin/php artisan view:cache
+      - name: 🔐 Fix permissions
+        run: |
+          echo "Setting correct permissions..."
+          ssh -p ${{ secrets.HOSTINGER_PORT }} ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }} "
+            cd ${{ secrets.HOSTINGER_DIR }} && \
+            chmod -R 775 storage bootstrap/cache && \
+            chown -R $(whoami):$(whoami) storage bootstrap/cache
+          "
 
-            chmod -R 775 storage bootstrap/cache
+      - name: ✅ Disable maintenance mode
+        run: |
+          echo "Disabling maintenance mode..."
+          ssh -p ${{ secrets.HOSTINGER_PORT }} ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }} "
+            cd ${{ secrets.HOSTINGER_DIR }} && \
+            php artisan up || true
+          "
 
-            /opt/alt/php84/usr/bin/php artisan up --no-interaction || true
-          ENDSSH
+      - name: 🧪 Verify deployment
+        run: |
+          echo "Verifying deployment..."
+          ssh -p ${{ secrets.HOSTINGER_PORT }} ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }} "
+            cd ${{ secrets.HOSTINGER_DIR }} && \
+            php artisan --version && \
+            echo 'Deployment completed successfully!'
+          "
