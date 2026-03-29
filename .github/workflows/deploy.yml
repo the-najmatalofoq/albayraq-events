@@ -29,8 +29,8 @@ jobs:
             ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }} \
             "echo '✅ SSH OK — connected to $(hostname) — PHP: $(php -r \"echo PHP_VERSION;\")'"
 
-  sync-files:
-    name: 🔄 Sync Project Files
+  deploy:
+    name: 🚀 Deploy Application
     runs-on: ubuntu-latest
     needs: verify-connection
     steps:
@@ -43,13 +43,13 @@ jobs:
           host: ${{ secrets.HOSTINGER_HOST }}
           port: ${{ secrets.HOSTINGER_PORT }}
 
-      - name: Ensure remote directory exists
+      - name: 🔄 Ensure remote directory exists
         run: |
           ssh -p ${{ secrets.HOSTINGER_PORT }} \
             ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }} \
             "mkdir -p ${{ secrets.HOSTINGER_DIR }}"
 
-      - name: Rsync project files
+      - name: 🔄 Sync project files
         run: |
           rsync -az --delete \
             --exclude=".git" \
@@ -61,82 +61,26 @@ jobs:
             -e "ssh -p ${{ secrets.HOSTINGER_PORT }}" \
             ./ ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }}:${{ secrets.HOSTINGER_DIR }}
 
-  maintenance-on:
-    name: 🚧 Enable Maintenance Mode
-    runs-on: ubuntu-latest
-    needs: sync-files
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup SSH
-        uses: ./.github/actions/setup-ssh
-        with:
-          ssh_key: ${{ secrets.HOSTINGER_SSH_KEY }}
-          host: ${{ secrets.HOSTINGER_HOST }}
-          port: ${{ secrets.HOSTINGER_PORT }}
-
-      - name: Enable maintenance mode
+      - name: 🚧 Enable maintenance mode
         run: |
           ssh -p ${{ secrets.HOSTINGER_PORT }} \
             ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }} \
             "cd ${{ secrets.HOSTINGER_DIR }} && php artisan down --retry=60 || true"
 
-  install-dependencies:
-    name: 📦 Install Composer Dependencies
-    runs-on: ubuntu-latest
-    needs: maintenance-on
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup SSH
-        uses: ./.github/actions/setup-ssh
-        with:
-          ssh_key: ${{ secrets.HOSTINGER_SSH_KEY }}
-          host: ${{ secrets.HOSTINGER_HOST }}
-          port: ${{ secrets.HOSTINGER_PORT }}
-
-      - name: Run composer install on server
+      - name: 📦 Install Composer dependencies
         run: |
           ssh -p ${{ secrets.HOSTINGER_PORT }} \
             ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }} \
             "cd ${{ secrets.HOSTINGER_DIR }} && \
              composer install --no-dev --optimize-autoloader --no-interaction"
 
-  run-migrations:
-    name: 🧱 Run Database Migrations
-    runs-on: ubuntu-latest
-    needs: install-dependencies
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup SSH
-        uses: ./.github/actions/setup-ssh
-        with:
-          ssh_key: ${{ secrets.HOSTINGER_SSH_KEY }}
-          host: ${{ secrets.HOSTINGER_HOST }}
-          port: ${{ secrets.HOSTINGER_PORT }}
-
-      - name: Run migrations
+      - name: 🧱 Run database migrations
         run: |
           ssh -p ${{ secrets.HOSTINGER_PORT }} \
             ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }} \
             "cd ${{ secrets.HOSTINGER_DIR }} && php artisan migrate --force"
 
-  optimize-app:
-    name: ⚡ Optimize Application
-    runs-on: ubuntu-latest
-    needs: run-migrations
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup SSH
-        uses: ./.github/actions/setup-ssh
-        with:
-          ssh_key: ${{ secrets.HOSTINGER_SSH_KEY }}
-          host: ${{ secrets.HOSTINGER_HOST }}
-          port: ${{ secrets.HOSTINGER_PORT }}
-
-      - name: Clear and rebuild caches
+      - name: ⚡ Clear and rebuild caches
         run: |
           ssh -p ${{ secrets.HOSTINGER_PORT }} \
             ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }} \
@@ -145,60 +89,20 @@ jobs:
              php artisan config:cache && \
              php artisan route:cache"
 
-  fix-permissions:
-    name: 🔐 Fix File Permissions
-    runs-on: ubuntu-latest
-    needs: optimize-app
-    steps:
-      - uses: actions/checkout@v4
-      - name: Setup SSH
-        uses: ./.github/actions/setup-ssh
-        with:
-          ssh_key: ${{ secrets.HOSTINGER_SSH_KEY }}
-          host: ${{ secrets.HOSTINGER_HOST }}
-          port: ${{ secrets.HOSTINGER_PORT }}
-      - name: Set correct permissions
+      - name: 🔐 Fix file permissions
         run: |
           ssh -p ${{ secrets.HOSTINGER_PORT }} \
             ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }} \
             "cd ${{ secrets.HOSTINGER_DIR }} && chmod -R 775 storage bootstrap/cache"
 
-  maintenance-off:
-    name: ✅ Disable Maintenance Mode
-    runs-on: ubuntu-latest
-    needs: fix-permissions
-    if: always()
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup SSH
-        uses: ./.github/actions/setup-ssh
-        with:
-          ssh_key: ${{ secrets.HOSTINGER_SSH_KEY }}
-          host: ${{ secrets.HOSTINGER_HOST }}
-          port: ${{ secrets.HOSTINGER_PORT }}
-
-      - name: Disable maintenance mode
+      - name: ✅ Disable maintenance mode
+        if: always()
         run: |
           ssh -p ${{ secrets.HOSTINGER_PORT }} \
             ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }} \
             "cd ${{ secrets.HOSTINGER_DIR }} && php artisan up || true"
 
-  verify-deployment:
-    name: 🧪 Verify Deployment
-    runs-on: ubuntu-latest
-    needs: maintenance-off
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup SSH
-        uses: ./.github/actions/setup-ssh
-        with:
-          ssh_key: ${{ secrets.HOSTINGER_SSH_KEY }}
-          host: ${{ secrets.HOSTINGER_HOST }}
-          port: ${{ secrets.HOSTINGER_PORT }}
-
-      - name: Confirm Laravel is responding
+      - name: 🧪 Verify deployment
         run: |
           ssh -p ${{ secrets.HOSTINGER_PORT }} \
             ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }} \
