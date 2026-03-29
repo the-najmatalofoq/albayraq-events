@@ -28,4 +28,4 @@ runs:
     - name: Add host to known_hosts
       shell: bash
       run: |
-        ssh-keyscan -p ${{ inputs.port }} ${{ inputs.host }} >> ~/.ssh/known_hosts 2>/dev/null
+        ssh-keyscan -p ${{ inputs.port }} ${{ inputs.host }} >> ~/.ssh/known_hosts 2>&1 || true
