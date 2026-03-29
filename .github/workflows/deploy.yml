@@ -151,21 +151,17 @@ jobs:
     needs: optimize-app
     steps:
       - uses: actions/checkout@v4
-
       - name: Setup SSH
         uses: ./.github/actions/setup-ssh
         with:
           ssh_key: ${{ secrets.HOSTINGER_SSH_KEY }}
           host: ${{ secrets.HOSTINGER_HOST }}
           port: ${{ secrets.HOSTINGER_PORT }}
-
       - name: Set correct permissions
         run: |
           ssh -p ${{ secrets.HOSTINGER_PORT }} \
             ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }} \
-            "cd ${{ secrets.HOSTINGER_DIR }} && \
-             chmod -R 775 storage bootstrap/cache && \
-             chown -R \$(whoami):\$(whoami) storage bootstrap/cache"
+            "cd ${{ secrets.HOSTINGER_DIR }} && chmod -R 775 storage bootstrap/cache"
 
   maintenance-off:
     name: ✅ Disable Maintenance Mode
