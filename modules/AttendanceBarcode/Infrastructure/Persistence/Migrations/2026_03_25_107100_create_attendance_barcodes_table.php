@@ -1,5 +1,5 @@
 <?php
-// modules/AttendanceBarcode/Infrastructure/Persistence/Migrations/2026_03_25_107100_create_attendance_barcodes_table.php
+
 declare(strict_types=1);
 
 use Illuminate\Database\Migrations\Migration;

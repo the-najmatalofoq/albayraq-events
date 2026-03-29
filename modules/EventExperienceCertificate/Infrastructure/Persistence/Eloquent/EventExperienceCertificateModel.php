@@ -1,5 +1,5 @@
 <?php
-// modules/EventExperienceCertificate/Infrastructure/Persistence/Eloquent/EventExperienceCertificateModel.php
+
 declare(strict_types=1);
 
 namespace Modules\EventExperienceCertificate\Infrastructure\Persistence\Eloquent;

@@ -1,5 +1,5 @@
 <?php
-// modules/Discount/Infrastructure/Persistence/Eloquent/DiscountModel.php
+
 declare(strict_types=1);
 
 namespace Modules\Discount\Infrastructure\Persistence\Eloquent;

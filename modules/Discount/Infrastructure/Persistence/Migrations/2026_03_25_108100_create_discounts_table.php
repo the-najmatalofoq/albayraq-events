@@ -1,5 +1,5 @@
 <?php
-// modules/Discount/Infrastructure/Persistence/Migrations/2026_03_25_108100_create_discounts_table.php
+
 declare(strict_types=1);
 
 use Illuminate\Database\Migrations\Migration;

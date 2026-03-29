@@ -1,5 +1,5 @@
 <?php
-// modules/DigitalSignature/Infrastructure/Persistence/Eloquent/DigitalSignatureModel.php
+
 declare(strict_types=1);
 
 namespace Modules\DigitalSignature\Infrastructure\Persistence\Eloquent;

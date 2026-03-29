@@ -1,5 +1,5 @@
 <?php
-// modules/EventParticipationBadge/Infrastructure/Persistence/Migrations/2026_03_25_108500_create_event_participation_badges_table.php
+
 declare(strict_types=1);
 
 use Illuminate\Database\Migrations\Migration;

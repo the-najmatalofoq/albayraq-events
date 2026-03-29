@@ -1,5 +1,5 @@
 <?php
-// modules/DigitalSignature/Infrastructure/Persistence/Migrations/2026_03_25_106100_create_digital_signatures_table.php
+
 declare(strict_types=1);
 
 use Illuminate\Database\Migrations\Migration;

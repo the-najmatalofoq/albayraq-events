@@ -1,5 +1,5 @@
 <?php
-// modules/EventParticipationBadge/Infrastructure/Persistence/Eloquent/EventParticipationBadgeModel.php
+
 declare(strict_types=1);
 
 namespace Modules\EventParticipationBadge\Infrastructure\Persistence\Eloquent;

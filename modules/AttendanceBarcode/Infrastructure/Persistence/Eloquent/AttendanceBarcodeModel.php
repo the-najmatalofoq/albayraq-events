@@ -1,5 +1,5 @@
 <?php
-// modules/AttendanceBarcode/Infrastructure/Persistence/Eloquent/AttendanceBarcodeModel.php
+
 declare(strict_types=1);
 
 namespace Modules\AttendanceBarcode\Infrastructure\Persistence\Eloquent;
