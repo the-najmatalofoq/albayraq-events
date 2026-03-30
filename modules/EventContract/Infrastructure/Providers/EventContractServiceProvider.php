@@ -1,5 +1,5 @@
 <?php
-
+// modules/EventContract/Infrastructure/Providers/EventContractServiceProvider.php
 namespace Modules\EventContract\Infrastructure\Providers;
 
 use Illuminate\Support\ServiceProvider;

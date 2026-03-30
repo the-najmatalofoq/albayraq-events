@@ -2,5 +2,5 @@ projectKey=events_app
 serverUrl=http://localhost:9000
 serverVersion=26.3.0.120487
 dashboardUrl=http://localhost:9000/dashboard?id=events_app
-ceTaskId=e1256fc4-fca9-4ac0-8c53-5f5fc79455d0
-ceTaskUrl=http://localhost:9000/api/ce/task?id=e1256fc4-fca9-4ac0-8c53-5f5fc79455d0
+ceTaskId=5b4cb2cc-12f0-4aec-9fc8-9c623cb8a765
+ceTaskUrl=http://localhost:9000/api/ce/task?id=5b4cb2cc-12f0-4aec-9fc8-9c623cb8a765

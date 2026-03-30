@@ -1,5 +1,5 @@
 <?php
-
+// filePath: bootstrap/providers.php
 use PHPOpenSourceSaver\JWTAuth\Providers\LaravelServiceProvider;
 use App\Providers\DocumentationServiceProvider;
 use Modules\{

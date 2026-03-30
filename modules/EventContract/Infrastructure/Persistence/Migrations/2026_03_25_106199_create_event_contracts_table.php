@@ -1,5 +1,5 @@
 <?php
-// modules/EventContract/Infrastructure/Persistence/Migrations/2026_03_25_106000_create_event_contracts_table.php
+// modules\EventContract\Infrastructure\Persistence\Migrations\2026_03_25_106199_create_event_contracts_table.php
 declare(strict_types=1);
 
 use Illuminate\Database\Migrations\Migration;

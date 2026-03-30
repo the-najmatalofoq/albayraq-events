@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Modules\DigitalSignature\Infrastructure\Providers;
 
@@ -7,7 +8,7 @@ use Illuminate\Support\ServiceProvider;
 use Modules\DigitalSignature\Domain\Repository\DigitalSignatureRepositoryInterface;
 use Modules\DigitalSignature\Infrastructure\Persistence\Eloquent\EloquentDigitalSignatureRepository;
 
-class DigitalSignatureServiceProvider extends ServiceProvider
+final class DigitalSignatureServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
@@ -19,9 +20,10 @@ class DigitalSignatureServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-        $this->loadMigrationsFrom(__DIR__.'/../Persistence/Migrations');
+        $this->loadMigrationsFrom(__DIR__ . '/../Persistence/Migrations');
+
         Route::prefix('api/v1/digital-signatures')
             ->middleware(['api'])
-            ->group(__DIR__.'/../Routes/api.php');
+            ->group(__DIR__ . '/../Routes/api.php');
     }
 }
