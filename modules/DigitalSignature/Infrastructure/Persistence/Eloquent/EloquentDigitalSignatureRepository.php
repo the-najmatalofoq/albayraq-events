@@ -7,6 +7,9 @@ use Modules\DigitalSignature\Domain\DigitalSignature;
 use Modules\DigitalSignature\Domain\Repository\DigitalSignatureRepositoryInterface;
 use Modules\DigitalSignature\Domain\ValueObject\DigitalSignatureId;
 use Modules\DigitalSignature\Infrastructure\Persistence\DigitalSignatureReflector;
+use Modules\Shared\Domain\ValueObject\FilterCriteria;
+use Modules\Shared\Domain\ValueObject\PaginationCriteria;
+use Modules\Shared\Domain\ValueObject\SortCriteria;
 
 final class EloquentDigitalSignatureRepository implements DigitalSignatureRepositoryInterface
 {
@@ -17,7 +20,7 @@ final class EloquentDigitalSignatureRepository implements DigitalSignatureReposi
 
     public function save(DigitalSignature $signature): void
     {
-        $model = DigitalSignatureModel::updateOrCreate(
+        DigitalSignatureModel::updateOrCreate(
             ['id' => $signature->uuid->value],
             [
                 'contract_id' => $signature->contractId,
@@ -50,9 +53,12 @@ final class EloquentDigitalSignatureRepository implements DigitalSignatureReposi
         DigitalSignatureModel::where('id', $id->value)->delete();
     }
 
-    public function findAll(): array
+    public function findAll(?FilterCriteria $filters = null, ?SortCriteria $sort = null): array
     {
-        $models = DigitalSignatureModel::all();
+        $query = $this->applyFilters(DigitalSignatureModel::query(), $filters);
+        $query = $this->applySort($query, $sort ?? new SortCriteria('signed_at', 'desc'));
+
+        $models = $query->get();
 
         return array_map(
             fn($model) => DigitalSignatureReflector::fromModel($model),
@@ -61,32 +67,18 @@ final class EloquentDigitalSignatureRepository implements DigitalSignatureReposi
     }
 
     public function findAllPaginated(
-        int $page = 1,
-        int $perPage = 15,
-        array $filters = [],
-        string $orderBy = 'signed_at',
-        string $orderDirection = 'desc'
+        PaginationCriteria $pagination,
+        ?FilterCriteria $filters = null,
+        ?SortCriteria $sort = null
     ): array {
-        $query = DigitalSignatureModel::query();
-
-        // Apply filters
-        if (isset($filters['contract_id'])) {
-            $query->where('contract_id', $filters['contract_id']);
-        }
-
-        if (isset($filters['from_date'])) {
-            $query->where('signed_at', '>=', $filters['from_date']);
-        }
-
-        if (isset($filters['to_date'])) {
-            $query->where('signed_at', '<=', $filters['to_date']);
-        }
+        $query = $this->applyFilters(DigitalSignatureModel::query(), $filters);
 
         $total = $query->count();
 
-        $models = $query->orderBy($orderBy, $orderDirection)
-            ->skip(($page - 1) * $perPage)
-            ->take($perPage)
+        $query = $this->applySort($query, $sort ?? new SortCriteria('signed_at', 'desc'));
+
+        $models = $query->skip($pagination->offset())
+            ->take($pagination->perPage)
             ->get();
 
         $data = array_map(
@@ -98,5 +90,31 @@ final class EloquentDigitalSignatureRepository implements DigitalSignatureReposi
             'data' => $data,
             'total' => $total,
         ];
+    }
+
+    private function applyFilters($query, ?FilterCriteria $filters)
+    {
+        if (!$filters) {
+            return $query;
+        }
+
+        if ($filters->has('contract_id')) {
+            $query->where('contract_id', $filters->get('contract_id'));
+        }
+
+        if ($filters->has('from_date')) {
+            $query->where('signed_at', '>=', $filters->get('from_date'));
+        }
+
+        if ($filters->has('to_date')) {
+            $query->where('signed_at', '<=', $filters->get('to_date'));
+        }
+
+        return $query;
+    }
+
+    private function applySort($query, SortCriteria $sort)
+    {
+        return $query->orderBy($sort->field, $sort->direction);
     }
 }

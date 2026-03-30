@@ -14,11 +14,9 @@ final readonly class GetAllDigitalSignaturesPaginatedHandler
     public function handle(GetAllDigitalSignaturesPaginatedQuery $query): array
     {
         return $this->repository->findAllPaginated(
-            page: $query->page,
-            perPage: $query->perPage,
+            pagination: $query->pagination,
             filters: $query->filters,
-            orderBy: $query->orderBy,
-            orderDirection: $query->orderDirection,
+            sort: $query->sort,
         );
     }
 }

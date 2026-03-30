@@ -23,7 +23,7 @@ final readonly class GetDigitalSignatureByContractIdAction
         ));
 
         return $this->responder->ok([
-            'id' => $signature->uuid->value,
+            'id' => $signature->id->value,
             'contract_id' => $signature->contractId,
             'signature_svg' => $signature->signatureSvg,
             'ip_address' => $signature->ipAddress,

@@ -23,6 +23,9 @@ final class DigitalSignature extends AggregateRoot
         public private(set) ?DateTimeImmutable $updatedAt = null,
     ) {}
 
+    /**
+     * Create a new digital signature with current timestamp
+     */
     public static function create(
         DigitalSignatureId $id,
         ContractId $contractId,
@@ -40,6 +43,28 @@ final class DigitalSignature extends AggregateRoot
             userAgent: $userAgent,
             signedAt: $now,
             createdAt: $now,
+        );
+    }
+
+    /**
+     * Create a new digital signature with custom signedAt timestamp
+     */
+    public static function createWithCustomTimestamp(
+        DigitalSignatureId $id,
+        ContractId $contractId,
+        string $signatureSvg,
+        DateTimeImmutable $signedAt,
+        ?string $ipAddress = null,
+        ?string $userAgent = null,
+    ): self {
+        return new self(
+            id: $id,
+            contractId: $contractId,
+            signatureSvg: $signatureSvg,
+            ipAddress: $ipAddress,
+            userAgent: $userAgent,
+            signedAt: $signedAt,
+            createdAt: new DateTimeImmutable(),
         );
     }
 

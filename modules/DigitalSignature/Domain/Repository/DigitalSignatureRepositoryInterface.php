@@ -5,6 +5,9 @@ namespace Modules\DigitalSignature\Domain\Repository;
 
 use Modules\DigitalSignature\Domain\DigitalSignature;
 use Modules\DigitalSignature\Domain\ValueObject\DigitalSignatureId;
+use Modules\Shared\Domain\ValueObject\FilterCriteria;
+use Modules\Shared\Domain\ValueObject\PaginationCriteria;
+use Modules\Shared\Domain\ValueObject\SortCriteria;
 
 interface DigitalSignatureRepositoryInterface
 {
@@ -21,17 +24,14 @@ interface DigitalSignatureRepositoryInterface
     /**
      * @return DigitalSignature[]
      */
-    public function findAll(): array;
+    public function findAll(?FilterCriteria $filters = null, ?SortCriteria $sort = null): array;
 
     /**
-     * @param array<string, mixed> $filters
      * @return array{data: DigitalSignature[], total: int}
      */
     public function findAllPaginated(
-        int $page = 1,
-        int $perPage = 15,
-        array $filters = [],
-        string $orderBy = 'signed_at',
-        string $orderDirection = 'desc'
+        PaginationCriteria $pagination,
+        ?FilterCriteria $filters = null,
+        ?SortCriteria $sort = null
     ): array;
 }

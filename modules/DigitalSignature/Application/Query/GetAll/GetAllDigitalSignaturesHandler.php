@@ -17,6 +17,6 @@ final readonly class GetAllDigitalSignaturesHandler
      */
     public function handle(GetAllDigitalSignaturesQuery $query): array
     {
-        return $this->repository->findAll();
+        return $this->repository->findAll($query->filters, $query->sort);
     }
 }

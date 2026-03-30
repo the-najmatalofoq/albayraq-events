@@ -5,7 +5,7 @@ namespace Modules\DigitalSignature\Application\Command\Create;
 
 use Modules\DigitalSignature\Domain\DigitalSignature;
 use Modules\DigitalSignature\Domain\Repository\DigitalSignatureRepositoryInterface;
-use Modules\DigitalSignature\Domain\ValueObject\DigitalSignatureId;
+use Modules\EventContract\Domain\ValueObject\ContractId;
 
 final readonly class CreateDigitalSignatureHandler
 {
@@ -17,13 +17,15 @@ final readonly class CreateDigitalSignatureHandler
     {
         $id = $this->repository->nextIdentity();
 
-        $signature = DigitalSignature::create(
-            uuid: $id,
-            contractId: $command->contractId,
+        $contractId = ContractId::fromString($command->contractId);
+
+        $signature = DigitalSignature::createWithCustomTimestamp(
+            id: $id,
+            contractId: $contractId,
             signatureSvg: $command->signatureSvg,
+            signedAt: $command->signedAt,
             ipAddress: $command->ipAddress,
             userAgent: $command->userAgent,
-            signedAt: $command->signedAt,
         );
 
         $this->repository->save($signature);
