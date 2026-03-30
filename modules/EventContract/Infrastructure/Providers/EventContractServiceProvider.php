@@ -13,6 +13,7 @@ class EventContractServiceProvider extends ServiceProvider
 
     public function boot()
     {
+        $this->loadMigrationsFrom(__DIR__.'/../Persistence/Migrations');
         // Register routes, event listeners, etc. here
     }
 }
