@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Modules\IAM\Presentation\Http\Action;
@@ -33,15 +34,13 @@ final readonly class LoginAction
             email: $data['email'],
             password: $data['password'],
         ));
-
         return $this->responder->success(
             data: [
                 'token' => $result['token'],
-                'user_id' => $result['user_id'],
+                'user' => $result['user'],
             ],
             status: 200,
             messageKey: 'messages.auth.login_success'
         );
-
     }
 }

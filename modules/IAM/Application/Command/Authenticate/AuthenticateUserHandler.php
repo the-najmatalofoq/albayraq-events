@@ -26,12 +26,12 @@ final readonly class AuthenticateUserHandler
         }
 
         if (!$this->hasher->verify($command->password, $user->password)) {
-            throw InvalidCredentialsException::create();
+            throw new InvalidCredentialsException();
         }
 
         return [
-            'token' => $this->tokenManager->createToken($user->email),
-            'user_id' => $user->uuid->value,
+            'token' => $this->tokenManager->createToken($user->uuid->value),
+            'user' => $user,
         ];
     }
 }

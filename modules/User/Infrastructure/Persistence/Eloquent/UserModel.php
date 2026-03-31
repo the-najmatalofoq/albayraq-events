@@ -12,9 +12,10 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Modules\Role\Infrastructure\Persistence\Eloquent\RoleModel;
 
-final class UserModel extends Model implements JWTSubject
+final class UserModel extends Authenticatable implements JWTSubject
 {
     use HasUuids, Notifiable, SoftDeletes;
 

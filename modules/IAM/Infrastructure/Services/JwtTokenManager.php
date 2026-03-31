@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Modules\IAM\Infrastructure\Services;
 
 use Modules\IAM\Domain\Service\TokenManager;
-use Modules\IAM\Infrastructure\Persistence\Eloquent\UserModel;
+use Modules\User\Infrastructure\Persistence\Eloquent\UserModel ;
 use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
 
 final readonly class JwtTokenManager implements TokenManager
@@ -13,7 +13,6 @@ final readonly class JwtTokenManager implements TokenManager
     public function createToken(string $userId): string
     {
         $user = UserModel::where('id', $userId)->firstOrFail();
-        
         return JWTAuth::fromUser($user);
     }
 
