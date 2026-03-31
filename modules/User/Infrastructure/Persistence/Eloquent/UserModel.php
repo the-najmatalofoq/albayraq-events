@@ -23,6 +23,7 @@ final class UserModel extends Model implements JWTSubject
     public $incrementing = false;
 
     protected $fillable = [
+        'id',
         'name',
         'email',
         'phone',

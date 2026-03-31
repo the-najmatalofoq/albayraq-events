@@ -5,13 +5,15 @@ declare(strict_types=1);
 namespace Modules\User\Domain;
 
 use DateTimeImmutable;
-use Modules\IAM\Domain\Event\UserRegistered;
 use Modules\User\Domain\ValueObject\HashedPassword;
 use Modules\User\Domain\ValueObject\UserId;
 use Modules\Role\Domain\ValueObject\RoleId;
 use Modules\Shared\Domain\AggregateRoot;
 use Modules\Shared\Domain\Identity;
+use Modules\IAM\Domain\Event\UserRegistered;
+use Modules\Shared\Domain\ValueObject\FilePath;
 use Modules\Shared\Domain\ValueObject\TranslatableText;
+use Modules\User\Domain\ValueObject\Phone;
 
 final class User extends AggregateRoot
 {
@@ -19,13 +21,13 @@ final class User extends AggregateRoot
         public readonly UserId $uuid,
         public readonly TranslatableText $name,
         public readonly ?string $email,
-        public readonly string $phone,
+        public readonly Phone $phone,
         public private(set) HashedPassword $password,
         /** @var list<RoleId> */
         public private(set) array $roleIds,
         public private(set) bool $isActive,
         public readonly DateTimeImmutable $createdAt,
-        public private(set) ?string $avatar = null,
+        public private(set) ?FilePath $avatar = null,
         public private(set) ?DateTimeImmutable $updatedAt = null,
         public private(set) ?DateTimeImmutable $phoneVerifiedAt = null,
         public private(set) ?DateTimeImmutable $deletedAt = null,
@@ -35,7 +37,8 @@ final class User extends AggregateRoot
         UserId $uuid,
         TranslatableText $name,
         ?string $email,
-        string $phone,
+        Phone $phone,
+        FilePath $avatar,
         HashedPassword $password,
         array $roleIds,
         DateTimeImmutable $createdAt,
@@ -47,18 +50,13 @@ final class User extends AggregateRoot
             email: $email,
             phone: $phone,
             password: $password,
+            avatar: $avatar,
             roleIds: $roleIds,
             isActive: $isActive,
             createdAt: $createdAt,
         );
         $user->recordEvent(new UserRegistered($uuid, $phone));
         return $user;
-    }
-
-    public function updateAvatar(string $avatar): void
-    {
-        $this->avatar = $avatar;
-        $this->updatedAt = new DateTimeImmutable;
     }
 
     public function hasRole(RoleId $roleId): bool

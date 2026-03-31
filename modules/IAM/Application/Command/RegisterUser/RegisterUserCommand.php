@@ -12,7 +12,7 @@ final readonly class RegisterUserCommand
         public TranslatableText $name,
         public string $phone,
         public string $password,
+        public ?string $avatar = null,
         public ?string $email = null,
-    ) {
-    }
+    ) {}
 }

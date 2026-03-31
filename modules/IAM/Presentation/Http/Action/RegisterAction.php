@@ -9,12 +9,15 @@ use Modules\IAM\Application\Command\RegisterUser\RegisterUserCommand;
 use Modules\IAM\Application\Command\RegisterUser\RegisterUserHandler;
 use Modules\User\Presentation\Http\Presenter\UserPresenter;
 use Modules\IAM\Presentation\Http\Request\RegisterRequest;
-use Modules\Role\Domain\Repository\RoleRepository;
+// use Modules\Role\Domain\Repository\RoleRepository;
 use Modules\Shared\Presentation\Http\JsonResponder;
 use Modules\User\Domain\Repository\UserRepositoryInterface;
 use Modules\Shared\Domain\ValueObject\TranslatableText;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
+// use Psr\Http\Message\ResponseInterface;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Modules\Shared\Application\Service\AvatarUploadService;
+use Modules\Shared\Infrastructure\Services\FileStorage;
 
 #[Group('Auth')]
 final readonly class RegisterAction
@@ -22,22 +25,28 @@ final readonly class RegisterAction
     public function __construct(
         private RegisterUserHandler $handler,
         private UserRepositoryInterface $repository,
-        private RoleRepository $roleRepository,
-        private UserPresenter $presenter,
         private JsonResponder $responder,
-    ) {
-    }
+        private FileStorage $file_storage,
+    ) {}
 
-    public function __invoke(RegisterRequest $request): ResponseInterface
+    public function __invoke(Request $request, RegisterRequest $registerRequest)
     {
-        $command = new RegisterUserCommand(
-            name: TranslatableText::fromArray($request->validated('name')),
-            phone: $request->validated('phone'),
-            password: $request->validated('password'),
-            email: $request->validated('email'),
+        $data = $registerRequest->validated($request);
+        $avatarPath = null;
+        if ($request->hasFile('avatar')) {
+            $avatarFilePath = $this->file_storage->upload($request->file('avatar'), 'user');
+            $avatarPath = $avatarFilePath->value;
+        }
+
+        $registerCommand = new RegisterUserCommand(
+            name: TranslatableText::fromArray($data['name']),
+            phone: $data['phone'],
+            password: $data['password'],
+            avatar: $avatarPath,
+            email: $data['email'] ?? null,
         );
 
-        $userId = $this->handler->handle($command);
+        $userId = $this->handler->handle($registerCommand);
 
         $user = $this->repository->findById($userId);
         if (!$user) {
@@ -45,7 +54,7 @@ final readonly class RegisterAction
         }
 
         return $this->responder->success(
-            data: $this->presenter->present($user),
+            data: UserPresenter::fromDomain($user),
             messageKey: 'messages.auth.registered'
         );
     }
