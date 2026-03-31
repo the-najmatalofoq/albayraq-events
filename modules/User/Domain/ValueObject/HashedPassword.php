@@ -6,7 +6,7 @@ namespace Modules\User\Domain\ValueObject;
 
 use Modules\Shared\Domain\ValueObject;
 
-final class HashedPassword extends ValueObject
+final readonly class HashedPassword extends ValueObject
 {
     public function __construct(
         public readonly string $value,
