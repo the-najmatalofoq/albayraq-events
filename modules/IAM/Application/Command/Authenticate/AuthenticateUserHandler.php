@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Modules\IAM\Application\Command\Authenticate;
@@ -15,8 +16,7 @@ final readonly class AuthenticateUserHandler
         private UserRepositoryInterface $repository,
         private PasswordHasher $hasher,
         private TokenManager $tokenManager,
-    ) {
-    }
+    ) {}
 
     public function handle(AuthenticateUserCommand $command): array
     {
@@ -30,7 +30,7 @@ final readonly class AuthenticateUserHandler
         }
 
         return [
-            'token' => $this->tokenManager->createToken($user->uuid->value),
+            'tokens' => $this->tokenManager->createToken($user->uuid->value),
             'user' => $user,
         ];
     }
