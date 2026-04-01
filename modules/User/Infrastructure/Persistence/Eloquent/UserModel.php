@@ -38,7 +38,7 @@ final class UserModel extends Authenticatable implements JWTSubject
     protected $hidden = ['password', 'remember_token'];
 
     protected $casts = [
-        'name' => 'array',
+        'name' => \Modules\Shared\Infrastructure\Laravel\Casts\TranslatableTextCast::class,
         'is_active' => 'boolean',
         'phone_verified_at' => 'datetime',
     ];

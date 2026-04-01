@@ -38,8 +38,10 @@ final readonly class RegisterAction
             $avatarPath = $avatarFilePath->value;
         }
 
+        $nameData = is_string($data['name']) ? json_decode($data['name'], true) : $data['name'];
+
         $registerCommand = new RegisterUserCommand(
-            name: TranslatableText::fromArray($data['name']),
+            name: TranslatableText::fromMixed($nameData),
             phone: $data['phone'],
             password: $data['password'],
             avatar: $avatarPath,

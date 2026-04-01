@@ -22,7 +22,7 @@ final class UserReflector
 
         $properties = [
             'uuid' => UserId::fromString($model->id),
-            'name' => TranslatableText::fromArray($model->name),
+            'name' => $model->name instanceof TranslatableText ? $model->name : TranslatableText::fromArray($model->name),
             'email' => $model->email,
             'phone' => new Phone($model->phone),
             'password' => new HashedPassword($model->password),

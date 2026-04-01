@@ -16,6 +16,15 @@ final readonly class TranslatableText extends ValueObject
         }
     }
 
+    public static function fromMixed(mixed $data): self
+    {
+        if (is_string($data)) {
+            $data = json_decode($data, true);
+        }
+
+        return new self($data);
+    }
+
     public static function fromArray(array $data): self
     {
         return new self($data);

@@ -21,7 +21,7 @@ final readonly class RegisterRequest
         return $this->validator->validate(
             (array) $request->all(),
             [
-                'name' => ['required', 'array'],
+                'name' => ['required', 'json'],
                 'email' => ['nullable', 'email', 'max:255'],
                 'phone' => ['required', 'string', 'regex:/^(?:\+966|966|0)?5\d{8}$/', 'unique:users,phone'],
                 'password' => ['required', 'string', 'confirmed', Password::min(8)->uncompromised()
