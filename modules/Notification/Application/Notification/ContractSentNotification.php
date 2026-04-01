@@ -36,8 +36,12 @@ final class ContractSentNotification extends Notification
 
     public function toFcm(object $notifiable): CloudMessage
     {
+        $locale = $notifiable->preferredLocale ?? 'en';
+        $titles = ['ar' => 'عقد جديد', 'en' => 'New Contract'];
+        $bodies = ['ar' => "تم إرسال عقد لفعالية {$this->eventName}", 'en' => "Contract sent for {$this->eventName}"];
+
         return CloudMessage::new()
-            ->withNotification(FcmNotification::create('New Contract', "Contract sent for {$this->eventName}"))
+            ->withNotification(FcmNotification::create($titles[$locale] ?? $titles['en'], $bodies[$locale] ?? $bodies['en']))
             ->withData(['contract_id' => $this->contractId, 'type' => 'contract_sent']);
     }
 
@@ -46,3 +50,20 @@ final class ContractSentNotification extends Notification
         return new BroadcastMessage($this->toArray($notifiable));
     }
 }
+
+
+// code review:
+/**
+ * CodeRabbit
+Queueable trait without ShouldQueue interface has no effect.
+
+The class uses the Queueable trait but doesn't implement Illuminate\Contracts\Queue\ShouldQueue. Without the interface, notifications will be sent synchronously regardless of the trait.
+
+If queueing is intended:
+
++use Illuminate\Contracts\Queue\ShouldQueue;
+ use Illuminate\Notifications\Notification;
+ use Illuminate\Notifications\Messages\BroadcastMessage;
+-final class ContractSentNotification extends Notification
++final class ContractSentNotification extends Notification implements ShouldQueue
+ */

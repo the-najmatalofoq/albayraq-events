@@ -228,7 +228,7 @@ final class CreateExampleTable extends Migration
     {
         Schema::create('example', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->foreignUuid('user_id')->constrained()->onDelete('cascade');
+            $table->foreignUuid('user_id')->constrained()->cascadeOnDelete();
             $table->string('field_name');
             $table->timestamps();
 

@@ -198,12 +198,12 @@ Response:
 | Action | Role |
 |--------|------|
 | Create manual discount | project_manager, general_manager |
-| Update/delete | project_manager |
+| Update | project_manager |
+| Delete | project_manager, system_controller |
 | View | project_manager, area_manager, general_manager |
 | View own deductions | Worker (self) |
 
 **Validation:** discount_type in: fixed,percentage; rate > 0; risk_level in: low,medium,high
-
 ---
 
 ## Events

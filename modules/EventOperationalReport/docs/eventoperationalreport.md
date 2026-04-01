@@ -20,7 +20,7 @@ Manages operational reports for events. Reports have types (security, medical, p
 | content | json | NOT NULL `{ar, en}` |
 | date | date | NOT NULL |
 | status | string | DEFAULT: 'draft' |
-| approved_by | uuid | FK → users.id, NULLABLE |
+| approved_by | uuid | FK → users.id, ON DELETE SET NULL, NULLABLE |
 | approved_at | timestamp | NULLABLE |
 | created_at, updated_at | timestamps | |
 
@@ -87,7 +87,7 @@ Manages operational reports for events. Reports have types (security, medical, p
 | Command | Input |
 |---------|-------|
 | CreateReport | event_id, report_type_id, author_id, title, content, date |
-| SubmitReport | report_id, submitted_by |
+| SubmitReport | report_id |
 | ApproveReport | report_id, approved_by |
 | RejectReport | report_id, rejected_by, rejection_reason |
 | UpdateReport | report_id, title, content |
@@ -97,7 +97,8 @@ Manages operational reports for events. Reports have types (security, medical, p
 |-------|--------|
 | GetReport | Full report |
 | ListReportsByEvent | Paginated reports |
-| GetClosureGate2Status | event_id → boolean (all reports approved) |
+| GetClosureGate2Status | event_id → {total_reports, approved_reports, pending_reports, gate_passed, message} |
+
 
 ---
 
@@ -115,7 +116,7 @@ Base: `/api/v1/events/{event_id}/reports`
 | POST | `/{id}/approve` | project_manager |
 | POST | `/{id}/reject` | project_manager |
 | DELETE | `/{id}` | project_manager |
-
+| GET | `/closure-gate` | project_manager, area_manager, general_manager |
 ### Request/Response Examples
 
 **POST /events/{event_id}/reports**
@@ -277,6 +278,30 @@ final class ReportRejected
     ) {}
 }
 ```
+
+code review:
+CodeRabbit
+Fix type mismatch for $title in ReportSubmitted event.
+
+The $title property is typed as string, but according to the domain entity definition (line 72) and table schema (line 19), title is a TranslatableText represented as JSON {ar, en}. This type mismatch could cause serialization or data integrity issues.
+
+Recommendation: Change the type to match the domain model.
+
+     public function __construct(
+         public readonly ReportId $reportId,
+         public readonly EventId $eventId,
+-        public readonly string $title,
++        public readonly TranslatableText $title,
+         public readonly UserId $authorId,
+         public readonly Carbon $submittedAt,
+         public readonly Carbon $occurredAt,
+     ) {}
+Or if using array representation:
+
+-        public readonly string $title,
++        public readonly array $title,
++        
+
 
 ### Events Listened
 

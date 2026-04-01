@@ -11,7 +11,8 @@ use Modules\User\Infrastructure\Persistence\Eloquent\UserModel;
 final class DeviceTokenModel extends Model
 {
     protected $table = 'device_tokens';
-
+    public $incrementing = false;
+    protected $keyType = 'string';
     protected $fillable = [
         'id',
         'user_id',

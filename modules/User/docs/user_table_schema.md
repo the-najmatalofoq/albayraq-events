@@ -310,7 +310,7 @@ Schema::create('users', function (Blueprint $table) {
 // employee_profiles table
 Schema::create('employee_profiles', function (Blueprint $table) {
     $table->uuid('id')->primary();
-    $table->foreignUuid('user_id')->constrained()->onDelete('cascade')->unique();
+    $table->foreignUuid('user_id')->constrained()->cascadeOnDelete();\->unique();
     $table->json('full_name')->nullable();
     $table->date('birth_date')->nullable();
     $table->string('nationality')->nullable();
@@ -324,7 +324,7 @@ Schema::create('employee_profiles', function (Blueprint $table) {
 // contact_phones table
 Schema::create('contact_phones', function (Blueprint $table) {
     $table->uuid('id')->primary();
-    $table->foreignUuid('user_id')->constrained()->onDelete('cascade');
+    $table->foreignUuid('user_id')->constrained()->cascadeOnDelete();
     $table->string('name');
     $table->string('phone');
     $table->string('relationship')->nullable();
@@ -334,7 +334,7 @@ Schema::create('contact_phones', function (Blueprint $table) {
 // bank_details table
 Schema::create('bank_details', function (Blueprint $table) {
     $table->uuid('id')->primary();
-    $table->foreignUuid('user_id')->constrained()->onDelete('cascade');
+    $table->foreignUuid('user_id')->constrained()->cascadeOnDelete();
     $table->string('account_owner_name');
     $table->string('bank_name');
     $table->string('iban');

@@ -7,7 +7,7 @@ use Modules\EventRoleAssignment\Infrastructure\Persistence\Eloquent\EventRoleAss
 use Modules\User\Infrastructure\Persistence\Eloquent\UserModel;
 
 Broadcast::channel('user.{userId}', function (UserModel $user, string $userId) {
-    return $user->id === $userId;
+    return (string) $user->id === $userId;
 });
 
 Broadcast::channel('event.{eventId}', function (UserModel $user, string $eventId) {
@@ -16,7 +16,9 @@ Broadcast::channel('event.{eventId}', function (UserModel $user, string $eventId
         ->exists();
 
     $hasGlobalRole = $user->roles()->whereIn('slug', [
-        'system_controller', 'general_manager', 'operations_manager'
+        'system_controller',
+        'general_manager',
+        'operations_manager'
     ])->exists();
 
     return $hasRole || $hasGlobalRole;
@@ -29,6 +31,10 @@ Broadcast::channel('event.{eventId}.attendance', function (UserModel $user, stri
         ->first();
 
     if (!$assignment) {
+        return false;
+    }
+
+    if (!$assignment->role) {
         return false;
     }
 
@@ -45,7 +51,7 @@ Broadcast::channel('event.{eventId}.location', function (UserModel $user, string
         return false;
     }
 
-    if ($assignment->role->level === 'individual') {
+    if ($assignment->role?->level === 'individual') {
         return false;
     }
 

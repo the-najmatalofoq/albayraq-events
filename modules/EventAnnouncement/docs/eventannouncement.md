@@ -22,6 +22,19 @@ Manages broadcast announcements within an event. Announcements can target all wo
 | sent_at | timestamp | NOT NULL |
 | created_at, updated_at | timestamps | |
 
+CodeRabbit
+Add index recommendations for query performance.
+
+The schema documentation doesn't specify indexes beyond the primary key. Based on the repository methods (line 83) and recipient resolution logic (lines 186-189), you'll likely need indexes on frequently queried columns.
+
+Add after line 23:
+
+**Indexes:**
+- `event_id` (for findByEvent queries)
+- `sender_id` (for sender-based lookups)
+- `(target_type, target_id)` composite (for findByTarget queries)
+- `sent_at` (for chronological ordering)
+
 **Target Types:**
 - `all` — send to all event participants
 - `group` — send to specific group (target_id = group_id)
@@ -48,6 +61,25 @@ Manages broadcast announcements within an event. Announcements can target all wo
 - If target_type = 'group' → target_id references `event_staffing_groups.id`
 - If target_type = 'position' → target_id references `event_staffing_positions.id`
 - If target_type = 'all' → target_id is NULL
+
+code review:
+CodeRabbit
+Document data integrity strategy for polymorphic target references.
+
+The polymorphic relationship (target_type + target_id) lacks database-level foreign key constraints. While this is typical for Laravel polymorphic relationships, it introduces a data integrity risk where target_id could reference non-existent groups or positions after deletion.
+
+Consider documenting:
+
+Application-level validation strategy to verify target existence before insert
+Database triggers or check constraints (if PostgreSQL)
+Cleanup strategy when groups/positions are deleted (orphaned announcements)
+Add after line 50:
+
+**Data Integrity Notes:**
+- Polymorphic target_id references are NOT enforced at the database level
+- Application MUST validate target existence before creating announcements
+- When groups/positions are deleted, consider adding cleanup logic for orphaned announcements
+- 
 
 ---
 
@@ -185,8 +217,8 @@ Response:
 
 **Recipient Resolution Service:**
 - `all` → query all active participations in event
-- `group` → query participations with group_id = target_id
-- `position` → query participations with position_id = target_id
+- `group` → query active participations with group_id = target_id
+- `position` → query active participations with position_id = target_id
 
 ---
 

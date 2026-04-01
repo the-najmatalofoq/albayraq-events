@@ -188,6 +188,21 @@ public function deviceTokens(): HasMany
 }
 ```
 
+note from code reviews:
+CodeRabbit
+Architectural inconsistency: Foundation module depends on Notification module.
+
+The documentation states at line 24 that User is a "foundation module" with "Depends on: None", but this section introduces a direct dependency on DeviceTokenModel from the Notification module. This violates the module's architectural position as a foundation with zero dependencies.
+
+Recommended approach: Since User is the foundation module, the relationship should be defined inversely in the Notification module:
+
+// In DeviceTokenModel (Notification module)
+public function user(): BelongsTo
+{
+    return $this->belongsTo(UserModel::class, 'user_id');
+}
+If a deviceTokens() relationship is genuinely needed on UserModel, consider using a dynamic relationship or repository pattern to avoid compile-time coupling to the Notification module.
+
 ### Events Emitted
 
 | Event | When | Payload |
@@ -196,6 +211,19 @@ public function deviceTokens(): HasMany
 | UserActivated | Admin activates account | user_id, activated_by |
 | UserDeactivated | Admin deactivates account | user_id, deactivated_by |
 | PhoneVerified | OTP verification success | user_id, verified_at |
+
+CodeRabbit
+Document event classes in the file structure.
+
+The documentation lists 4 domain events that are emitted (UserRegistered, UserActivated, UserDeactivated, PhoneVerified), but the File Structure section (lines 59-152) doesn't include any event classes or a Domain/Event/ directory.
+
+Additionally, the Module Size section (line 42) states "6 domain entities/value objects" but doesn't account for these 4 event classes.
+
+Please either:
+
+Add the event class files to the file structure (e.g., Domain/Event/UserRegistered.php), or
+Clarify if these events are implemented differently (e.g., using Laravel's event system without custom classes)
+Update the Module Size counts accordingly if event classes exist.
 
 ### Events Listened
 

@@ -12,11 +12,11 @@ final class CreateLocationLogsTable extends Migration
     {
         Schema::create('location_logs', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->foreignUuid('event_participation_id')->constrained('event_participations')->onDelete('cascade');
+            $table->foreignUuid('event_participation_id')->constrained('event_participations')->cascadeOnDelete();
             $table->decimal('latitude', 10, 7);
             $table->decimal('longitude', 10, 7);
             $table->decimal('accuracy', 5, 1)->nullable();
-            $table->boolean('is_within_geofence');
+            $table->boolean('is_within_geofence')->default(false);
             $table->timestamp('recorded_at');
 
             $table->index(['event_participation_id', 'recorded_at']);
