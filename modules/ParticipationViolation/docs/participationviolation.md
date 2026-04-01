@@ -476,3 +476,72 @@ php artisan module:make Discount
 ---
 
 **ParticipationViolation Module Specification Complete.**   
+
+## Notifications & Events
+
+### Events Emitted
+
+| Event | When | Payload | Notification Recipient |
+|-------|------|---------|------------------------|
+| ViolationReported | Supervisor reports violation | violation_id, participation_id, user_id, violation_type, date, reported_by | Employee (worker), tier 1 manager |
+| ViolationEscalated | Manager escalates to next tier | violation_id, current_tier, new_tier, escalated_by | Next tier manager |
+| ViolationApproved | Manager approves violation | violation_id, deduction_amount, approved_by | Employee, reporter (supervisor) |
+| ViolationRejected | Manager rejects violation | violation_id, rejection_reason, rejected_by | Reporter (supervisor) |
+
+### Domain Event Classes
+
+Create these in `Domain/Events/`:
+
+```php
+// ViolationReported.php
+final class ViolationReported
+{
+    public function __construct(
+        public readonly ViolationId $violationId,
+        public readonly ParticipationId $participationId,
+        public readonly UserId $userId,
+        public readonly string $violationTypeName,
+        public readonly Date $date,
+        public readonly UserId $reportedBy,
+        public readonly Carbon $occurredAt,
+    ) {}
+}
+
+// ViolationEscalated.php
+final class ViolationEscalated
+{
+    public function __construct(
+        public readonly ViolationId $violationId,
+        public readonly int $currentTier,
+        public readonly int $newTier,
+        public readonly UserId $escalatedBy,
+        public readonly Carbon $occurredAt,
+    ) {}
+}
+
+// ViolationApproved.php
+final class ViolationApproved
+{
+    public function __construct(
+        public readonly ViolationId $violationId,
+        public readonly float $deductionAmount,
+        public readonly UserId $approvedBy,
+        public readonly Carbon $occurredAt,
+    ) {}
+}
+
+// ViolationRejected.php
+final class ViolationRejected
+{
+    public function __construct(
+        public readonly ViolationId $violationId,
+        public readonly string $rejectionReason,
+        public readonly UserId $rejectedBy,
+        public readonly Carbon $occurredAt,
+    ) {}
+}
+```
+
+### Events Listened
+
+None. ParticipationViolation module fires events but does not listen to external events.

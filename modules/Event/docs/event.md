@@ -598,3 +598,55 @@ php artisan module:make EventStaffingPosition
 ---
 
 **Event Module Specification Complete.**
+
+## Notifications & Events
+
+### Geofence Validation Method
+
+Add this method to Event domain entity for location tracking:
+
+```php
+// Domain/Event.php
+public function isWithinGeofence(float $latitude, float $longitude): bool
+{
+    $distance = $this->haversineGreatCircleDistance(
+        $this->latitude,
+        $this->longitude,
+        $latitude,
+        $longitude
+    );
+    
+    return $distance <= $this->geofenceRadius;
+}
+
+private function haversineGreatCircleDistance(float $lat1, float $lon1, float $lat2, float $lon2): float
+{
+    $earthRadius = 6371000; // meters
+    
+    $latDelta = deg2rad($lat2 - $lat1);
+    $lonDelta = deg2rad($lon2 - $lon1);
+    
+    $a = sin($latDelta / 2) * sin($latDelta / 2) +
+         cos(deg2rad($lat1)) * cos(deg2rad($lat2)) *
+         sin($lonDelta / 2) * sin($lonDelta / 2);
+    
+    $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
+    
+    return $earthRadius * $c;
+}
+```
+
+### Events Emitted
+
+| Event | When | Payload |
+|-------|------|---------|
+| EventCreated | After event creation | event_id, created_by |
+| EventPublished | Status → PUBLISHED | event_id, published_by |
+| EventActivated | Status → ACTIVE | event_id, activated_by |
+| EventClosureRequested | Status → PENDING_CLOSURE | event_id, requested_by |
+| EventClosed | Status → CLOSED | event_id, closed_by |
+
+### Events Listened
+
+None. Event module does not listen to external events for notifications.
+```

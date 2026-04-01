@@ -158,3 +158,46 @@ modules/User/
 - **Translation:** JSON columns with `{ar, en}` structure
 - **Authentication:** JWT (phone + password)
 - **Module Status:** ✅ Complete (ready for production)
+
+## Notifications & Events
+
+### Notifiable Trait
+
+The UserModel MUST use Laravel's `Notifiable` trait to enable notification delivery:
+
+```php
+// UserModel.php
+use Illuminate\Notifications\Notifiable;
+
+final class UserModel extends Model
+{
+    use HasUuids, SoftDeletes, Notifiable;
+    // ... rest unchanged
+}
+```
+
+### Device Tokens
+
+User has many device tokens (managed by Notification module):
+
+```php
+// In UserModel (add this relationship)
+public function deviceTokens(): HasMany
+{
+    return $this->hasMany(DeviceTokenModel::class, 'user_id');
+}
+```
+
+### Events Emitted
+
+| Event | When | Payload |
+|-------|------|---------|
+| UserRegistered | Registration complete | user_id, phone, email |
+| UserActivated | Admin activates account | user_id, activated_by |
+| UserDeactivated | Admin deactivates account | user_id, deactivated_by |
+| PhoneVerified | OTP verification success | user_id, verified_at |
+
+### Events Listened
+
+None. User module does not listen to external events.
+

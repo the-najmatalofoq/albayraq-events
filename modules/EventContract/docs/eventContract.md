@@ -587,3 +587,61 @@ php artisan module:make EventAttendance
 
 **EventContract Module Specification Complete.**
 
+
+## Notifications & Events
+
+### Events Emitted
+
+| Event | When | Payload | Notification Recipient |
+|-------|------|---------|------------------------|
+| ContractSent | Contract sent to worker | contract_id, participation_id, user_id, event_name | Worker |
+| ContractAccepted | Worker accepts contract | contract_id, participation_id, user_id, event_name | Admissions admin, project manager |
+| ContractRejectedByEmployee | Worker rejects contract | contract_id, rejection_reason, user_id | Admissions admin |
+| ContractRejectedByAdmin | Admin rejects contract | contract_id, rejection_reason, user_id | Worker |
+| ContractCancelled | Contract cancelled | contract_id, reason, user_id | Worker, project manager |
+| ContractStepCompleted | Acceptance step completed | contract_id, step, contract_id | None (internal) |
+
+### Domain Event Classes
+
+Create these in `Domain/Events/`:
+
+```php
+// ContractSent.php
+final class ContractSent
+{
+    public function __construct(
+        public readonly ContractId $contractId,
+        public readonly ParticipationId $participationId,
+        public readonly UserId $userId,
+        public readonly string $eventName,
+        public readonly Carbon $occurredAt,
+    ) {}
+}
+
+// ContractAccepted.php
+final class ContractAccepted
+{
+    public function __construct(
+        public readonly ContractId $contractId,
+        public readonly ParticipationId $participationId,
+        public readonly UserId $userId,
+        public readonly string $eventName,
+        public readonly Carbon $occurredAt,
+    ) {}
+}
+
+// ContractRejectedByEmployee.php
+final class ContractRejectedByEmployee
+{
+    public function __construct(
+        public readonly ContractId $contractId,
+        public readonly string $rejectionReason,
+        public readonly UserId $userId,
+        public readonly Carbon $occurredAt,
+    ) {}
+}
+```
+
+### Events Listened
+
+None. EventContract module fires events but does not listen to external events.
