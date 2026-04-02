@@ -8,12 +8,12 @@ use Modules\ContractRejectionReason\Domain\ContractRejectionReason;
 use Modules\ContractRejectionReason\Domain\ValueObject\ContractRejectionReasonId;
 use Modules\Shared\Domain\ValueObject\TranslatableText;
 use Modules\ContractRejectionReason\Infrastructure\Persistence\Eloquent\ContractRejectionReasonModel;
-
+use ReflectionClass;
 final class ContractRejectionReasonReflector
 {
     public static function fromModel(ContractRejectionReasonModel $model): ContractRejectionReason
     {
-        $reflection = new \ReflectionClass(ContractRejectionReason::class);
+        $reflection = new ReflectionClass(ContractRejectionReason::class);
         $reason = $reflection->newInstanceWithoutConstructor();
 
         $properties = [

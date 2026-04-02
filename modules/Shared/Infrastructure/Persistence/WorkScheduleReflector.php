@@ -6,7 +6,7 @@ namespace Modules\Shared\Infrastructure\Persistence;
 
 use Modules\Shared\Domain\WorkSchedule;
 use Modules\Shared\Domain\ValueObject\ScheduleId;
-use Modules\Shared\Infrastructure\Persistence\Eloquent\WorkScheduleModel;
+use Modules\Shared\Infrastructure\Persistence\Eloquent\Models\WorkScheduleModel;
 
 final class WorkScheduleReflector
 {

@@ -1,25 +1,26 @@
 <?php
-// modules/User/Infrastructure/Persistence/Eloquent/BankDetailModel.php
+// modules/User/Infrastructure/Persistence/Eloquent/ContactPhoneModel.php
 declare(strict_types=1);
 
-namespace Modules\User\Infrastructure\Persistence\Eloquent;
+namespace Modules\User\Infrastructure\Persistence\Eloquent\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-final class BankDetailModel extends Model
+final class ContactPhoneModel extends Model
 {
     use HasUuids;
-    protected $table = 'bank_details';
+
+    protected $table = 'contact_phones';
     public $incrementing = false;
     protected $keyType = 'string';
 
     protected $fillable = [
         'user_id',
-        'account_owner',
-        'bank_name',
-        'iban',
+        'name',
+        'phone',
+        'relation',
     ];
 
     public function user(): BelongsTo

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Modules\IAM\Infrastructure\Services;
 
 use Modules\IAM\Domain\Service\TokenManager;
-use Modules\User\Infrastructure\Persistence\Eloquent\UserModel;
+use Modules\User\Infrastructure\Persistence\Eloquent\Models\UserModel;
 use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
 
 final readonly class JwtTokenManager implements TokenManager
@@ -17,6 +17,7 @@ final readonly class JwtTokenManager implements TokenManager
 
         return [
             'access_token'  => $this->generateAccessToken($user, $accessTtl),
+            // todo
             'refresh_token' => $this->generateRefreshToken($user, $accessTtl),
             'expires_in'    => $accessTtl * 60,
             'token_type'    => 'Bearer',

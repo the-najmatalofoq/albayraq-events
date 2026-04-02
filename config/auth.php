@@ -2,6 +2,8 @@
 // filePath: config/auth.php
 declare(strict_types=1);
 
+use Modules\User\Infrastructure\Persistence\Eloquent\Models\UserModel;
+
 return [
 
     'defaults' => [
@@ -23,7 +25,7 @@ return [
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => env('AUTH_MODEL', \Modules\User\Infrastructure\Persistence\Eloquent\UserModel::class),
+            'model' => env('AUTH_MODEL', UserModel::class),
         ],
 
     ],

@@ -6,14 +6,18 @@ namespace Modules\User\Infrastructure\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
-use Modules\User\Domain\Repository\UserRepositoryInterface;
-use Modules\User\Domain\Repository\EmployeeProfileRepositoryInterface;
-use Modules\User\Domain\Repository\ContactPhoneRepositoryInterface;
-use Modules\User\Domain\Repository\BankDetailRepositoryInterface;
-use Modules\User\Infrastructure\Persistence\Eloquent\EloquentUserRepository;
-use Modules\User\Infrastructure\Persistence\Eloquent\EloquentEmployeeProfileRepository;
-use Modules\User\Infrastructure\Persistence\Eloquent\EloquentContactPhoneRepository;
-use Modules\User\Infrastructure\Persistence\Eloquent\EloquentBankDetailRepository;
+use Modules\User\Domain\Repository\{
+    UserRepositoryInterface,
+    EmployeeProfileRepositoryInterface,
+    ContactPhoneRepositoryInterface,
+    BankDetailRepositoryInterface,
+};
+use Modules\User\Infrastructure\Persistence\Eloquent\Repositories\{
+    EloquentUserRepository,
+    EloquentEmployeeProfileRepository,
+    EloquentContactPhoneRepository,
+    EloquentBankDetailRepository,
+};
 
 final class UserServiceProvider extends ServiceProvider
 {

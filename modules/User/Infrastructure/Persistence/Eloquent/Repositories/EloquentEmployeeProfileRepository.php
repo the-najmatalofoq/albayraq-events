@@ -2,13 +2,14 @@
 // modules/User/Infrastructure/Persistence/Eloquent/EloquentEmployeeProfileRepository.php
 declare(strict_types=1);
 
-namespace Modules\User\Infrastructure\Persistence\Eloquent;
+namespace Modules\User\Infrastructure\Persistence\Eloquent\Repositories;
 
 use Modules\User\Domain\EmployeeProfile;
 use Modules\User\Domain\Repository\EmployeeProfileRepositoryInterface;
 use Modules\User\Domain\ValueObject\UserId;
 use Modules\User\Domain\ValueObject\EmployeeProfileId;
 use Modules\Shared\Domain\ValueObject\TranslatableText;
+use Modules\User\Infrastructure\Persistence\Eloquent\Models\EmployeeProfileModel;
 
 final class EloquentEmployeeProfileRepository implements EmployeeProfileRepositoryInterface
 {

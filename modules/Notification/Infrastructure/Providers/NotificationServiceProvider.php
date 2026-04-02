@@ -32,23 +32,7 @@ final class NotificationServiceProvider extends ServiceProvider
 
     private function registerEventListeners(): void
     {
-        $events = [
-            \Modules\EventContract\Domain\Events\ContractSent::class => [
-                \Modules\Notification\Application\Listeners\SendContractSentNotification::class,
-            ],
-            \Modules\EventContract\Domain\Events\ContractAccepted::class => [
-                \Modules\Notification\Application\Listeners\SendContractAcceptedNotification::class,
-            ],
-            \Modules\EventContract\Domain\Events\ContractRejected::class => [
-                \Modules\Notification\Application\Listeners\SendContractRejectedNotification::class,
-            ],
-            \Modules\ParticipationViolation\Domain\Events\ViolationReported::class => [
-                \Modules\Notification\Application\Listeners\SendViolationReportedNotification::class,
-            ],
-            \Modules\ParticipationViolation\Domain\Events\ViolationApproved::class => [
-                \Modules\Notification\Application\Listeners\SendViolationApprovedNotification::class,
-            ],
-        ];
+        $events = [];
 
         foreach ($events as $event => $listeners) {
             foreach ($listeners as $listener) {

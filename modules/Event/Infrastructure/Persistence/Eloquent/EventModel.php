@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Modules\User\Infrastructure\Persistence\Eloquent\UserModel;
+use Modules\User\Infrastructure\Persistence\Eloquent\Models\UserModel;
 use Modules\EventStaffingPosition\Infrastructure\Persistence\Eloquent\EventStaffingPositionModel;
 use Modules\EventStaffingGroup\Infrastructure\Persistence\Eloquent\EventStaffingGroupModel;
 use Modules\EventParticipation\Infrastructure\Persistence\Eloquent\EventParticipationModel;

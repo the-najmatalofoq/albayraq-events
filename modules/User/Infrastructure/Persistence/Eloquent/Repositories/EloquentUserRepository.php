@@ -2,12 +2,13 @@
 // modules/User/Infrastructure/Persistence/Eloquent/EloquentUserRepository.php
 declare(strict_types=1);
 
-namespace Modules\User\Infrastructure\Persistence\Eloquent;
+namespace Modules\User\Infrastructure\Persistence\Eloquent\Repositories;
 
 use Modules\User\Domain\Repository\UserRepositoryInterface;
 use Modules\User\Domain\User;
 use Modules\User\Domain\ValueObject\UserId;
 use Modules\User\Infrastructure\Persistence\UserReflector;
+use Modules\User\Infrastructure\Persistence\Eloquent\Models\UserModel;
 
 final class EloquentUserRepository implements UserRepositoryInterface
 {

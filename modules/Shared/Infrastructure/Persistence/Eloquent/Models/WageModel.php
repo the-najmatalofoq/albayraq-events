@@ -2,12 +2,12 @@
 // modules/Shared/Infrastructure/Persistence/Eloquent/WageModel.php
 declare(strict_types=1);
 
-namespace Modules\Shared\Infrastructure\Persistence\Eloquent;
+namespace Modules\Shared\Infrastructure\Persistence\Eloquent\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
-
+// todo: we must move into its own module,
 final class WageModel extends Model
 {
     use HasUuids;

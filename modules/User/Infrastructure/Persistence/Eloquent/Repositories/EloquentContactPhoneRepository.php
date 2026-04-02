@@ -2,12 +2,13 @@
 // modules/User/Infrastructure/Persistence/Eloquent/EloquentContactPhoneRepository.php
 declare(strict_types=1);
 
-namespace Modules\User\Infrastructure\Persistence\Eloquent;
+namespace Modules\User\Infrastructure\Persistence\Eloquent\Repositories;
 
 use Modules\User\Domain\ContactPhone;
 use Modules\User\Domain\Repository\ContactPhoneRepositoryInterface;
 use Modules\User\Domain\ValueObject\UserId;
 use Modules\User\Domain\ValueObject\ContactPhoneId;
+use Modules\User\Infrastructure\Persistence\Eloquent\Models\ContactPhoneModel;
 
 final class EloquentContactPhoneRepository implements ContactPhoneRepositoryInterface
 {

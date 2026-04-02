@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Modules\Event\Infrastructure\Persistence\Eloquent\EventModel;
 use Modules\ReportType\Infrastructure\Persistence\Eloquent\ReportTypeModel;
-use Modules\User\Infrastructure\Persistence\Eloquent\UserModel;
+use Modules\User\Infrastructure\Persistence\Eloquent\Models\UserModel;
 
 final class EventOperationalReportModel extends Model
 {

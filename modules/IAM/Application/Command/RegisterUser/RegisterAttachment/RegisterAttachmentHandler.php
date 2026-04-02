@@ -7,7 +7,7 @@ namespace Modules\IAM\Application\Command\RegisterUser\RegisterAttachment;
 use Modules\User\Domain\ValueObject\UserId;
 use Modules\FileAttachment\Domain\Repository\FileAttachmentRepositoryInterface;
 use Modules\FileAttachment\Domain\FileAttachment;
-use Modules\User\Infrastructure\Persistence\Eloquent\UserModel;
+use Modules\User\Infrastructure\Persistence\Eloquent\Models\UserModel;
 use Illuminate\Support\Facades\Storage;
 
 final readonly class RegisterAttachmentHandler

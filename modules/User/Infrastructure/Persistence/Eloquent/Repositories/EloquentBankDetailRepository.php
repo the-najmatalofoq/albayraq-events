@@ -2,12 +2,13 @@
 // modules/User/Infrastructure/Persistence/Eloquent/EloquentBankDetailRepository.php
 declare(strict_types=1);
 
-namespace Modules\User\Infrastructure\Persistence\Eloquent;
+namespace Modules\User\Infrastructure\Persistence\Eloquent\Repositories;
 
 use Modules\User\Domain\BankDetail;
 use Modules\User\Domain\Repository\BankDetailRepositoryInterface;
 use Modules\User\Domain\ValueObject\UserId;
 use Modules\User\Domain\ValueObject\BankDetailId;
+use Modules\User\Infrastructure\Persistence\Eloquent\Models\BankDetailModel;
 
 final class EloquentBankDetailRepository implements BankDetailRepositoryInterface
 {

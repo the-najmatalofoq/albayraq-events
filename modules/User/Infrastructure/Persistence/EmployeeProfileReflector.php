@@ -8,7 +8,7 @@ use Modules\User\Domain\ValueObject\UserProfileId;
 use Modules\User\Domain\ValueObject\UserId;
 use Modules\User\Domain\EmployeeProfile;
 use Modules\Shared\Domain\ValueObject\TranslatableText;
-use Modules\User\Infrastructure\Persistence\Eloquent\EmployeeProfileModel;
+use Modules\User\Infrastructure\Persistence\Eloquent\Models\EmployeeProfileModel;
 
 final class UserProfileReflector
 {

@@ -7,7 +7,7 @@ namespace Modules\EventRoleAssignment\Infrastructure\Persistence\Eloquent;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Modules\User\Infrastructure\Persistence\Eloquent\UserModel;
+use Modules\User\Infrastructure\Persistence\Eloquent\Models\UserModel;
 use Modules\Event\Infrastructure\Persistence\Eloquent\EventModel;
 use Modules\Role\Infrastructure\Persistence\Eloquent\RoleModel;
 

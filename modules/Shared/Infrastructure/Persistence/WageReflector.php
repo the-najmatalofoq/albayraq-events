@@ -7,7 +7,7 @@ namespace Modules\Shared\Infrastructure\Persistence;
 use Modules\Shared\Domain\Wage;
 use Modules\Shared\Domain\ValueObject\WageId;
 use Modules\Shared\Domain\ValueObject\Money;
-use Modules\Shared\Infrastructure\Persistence\Eloquent\WageModel;
+use Modules\Shared\Infrastructure\Persistence\Eloquent\Models\WageModel;
 
 final class WageReflector
 {

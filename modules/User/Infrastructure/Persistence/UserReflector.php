@@ -8,7 +8,7 @@ use Modules\User\Domain\User;
 use Modules\User\Domain\ValueObject\UserId;
 use Modules\User\Domain\ValueObject\HashedPassword;
 use Modules\Role\Domain\ValueObject\RoleId;
-use Modules\User\Infrastructure\Persistence\Eloquent\UserModel;
+use Modules\User\Infrastructure\Persistence\Eloquent\Models\UserModel;
 use Modules\Shared\Domain\ValueObject\TranslatableText;
 use Modules\User\Domain\ValueObject\Phone;
 use Modules\Shared\Domain\ValueObject\FilePath;
