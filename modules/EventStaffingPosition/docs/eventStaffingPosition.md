@@ -540,6 +540,54 @@ php artisan module:make EventStaffingGroup
 - [ ] Applications can reference positions
 - [ ] Participations can reference positions
 
+## Notifications & Events
+
+### Events Emitted
+
+| Event               | When                             | Payload                           | Notification Recipient                                    |
+| ------------------- | -------------------------------- | --------------------------------- | --------------------------------------------------------- |
+| PositionCreated     | Position created                 | position_id, event_id, title      | None (internal)                                           |
+| PositionAnnounced   | Position opened for applications | position_id, event_id, title      | All active users matching requirements                    |
+| PositionUnannounced | Position closed                  | position_id, event_id, title      | None                                                      |
+| HeadcountChanged    | Headcount updated                | position_id, old_count, new_count | None (broadcast to event channel for real-time UI update) |
+| WageUpdated         | Wage amount or type changed      | position_id, old_wage, new_wage   | None                                                      |
+
+### Domain Event Classes
+
+Create in `Domain/Events/`:
+
+```php
+final class PositionAnnounced
+{
+    public function __construct(
+        public readonly PositionId $positionId,
+        public readonly EventId $eventId,
+        public readonly string $title,
+        public readonly Carbon $occurredAt,
+    ) {}
+}
+
+final class HeadcountChanged
+{
+    public function __construct(
+        public readonly PositionId $positionId,
+        public readonly int $oldHeadcount,
+        public readonly int $newHeadcount,
+        public readonly Carbon $occurredAt,
+    ) {}
+}
+```
+
+### Events Listened
+
+None. EventStaffingPosition module fires events but does not listen to external events.
+
+### Broadcast Channel
+
+When `PositionAnnounced` or `HeadcountChanged` occurs, Notification module broadcasts to:
+
+- `private-event.{eventId}` channel — all event role holders see updated position availability
+
 ---
 
 **EventStaffingPosition Module Specification Complete.**

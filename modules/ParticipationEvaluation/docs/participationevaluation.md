@@ -455,5 +455,70 @@ php artisan module:make ParticipationViolation
 
 ---
 
+## Notifications & Events
+
+### Events Emitted
+
+| Event | When | Payload | Notification Recipient |
+|-------|------|---------|------------------------|
+| EvaluationCreated | Evaluation recorded | evaluation_id, participation_id, user_id, date, score, evaluator_id | Worker (the evaluated employee) |
+| EvaluationUpdated | Score/notes changed | evaluation_id, old_score, new_score, updated_by | Worker (if score changed) |
+| EvaluationLocked | Evaluation locked | evaluation_id, locked_by, locked_at | Worker, evaluator |
+| AllEvaluationsLocked | All evaluations for participation locked | participation_id, user_id, locked_by | Worker |
+
+### Domain Event Classes
+
+Create in `Domain/Events/`:
+
+```php
+final class EvaluationCreated
+{
+    public function __construct(
+        public readonly EvaluationId $evaluationId,
+        public readonly ParticipationId $participationId,
+        public readonly UserId $userId,
+        public readonly Date $date,
+        public readonly float $score,
+        public readonly UserId $evaluatorId,
+        public readonly Carbon $occurredAt,
+    ) {}
+}
+
+final class EvaluationUpdated
+{
+    public function __construct(
+        public readonly EvaluationId $evaluationId,
+        public readonly float $oldScore,
+        public readonly float $newScore,
+        public readonly UserId $updatedBy,
+        public readonly Carbon $occurredAt,
+    ) {}
+}
+
+final class EvaluationLocked
+{
+    public function __construct(
+        public readonly EvaluationId $evaluationId,
+        public readonly UserId $lockedBy,
+        public readonly Carbon $lockedAt,
+        public readonly Carbon $occurredAt,
+    ) {}
+}
+
+final class AllEvaluationsLocked
+{
+    public function __construct(
+        public readonly ParticipationId $participationId,
+        public readonly UserId $userId,
+        public readonly UserId $lockedBy,
+        public readonly Carbon $occurredAt,
+    ) {}
+}
+```
+
+### Events Listened
+
+None. ParticipationEvaluation module fires events but does not listen to external events.
+
+
 **ParticipationEvaluation Module Specification Complete.**
-    
