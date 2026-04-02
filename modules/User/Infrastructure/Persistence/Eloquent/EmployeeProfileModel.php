@@ -7,6 +7,9 @@ namespace Modules\User\Infrastructure\Persistence\Eloquent;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
+use \Modules\Shared\Infrastructure\Laravel\Casts\TranslatableTextCast;
+use \Modules\FileAttachment\Infrastructure\Persistence\Eloquent\AttachmentModel;
 
 final class EmployeeProfileModel extends Model
 {
@@ -22,16 +25,13 @@ final class EmployeeProfileModel extends Model
         'birth_date',
         'nationality',
         'gender',
-        'national_id',
-        'medical_record',
         'height',
         'weight',
     ];
 
     protected $casts = [
-        'full_name' => 'array',
+        'full_name' => TranslatableTextCast::class,
         'birth_date' => 'date',
-        'medical_record' => 'array',
         'height' => 'float',
         'weight' => 'float',
     ];
@@ -39,5 +39,25 @@ final class EmployeeProfileModel extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(UserModel::class, 'user_id');
+    }
+
+    public function attachments(): MorphMany
+    {
+        return $this->morphMany(AttachmentModel::class, 'attachable');
+    }
+
+    public function cv()
+    {
+        return $this->attachments()->where('collection', 'cv');
+    }
+
+    public function identityPersonal()
+    {
+        return $this->attachments()->where('collection', 'identity_personal');
+    }
+
+    public function medicalRecord()
+    {
+        return $this->attachments()->where('collection', 'medical_record');
     }
 }

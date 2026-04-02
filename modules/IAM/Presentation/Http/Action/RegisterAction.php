@@ -9,14 +9,10 @@ use Modules\IAM\Application\Command\RegisterUser\RegisterUserCommand;
 use Modules\IAM\Application\Command\RegisterUser\RegisterUserHandler;
 use Modules\User\Presentation\Http\Presenter\UserPresenter;
 use Modules\IAM\Presentation\Http\Request\RegisterRequest;
-// use Modules\Role\Domain\Repository\RoleRepository;
 use Modules\Shared\Presentation\Http\JsonResponder;
 use Modules\User\Domain\Repository\UserRepositoryInterface;
-use Modules\Shared\Domain\ValueObject\TranslatableText;
-// use Psr\Http\Message\ResponseInterface;
+
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
-use Modules\Shared\Application\Service\AvatarUploadService;
 use Modules\Shared\Infrastructure\Services\FileStorage;
 
 #[Group('Auth')]
@@ -26,29 +22,37 @@ final readonly class RegisterAction
         private RegisterUserHandler $handler,
         private UserRepositoryInterface $repository,
         private JsonResponder $responder,
-        private FileStorage $file_storage,
+        private FileStorage $fileStorage,
     ) {}
 
     public function __invoke(Request $request, RegisterRequest $registerRequest)
     {
         $data = $registerRequest->validated($request);
-        $avatarPath = null;
+
+        // todo: move into private method
         if ($request->hasFile('avatar')) {
-            $avatarFilePath = $this->file_storage->upload($request->file('avatar'), 'user');
-            $avatarPath = $avatarFilePath->value;
+            $avatarFilePath = $this->fileStorage->upload($request->file('avatar'), 'user//avatars');
+            $data['user']['avatar'] = $avatarFilePath->value;
+        } else {
+            $data['user']['avatar'] = null;
         }
 
-        $nameData = is_string($data['name']) ? json_decode($data['name'], true) : $data['name'];
+        // todo: move into private method
+        $data['attachments'] = [
+            'cv' => $request->hasFile('attachments.cv')
+                ? $this->fileStorage->upload($request->file('attachments.cv'), 'user/cvs')->value
+                : null,
+            'medical_record' => $request->hasFile('attachments.medical_record')
+                ? $this->fileStorage->upload($request->file('attachments.medical_record'), 'user/medicals')->value
+                : null,
+            'personal_identity' => $request->hasFile('attachments.personal_identity')
+                ? $this->fileStorage->upload($request->file('attachments.personal_identity'), 'user/ids')->value
+                : null,
+        ];
 
-        $registerCommand = new RegisterUserCommand(
-            name: TranslatableText::fromMixed($nameData),
-            phone: $data['phone'],
-            password: $data['password'],
-            avatar: $avatarPath,
-            email: $data['email'] ?? null,
-        );
+        $command = RegisterUserCommand::fromRequest($data);
 
-        $userId = $this->handler->handle($registerCommand);
+        $userId = $this->handler->handle($command);
 
         $user = $this->repository->findById($userId);
         if (!$user) {

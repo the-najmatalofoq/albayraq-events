@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Modules\User\Domain\Repository;
 
-use Modules\User\Domain\UserProfile;
+use Modules\User\Domain\EmployeeProfile;
 use Modules\User\Domain\ValueObject\UserProfileId;
 use Modules\User\Domain\ValueObject\UserId;
 
@@ -12,13 +12,13 @@ interface UserProfileRepositoryInterface
 {
     public function nextIdentity(): UserProfileId;
 
-    public function save(UserProfile $userProfile): void;
+    public function save(EmployeeProfile $userProfile): void;
 
-    public function findById(UserProfileId $id): ?UserProfile;
+    public function findById(UserProfileId $id): ?EmployeeProfile;
 
-    public function findByUserId(UserId $userId): ?UserProfile;
+    public function findByUserId(UserId $userId): ?EmployeeProfile;
 
-    public function findByEmployeeNumber(string $employeeNumber): ?UserProfile;
+    public function findByEmployeeNumber(string $employeeNumber): ?EmployeeProfile;
 
     public function listAll(): array;
 }

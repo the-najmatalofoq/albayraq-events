@@ -4,19 +4,23 @@ declare(strict_types=1);
 
 namespace Modules\User\Presentation\Http\Presenter;
 
-use Modules\User\Domain\UserProfile;
+use Modules\User\Domain\EmployeeProfile;
 
 final class UserProfilePresenter
 {
-    public static function fromDomain(UserProfile $profile): array
+    public static function fromDomain(EmployeeProfile $profile): array
     {
         return [
             'id' => $profile->uuid->value,
-            'employee_number' => $profile->employeeNumber,
-            'job_title' => $profile->jobTitle->toArray(),
-            'department' => $profile->department->toArray(),
-            'hiring_date' => $profile->hiringDate?->format('Y-m-d'),
-            'is_active' => $profile->isActive,
+            'user_id' => $profile->userId->value,
+            'full_name' => $profile->fullName?->toArray(),
+            'birth_date' => $profile->birthDate?->format('Y-m-d'),
+            'nationality' => $profile->nationality,
+            'gender' => $profile->gender,
+            'national_id' => $profile->nationalId,
+            'medical_record' => $profile->medicalRecord,
+            'height' => $profile->height,
+            'weight' => $profile->weight,
         ];
     }
 }

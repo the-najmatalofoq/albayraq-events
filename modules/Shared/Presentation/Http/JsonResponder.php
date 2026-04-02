@@ -32,6 +32,7 @@ final readonly class JsonResponder
             'timestamp'  => now()->toIso8601String(),
             'data'       => $data,
             'errors'     => null,
+            //todo: remove the errors key when the response is "success"
         ], $status);
     }
 

@@ -12,10 +12,10 @@ final class UserPresenter
     {
         return [
             'id' => $user->uuid->value,
-            'name' => $user->name,
+            'name' => $user->name->values['ar'],
             'email' => $user->email,
-            'phone' => $user->phone,
-            'avatar' => $user->avatar,
+            'phone' => $user->phone->value,
+            'avatar' => $user->avatar->value,
         ];
     }
 }

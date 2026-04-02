@@ -11,7 +11,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 final class BankDetailModel extends Model
 {
     use HasUuids;
-
     protected $table = 'bank_details';
     public $incrementing = false;
     protected $keyType = 'string';
