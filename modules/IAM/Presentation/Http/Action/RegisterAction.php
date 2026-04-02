@@ -9,12 +9,11 @@ use Modules\IAM\Application\Command\RegisterUser\RegisterUserCommand;
 use Modules\IAM\Application\Command\RegisterUser\RegisterUserHandler;
 use Modules\User\Presentation\Http\Presenter\UserPresenter;
 use Modules\IAM\Presentation\Http\Request\RegisterRequest;
-use Modules\Role\Domain\Repository\RoleRepository;
 use Modules\Shared\Presentation\Http\JsonResponder;
 use Modules\User\Domain\Repository\UserRepositoryInterface;
-use Modules\Shared\Domain\ValueObject\TranslatableText;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
+
+use Illuminate\Http\Request;
+use Modules\Shared\Infrastructure\Services\FileStorage;
 
 #[Group('Auth')]
 final readonly class RegisterAction
@@ -22,20 +21,36 @@ final readonly class RegisterAction
     public function __construct(
         private RegisterUserHandler $handler,
         private UserRepositoryInterface $repository,
-        private RoleRepository $roleRepository,
-        private UserPresenter $presenter,
         private JsonResponder $responder,
-    ) {
-    }
+        private FileStorage $fileStorage,
+    ) {}
 
-    public function __invoke(RegisterRequest $request): ResponseInterface
+    public function __invoke(Request $request, RegisterRequest $registerRequest)
     {
-        $command = new RegisterUserCommand(
-            name: TranslatableText::fromArray($request->validated('name')),
-            phone: $request->validated('phone'),
-            password: $request->validated('password'),
-            email: $request->validated('email'),
-        );
+        $data = $registerRequest->validated($request);
+
+        // todo: move into private method
+        if ($request->hasFile('avatar')) {
+            $avatarFilePath = $this->fileStorage->upload($request->file('avatar'), 'user//avatars');
+            $data['user']['avatar'] = $avatarFilePath->value;
+        } else {
+            $data['user']['avatar'] = null;
+        }
+
+        // todo: move into private method
+        $data['attachments'] = [
+            'cv' => $request->hasFile('attachments.cv')
+                ? $this->fileStorage->upload($request->file('attachments.cv'), 'user/cvs')->value
+                : null,
+            'medical_record' => $request->hasFile('attachments.medical_record')
+                ? $this->fileStorage->upload($request->file('attachments.medical_record'), 'user/medicals')->value
+                : null,
+            'personal_identity' => $request->hasFile('attachments.personal_identity')
+                ? $this->fileStorage->upload($request->file('attachments.personal_identity'), 'user/ids')->value
+                : null,
+        ];
+
+        $command = RegisterUserCommand::fromRequest($data);
 
         $userId = $this->handler->handle($command);
 
@@ -45,7 +60,7 @@ final readonly class RegisterAction
         }
 
         return $this->responder->success(
-            data: $this->presenter->present($user),
+            data: UserPresenter::fromDomain($user),
             messageKey: 'messages.auth.registered'
         );
     }

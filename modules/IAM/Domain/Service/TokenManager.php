@@ -6,7 +6,7 @@ namespace Modules\IAM\Domain\Service;
 
 interface TokenManager
 {
-    public function createToken(string $userId): string;
+    public function createToken(string $userId): array;
 
     public function revokeAllTokens(string $userId): void;
 }

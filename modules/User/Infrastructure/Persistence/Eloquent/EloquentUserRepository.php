@@ -23,9 +23,9 @@ final class EloquentUserRepository implements UserRepositoryInterface
             [
                 'name' => $user->name->toArray(),
                 'email' => $user->email,
-                'phone' => $user->phone,
+                'phone' => $user->phone->value,
+                'avatar' => $user->avatar?->value,
                 'password' => $user->password->value,
-                'avatar' => $user->avatar,
                 'is_active' => $user->isActive,
                 'created_at' => $user->createdAt,
                 'updated_at' => $user->updatedAt,
@@ -40,6 +40,7 @@ final class EloquentUserRepository implements UserRepositoryInterface
     public function findById(UserId $id): ?User
     {
         $model = UserModel::with('roles')->where('id', $id->value)->first();
+
         return $model ? UserReflector::fromModel($model) : null;
     }
 

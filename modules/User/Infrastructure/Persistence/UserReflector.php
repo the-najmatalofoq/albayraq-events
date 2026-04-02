@@ -10,6 +10,8 @@ use Modules\User\Domain\ValueObject\HashedPassword;
 use Modules\Role\Domain\ValueObject\RoleId;
 use Modules\User\Infrastructure\Persistence\Eloquent\UserModel;
 use Modules\Shared\Domain\ValueObject\TranslatableText;
+use Modules\User\Domain\ValueObject\Phone;
+use Modules\Shared\Domain\ValueObject\FilePath;
 
 final class UserReflector
 {
@@ -20,13 +22,13 @@ final class UserReflector
 
         $properties = [
             'uuid' => UserId::fromString($model->id),
-            'name' => TranslatableText::fromArray($model->name),
+            'name' => $model->name instanceof TranslatableText ? $model->name : TranslatableText::fromArray($model->name),
             'email' => $model->email,
-            'phone' => $model->phone,
+            'phone' => new Phone($model->phone),
             'password' => new HashedPassword($model->password),
             'roleIds' => [],
             'isActive' => $model->is_active,
-            'avatar' => $model->avatar,
+            'avatar' => $model->avatar ? new FilePath($model->avatar) : null,
             'createdAt' => $model->created_at->toDateTimeImmutable(),
             'updatedAt' => $model->updated_at?->toDateTimeImmutable(),
             'phoneVerifiedAt' => $model->phone_verified_at?->toDateTimeImmutable(),

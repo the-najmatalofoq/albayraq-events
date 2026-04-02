@@ -12,9 +12,10 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Modules\Role\Infrastructure\Persistence\Eloquent\RoleModel;
 
-final class UserModel extends Model implements JWTSubject
+final class UserModel extends Authenticatable implements JWTSubject
 {
     use HasUuids, Notifiable, SoftDeletes;
 
@@ -23,6 +24,7 @@ final class UserModel extends Model implements JWTSubject
     public $incrementing = false;
 
     protected $fillable = [
+        'id',
         'name',
         'email',
         'phone',
@@ -36,7 +38,7 @@ final class UserModel extends Model implements JWTSubject
     protected $hidden = ['password', 'remember_token'];
 
     protected $casts = [
-        'name' => 'array',
+        'name' => \Modules\Shared\Infrastructure\Laravel\Casts\TranslatableTextCast::class,
         'is_active' => 'boolean',
         'phone_verified_at' => 'datetime',
     ];

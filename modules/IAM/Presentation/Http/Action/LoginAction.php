@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Modules\IAM\Presentation\Http\Action;
@@ -8,6 +9,7 @@ use Dedoc\Scramble\Attributes\Endpoint;
 use Dedoc\Scramble\Attributes\Group;
 use Modules\IAM\Application\Command\Authenticate\AuthenticateUserCommand;
 use Modules\IAM\Application\Command\Authenticate\AuthenticateUserHandler;
+use Modules\IAM\Presentation\Http\Presenter\AuthenticationPresenter;
 use Modules\IAM\Presentation\Http\Request\LoginRequest;
 use Modules\Shared\Presentation\Http\JsonResponder;
 use Psr\Http\Message\ResponseInterface;
@@ -33,15 +35,9 @@ final readonly class LoginAction
             email: $data['email'],
             password: $data['password'],
         ));
-
         return $this->responder->success(
-            data: [
-                'token' => $result['token'],
-                'user_id' => $result['user_id'],
-            ],
-            status: 200,
+            data: AuthenticationPresenter::fromResult($result),
             messageKey: 'messages.auth.login_success'
         );
-
     }
 }

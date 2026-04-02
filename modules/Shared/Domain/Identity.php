@@ -6,7 +6,7 @@ namespace Modules\Shared\Domain;
 
 use Ramsey\Uuid\Uuid;
 
-abstract class Identity extends ValueObject
+abstract readonly class Identity extends ValueObject
 {
     public function __construct(
         public readonly string $value,

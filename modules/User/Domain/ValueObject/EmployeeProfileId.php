@@ -6,6 +6,6 @@ namespace Modules\User\Domain\ValueObject;
 
 use Modules\Shared\Domain\Identity;
 
-final class EmployeeProfileId extends Identity
+final readonly class EmployeeProfileId extends Identity
 {
 }

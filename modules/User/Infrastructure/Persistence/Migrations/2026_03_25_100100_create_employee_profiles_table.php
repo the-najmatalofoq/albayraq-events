@@ -17,8 +17,6 @@ return new class extends Migration
             $table->date('birth_date')->nullable();
             $table->string('nationality')->nullable();
             $table->enum('gender', ['male', 'female', 'other'])->nullable();
-            $table->string('national_id')->unique()->nullable();
-            $table->json('medical_record')->nullable();
             $table->float('height')->nullable();
             $table->float('weight')->nullable();
             $table->timestamps();

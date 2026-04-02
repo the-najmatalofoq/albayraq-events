@@ -26,7 +26,7 @@ final readonly class LogoutAction
     #[Header('Authorization', description: 'Bearer token', required: true)]
     public function __invoke(ServerRequestInterface $request): ResponseInterface
     {
-        $user = $request->getAttribute('user');
+        $user = $user = auth('api')->user();
 
         $this->handler->handle(new RevokeTokenCommand(
             userEmail: $user->email,

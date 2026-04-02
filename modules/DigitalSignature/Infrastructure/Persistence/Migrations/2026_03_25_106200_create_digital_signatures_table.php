@@ -10,7 +10,6 @@ return new class extends Migration
     {
         Schema::create('digital_signatures', function (Blueprint $table): void {
             $table->uuid('id')->primary();
-            $table->foreignUuid('contract_id')->constrained('event_contracts')->cascadeOnDelete();
             $table->text('signature_svg');
             $table->string('ip_address')->nullable();
             $table->string('user_agent')->nullable();

@@ -1,7 +1,7 @@
 <?php
 // filePath: config/auth.php
 declare(strict_types=1);
-use Modules\IAM\Infrastructure\Persistence\Eloquent\UserModel;
+
 return [
 
     'defaults' => [
@@ -23,7 +23,7 @@ return [
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => env('AUTH_MODEL', UserModel::class),
+            'model' => env('AUTH_MODEL', \Modules\User\Infrastructure\Persistence\Eloquent\UserModel::class),
         ],
 
     ],

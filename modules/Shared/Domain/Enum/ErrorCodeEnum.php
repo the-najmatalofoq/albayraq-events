@@ -13,6 +13,7 @@ enum ErrorCodeEnum: string
     case INTERNAL_ERROR = 'INTERNAL_ERROR';
     case USER_ALREADY_EXISTS = 'USER_ALREADY_EXISTS';
     case INVALID_CREDENTIALS = 'INVALID_CREDENTIALS';
+    case BANK_ALREADY_EXISTS = 'BANK_ALREADY_EXISTS';
 
     public function getHttpStatus(): int
     {
@@ -24,6 +25,7 @@ enum ErrorCodeEnum: string
             self::INTERNAL_ERROR => 500,
             self::USER_ALREADY_EXISTS => 409,
             self::INVALID_CREDENTIALS => 401,
+            self::BANK_ALREADY_EXISTS => 409,
         };
     }
 }

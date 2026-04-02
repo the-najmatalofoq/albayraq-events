@@ -19,8 +19,6 @@ final class EmployeeProfile extends AggregateRoot
         public private(set) ?\DateTimeImmutable $birthDate = null,
         public private(set) ?string $nationality = null,
         public private(set) ?string $gender = null,
-        public private(set) ?string $nationalId = null,
-        public private(set) ?array $medicalRecord = null,
         public private(set) ?float $height = null,
         public private(set) ?float $weight = null,
     ) {}
@@ -33,27 +31,23 @@ final class EmployeeProfile extends AggregateRoot
     }
 
     public function updatePersonalData(
-        ?TranslatableText $fullName,
-        ?\DateTimeImmutable $birthDate,
-        ?string $nationality,
-        ?string $gender,
-        ?string $nationalId
+        TranslatableText $fullName,
+        \DateTimeImmutable $birthDate,
+        string $nationality,
+        string $gender,
     ): void {
         $this->fullName = $fullName;
         $this->birthDate = $birthDate;
         $this->nationality = $nationality;
         $this->gender = $gender;
-        $this->nationalId = $nationalId;
     }
 
     public function updatePhysicalData(
-        ?float $height,
-        ?float $weight,
-        ?array $medicalRecord
+        float $height,
+        float $weight,
     ): void {
         $this->height = $height;
         $this->weight = $weight;
-        $this->medicalRecord = $medicalRecord;
     }
 
     public function id(): Identity
