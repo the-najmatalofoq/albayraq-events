@@ -8,7 +8,22 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Modules\Quiz\Infrastructure\Persistence\Eloquent\QuizModel;
+use Illuminate\Database\Eloquent\Collection;
+use Carbon\Carbon;
 
+/**
+ * Quiz question model
+ *
+ * @property string $id
+ * @property string $quiz_id
+ * @property array $content
+ * @property string $type
+ * @property array $options
+ * @property int $score_weight
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ * @property-read QuizModel $quiz
+ */
 final class QuestionModel extends Model
 {
     use HasUuids;

@@ -11,7 +11,26 @@ use Modules\EventAssetCustody\Domain\Enum\CustodyStatusEnum;
 use Modules\User\Infrastructure\Persistence\Eloquent\Models\UserModel;
 use Modules\Event\Infrastructure\Persistence\Eloquent\EventModel;
 use Modules\EventParticipation\Infrastructure\Persistence\Eloquent\EventParticipationModel;
+use Carbon\Carbon;
 
+/**
+ * Event asset custody model
+ *
+ * @property string $id
+ * @property string $event_id
+ * @property string $event_participation_id
+ * @property array $item_name
+ * @property array $description
+ * @property Carbon $handed_at
+ * @property Carbon|null $returned_at
+ * @property CustodyStatusEnum $status
+ * @property string $handed_by
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ * @property-read EventModel $event
+ * @property-read EventParticipationModel $participation
+ * @property-read UserModel $handler
+ */
 final class EventAssetCustodyModel extends Model
 {
     use HasUuids;

@@ -38,6 +38,24 @@ final class BankDetail extends AggregateRoot
         );
     }
 
+    public static function fromPersistence(
+        BankDetailId $uuid,
+        UserId $userId,
+        string $accountOwner,
+        string $bankName,
+        string $iban,
+        ?string $accountContact = null,
+    ): self {
+        return new self(
+            uuid: $uuid,
+            userId: $userId,
+            accountOwner: $accountOwner,
+            bankName: $bankName,
+            iban: $iban,
+            accountContact: $accountContact,
+        );
+    }
+
     public function updateDetails(
         string $accountOwner,
         string $bankName,

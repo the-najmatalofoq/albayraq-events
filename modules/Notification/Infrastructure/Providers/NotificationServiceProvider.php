@@ -6,6 +6,8 @@ namespace Modules\Notification\Infrastructure\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Broadcast;
+use Modules\EventContract\Domain\Events\ContractSent;
+use Modules\Notification\Application\Listeners\SendContractSentNotification;
 use Modules\Notification\Domain\Repository\DeviceTokenRepositoryInterface;
 use Modules\Notification\Infrastructure\Persistence\Eloquent\EloquentDeviceTokenRepository;
 
@@ -32,7 +34,11 @@ final class NotificationServiceProvider extends ServiceProvider
 
     private function registerEventListeners(): void
     {
-        $events = [];
+        $events = [
+            ContractSent::class => [
+                SendContractSentNotification::class,
+            ],
+        ];
 
         foreach ($events as $event => $listeners) {
             foreach ($listeners as $listener) {

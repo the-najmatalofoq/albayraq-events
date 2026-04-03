@@ -6,7 +6,22 @@ namespace Modules\EventPositionApplication\Infrastructure\Persistence\Eloquent;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Carbon\Carbon;
 
+/**
+ * Event position application model
+ *
+ * @property string $id
+ * @property string $user_id
+ * @property string $position_id
+ * @property string $status
+ * @property float $ranking_score
+ * @property Carbon $applied_at
+ * @property Carbon|null $reviewed_at
+ * @property string|null $reviewed_by
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ */
 final class EventPositionApplicationModel extends Model
 {
     use HasUuids;

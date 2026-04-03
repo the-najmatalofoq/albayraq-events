@@ -9,7 +9,24 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Modules\User\Infrastructure\Persistence\Eloquent\Models\UserModel;
 use Modules\Event\Infrastructure\Persistence\Eloquent\EventModel;
+use Carbon\Carbon;
 
+/**
+ * Event announcement model
+ * 
+ * @property string $id
+ * @property string $event_id
+ * @property string $sender_id
+ * @property string $target_type
+ * @property string $target_id
+ * @property array $title
+ * @property array $body
+ * @property Carbon $sent_at
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ * @property-read EventModel $event
+ * @property-read UserModel $sender
+ */
 final class EventAnnouncementModel extends Model
 {
     use HasUuids;

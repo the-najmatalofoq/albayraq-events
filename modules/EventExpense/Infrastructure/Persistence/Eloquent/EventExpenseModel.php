@@ -10,7 +10,26 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Modules\EventExpense\Domain\Enum\ExpenseStatusEnum;
 use Modules\User\Infrastructure\Persistence\Eloquent\Models\UserModel;
 use Modules\Event\Infrastructure\Persistence\Eloquent\EventModel;
+use Carbon\Carbon;
 
+/**
+ * Event expense model
+ *
+ * @property string $id
+ * @property string $event_id
+ * @property array $description
+ * @property float $amount
+ * @property string $category
+ * @property ExpenseStatusEnum $status
+ * @property string $submitted_by
+ * @property string|null $approved_by
+ * @property Carbon|null $approved_at
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ * @property-read EventModel $event
+ * @property-read UserModel $submitter
+ * @property-read UserModel|null $approver
+ */
 final class EventExpenseModel extends Model
 {
     use HasUuids;

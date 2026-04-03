@@ -31,19 +31,20 @@ final readonly class UploadFileAction
         }
 
         $extension = pathinfo($file->getClientFilename(), PATHINFO_EXTENSION);
-        $fileName = Str::uuid() . '.' . $extension;
+        $id = $this->repository->nextIdentity();
+        $fileName = $id->value . '.' . $extension;
         $path = 'attachments/' . $fileName;
 
         Storage::disk('local')->put($path, (string) $file->getStream());
 
-        $id = $this->repository->nextIdentity();
         $attachment = FileAttachment::create(
             uuid: $id,
-            originalName: $file->getClientFilename(),
-            storagePath: $path,
-            mimeType: $file->getClientMediaType(),
-            size: $file->getSize(),
-            uploaderId: UserId::fromString(auth()->id())
+            attachableId: (string) auth()->id(),
+            attachableType: 'user_upload',
+            filePath: $path,
+            fileName: $file->getClientFilename(),
+            fileType: $file->getClientMediaType(),
+            fileSize: $file->getSize(),
         );
 
         $this->repository->save($attachment);

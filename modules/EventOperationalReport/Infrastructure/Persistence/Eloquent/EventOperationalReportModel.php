@@ -10,7 +10,28 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Modules\Event\Infrastructure\Persistence\Eloquent\EventModel;
 use Modules\ReportType\Infrastructure\Persistence\Eloquent\ReportTypeModel;
 use Modules\User\Infrastructure\Persistence\Eloquent\Models\UserModel;
+use Carbon\Carbon;
 
+/**
+ * Event operational report model
+ *
+ * @property string $id
+ * @property string $event_id
+ * @property string $report_type_id
+ * @property string $author_id
+ * @property array $title
+ * @property array $content
+ * @property Carbon $date
+ * @property string $status
+ * @property string|null $approved_by
+ * @property Carbon|null $approved_at
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ * @property-read EventModel $event
+ * @property-read ReportTypeModel $reportType
+ * @property-read UserModel $author
+ * @property-read UserModel|null $approver
+ */
 final class EventOperationalReportModel extends Model
 {
     use HasUuids;
@@ -31,12 +52,15 @@ final class EventOperationalReportModel extends Model
         'approved_at',
     ];
 
-    protected $casts = [
-        'title' => 'array',
-        'content' => 'array',
-        'date' => 'date',
-        'approved_at' => 'datetime',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'title' => 'array',
+            'content' => 'array',
+            'date' => 'date',
+            'approved_at' => 'datetime',
+        ];
+    }
 
     public function event(): BelongsTo
     {

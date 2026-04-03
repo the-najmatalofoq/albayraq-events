@@ -11,20 +11,14 @@ final class EventExpensePresenter
     public function present(EventExpense $expense): array
     {
         return [
-            'uuid'          => $expense->uuid->value(),
-            'event_id'       => $expense->eventId->value(),
-            'description'   => $expense->description->toArray(),
-            'amount'        => $expense->amount,
-            'category'      => $expense->category,
-            'status'        => $expense->status->value,
-            'submission'    => [
-                'at' => $expense->createdAt->format(DATE_ATOM),
-                'by' => $expense->submittedBy->value(),
-            ],
-            'approval'      => [
-                'at' => $expense->approvedAt?->format(DATE_ATOM),
-                'by' => $expense->approvedBy?->value(),
-            ],
+            'uuid' => $expense->uuid->value,
+            'event_id' => $expense->eventId->value,
+            'description' => $expense->description->toArray(),
+            'amount' => $expense->amount,
+            'category' => $expense->category,
+            'status' => $expense->status->value,
+            'submission' => EventExpenseActionPresenter::present($expense->createdAt, $expense->submittedBy),
+            'approval' => EventExpenseActionPresenter::present($expense->approvedAt, $expense->approvedBy),
         ];
     }
 

@@ -8,7 +8,21 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Modules\EventContract\Infrastructure\Persistence\Eloquent\EventContractModel;
+use Carbon\Carbon;
 
+/**
+ * Digital signature model
+ *
+ * @property string $id
+ * @property string $contract_id
+ * @property string $signature_svg
+ * @property string $ip_address
+ * @property string $user_agent
+ * @property Carbon $signed_at
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ * @property-read EventContractModel $contract
+ */
 final class DigitalSignatureModel extends Model
 {
     use HasUuids;

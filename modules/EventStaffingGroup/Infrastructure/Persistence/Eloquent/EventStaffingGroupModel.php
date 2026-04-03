@@ -10,7 +10,22 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Modules\Event\Infrastructure\Persistence\Eloquent\EventModel;
 use Modules\EventParticipation\Infrastructure\Persistence\Eloquent\EventParticipationModel;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection;
 
+/**
+ * Event staffing group model
+ *
+ * @property string $id
+ * @property string $event_id
+ * @property array $name
+ * @property string|null $color
+ * @property bool $is_locked
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ * @property-read EventModel $event
+ * @property-read Collection|EventParticipationModel[] $participations
+ */
 final class EventStaffingGroupModel extends Model
 {
     use HasUuids;

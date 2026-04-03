@@ -11,20 +11,17 @@ final class EventContractPresenter
     public function present(EventContract $contract): array
     {
         return [
-            'uuid'              => $contract->uuid->value(),
-            'participation_id'   => $contract->participationId->value(),
-            'contract_type'      => $contract->contractType,
-            'wage_amount'        => $contract->wageAmount,
-            'terms'             => $contract->terms,
-            'status'            => $contract->status->value,
-            'rejection'         => [
-                'reason_id' => $contract->rejectionReasonId?->value(),
-                'notes'    => $contract->rejectionNotes,
-            ],
-            'sent_at'           => $contract->sentAt?->format(DATE_ATOM),
-            'accepted_at'       => $contract->acceptedAt?->format(DATE_ATOM),
-            'rejected_at'       => $contract->rejectedAt?->format(DATE_ATOM),
-            'created_at'        => $contract->createdAt->format(DATE_ATOM),
+            'uuid' => $contract->uuid->value,
+            'participation_id' => $contract->participationId->value,
+            'contract_type' => $contract->contractType,
+            'wage_amount' => $contract->wageAmount,
+            'terms' => $contract->terms,
+            'status' => $contract->status->value,
+            'rejection' => EventContractRejectionPresenter::present($contract),
+            'sent_at' => $contract->sentAt?->format(DATE_ATOM),
+            'accepted_at' => $contract->acceptedAt?->format(DATE_ATOM),
+            'rejected_at' => $contract->rejectedAt?->format(DATE_ATOM),
+            'created_at' => $contract->createdAt->format(DATE_ATOM),
         ];
     }
 

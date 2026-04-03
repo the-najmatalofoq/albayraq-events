@@ -9,7 +9,20 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Modules\User\Infrastructure\Persistence\Eloquent\Models\UserModel;
 use Modules\Event\Infrastructure\Persistence\Eloquent\EventModel;
+use Carbon\Carbon;
 
+/**
+ * Event role capability model
+ *
+ * @property string $id
+ * @property string $event_id
+ * @property string $user_id
+ * @property string $capability
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ * @property-read EventModel $event
+ * @property-read UserModel $user
+ */
 final class EventRoleCapabilityModel extends Model
 {
     use HasUuids;

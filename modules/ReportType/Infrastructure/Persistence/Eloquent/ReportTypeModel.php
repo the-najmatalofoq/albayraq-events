@@ -6,7 +6,18 @@ namespace Modules\ReportType\Infrastructure\Persistence\Eloquent;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Carbon\Carbon;
 
+/**
+ * Report type model
+ *
+ * @property string $id
+ * @property string $slug
+ * @property array $name
+ * @property bool $is_active
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ */
 final class ReportTypeModel extends Model
 {
     use HasUuids;

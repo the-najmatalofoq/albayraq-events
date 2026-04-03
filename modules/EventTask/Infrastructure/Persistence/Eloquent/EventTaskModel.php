@@ -11,7 +11,29 @@ use Modules\EventTask\Domain\Enum\TaskStatusEnum;
 use Modules\User\Infrastructure\Persistence\Eloquent\Models\UserModel;
 use Modules\Event\Infrastructure\Persistence\Eloquent\EventModel;
 use Modules\EventStaffingGroup\Infrastructure\Persistence\Eloquent\EventStaffingGroupModel;
+use Carbon\Carbon;
 
+/**
+ * Event task model
+ *
+ * @property string $id
+ * @property string $event_id
+ * @property string $assigned_to
+ * @property string|null $group_id
+ * @property array $title
+ * @property array $description
+ * @property Carbon $due_at
+ * @property float|null $location_latitude
+ * @property float|null $location_longitude
+ * @property TaskStatusEnum $status
+ * @property string $created_by
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ * @property-read EventModel $event
+ * @property-read UserModel $assignee
+ * @property-read EventStaffingGroupModel|null $group
+ * @property-read UserModel $creator
+ */
 final class EventTaskModel extends Model
 {
     use HasUuids;

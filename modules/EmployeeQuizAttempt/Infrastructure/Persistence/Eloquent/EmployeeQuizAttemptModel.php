@@ -11,7 +11,25 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Modules\Quiz\Infrastructure\Persistence\Eloquent\QuizModel;
 use Modules\EventParticipation\Infrastructure\Persistence\Eloquent\EventParticipationModel;
 use Modules\EmployeeAnswer\Infrastructure\Persistence\Eloquent\EmployeeAnswerModel;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection;
 
+/**
+ * Employee quiz attempt model
+ * 
+ * @property string $id
+ * @property string $quiz_id
+ * @property string $event_participation_id
+ * @property int $score
+ * @property string $status
+ * @property Carbon $started_at
+ * @property Carbon|null $completed_at
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ * @property-read QuizModel $quiz
+ * @property-read EventParticipationModel $participation
+ * @property-read Collection|EmployeeAnswerModel[] $answers
+ */
 final class EmployeeQuizAttemptModel extends Model
 {
     use HasUuids;

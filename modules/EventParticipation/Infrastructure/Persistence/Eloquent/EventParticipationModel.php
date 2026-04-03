@@ -20,7 +20,35 @@ use Modules\ParticipationEvaluation\Infrastructure\Persistence\Eloquent\Particip
 use Modules\ParticipationViolation\Infrastructure\Persistence\Eloquent\ParticipationViolationModel;
 use Modules\EventParticipationBadge\Infrastructure\Persistence\Eloquent\EventParticipationBadgeModel;
 use Modules\EventExperienceCertificate\Infrastructure\Persistence\Eloquent\EventExperienceCertificateModel;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection;
 
+/**
+ * Event participation model
+ *
+ * @property string $id
+ * @property string $user_id
+ * @property string $event_id
+ * @property string $position_id
+ * @property string|null $group_id
+ * @property string $employee_number
+ * @property string $status
+ * @property Carbon $started_at
+ * @property Carbon|null $ended_at
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ * @property Carbon|null $deleted_at
+ * @property-read UserModel $user
+ * @property-read EventModel $event
+ * @property-read EventStaffingPositionModel $position
+ * @property-read EventStaffingGroupModel|null $group
+ * @property-read EventContractModel|null $contract
+ * @property-read Collection|EventAttendanceModel[] $attendanceRecords
+ * @property-read Collection|ParticipationEvaluationModel[] $evaluations
+ * @property-read Collection|ParticipationViolationModel[] $violations
+ * @property-read EventParticipationBadgeModel|null $badge
+ * @property-read EventExperienceCertificateModel|null $certificate
+ */
 final class EventParticipationModel extends Model
 {
     use HasUuids, SoftDeletes;

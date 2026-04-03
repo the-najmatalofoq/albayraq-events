@@ -7,7 +7,7 @@ namespace Modules\IAM\Application\Command\AuthenticateUser;
 use Modules\User\Domain\Repository\UserRepositoryInterface;
 use Modules\IAM\Domain\Service\PasswordHasher;
 use Modules\IAM\Domain\Service\TokenManagerInterface;
-use Modules\Shared\Domain\Exception\UserNotActiveException;
+use Modules\User\Domain\Exception\UserNotActiveException;
 use Modules\IAM\Domain\Exception\CredentialsInvalidException;
 
 final readonly class AuthenticateUserHandler

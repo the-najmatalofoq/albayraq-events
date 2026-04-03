@@ -11,7 +11,29 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Modules\EventParticipation\Infrastructure\Persistence\Eloquent\EventParticipationModel;
 use Modules\ContractRejectionReason\Infrastructure\Persistence\Eloquent\ContractRejectionReasonModel;
 use Modules\ContractAcceptanceStep\Infrastructure\Persistence\Eloquent\ContractAcceptanceStepModel;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection;
 
+/**
+ * Event contract model
+ * 
+ * @property string $id
+ * @property string $event_participation_id
+ * @property string $contract_type
+ * @property float $wage_amount
+ * @property array $terms
+ * @property string $status
+ * @property string|null $rejection_reason_id
+ * @property string|null $rejection_notes
+ * @property Carbon|null $accepted_at
+ * @property Carbon|null $rejected_at
+ * @property Carbon|null $sent_at
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ * @property-read EventParticipationModel $participation
+ * @property-read ContractRejectionReasonModel|null $rejectionReason
+ * @property-read Collection|ContractAcceptanceStepModel[] $acceptanceSteps
+ */
 final class EventContractModel extends Model
 {
     use HasUuids;

@@ -14,4 +14,5 @@ interface ContactPhoneRepositoryInterface
     public function findByUserId(UserId $userId): array;
     public function findById(ContactPhoneId $uuid): ?ContactPhone;
     public function nextIdentity(): ContactPhoneId;
+    public function delete(ContactPhoneId $uuid): void;
 }

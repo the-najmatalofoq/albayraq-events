@@ -8,7 +8,21 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Modules\EventParticipation\Infrastructure\Persistence\Eloquent\EventParticipationModel;
+use Carbon\Carbon;
 
+/**
+ * Event experience certificate model
+ *
+ * @property string $id
+ * @property string $event_participation_id
+ * @property float $total_hours
+ * @property float $average_score
+ * @property Carbon $issued_at
+ * @property string $verification_code
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ * @property-read EventParticipationModel $participation
+ */
 final class EventExperienceCertificateModel extends Model
 {
     use HasUuids;

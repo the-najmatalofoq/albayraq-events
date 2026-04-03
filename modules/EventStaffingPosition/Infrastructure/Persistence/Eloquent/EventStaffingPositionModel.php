@@ -10,7 +10,25 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Modules\Event\Infrastructure\Persistence\Eloquent\EventModel;
 use Modules\EventParticipation\Infrastructure\Persistence\Eloquent\EventParticipationModel;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection;
 
+/**
+ * Event staffing position model
+ *
+ * @property string $id
+ * @property string $event_id
+ * @property array $title
+ * @property float $wage_amount
+ * @property string $wage_type
+ * @property int $headcount
+ * @property array $requirements
+ * @property bool $is_announced
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ * @property-read EventModel $event
+ * @property-read Collection|EventParticipationModel[] $participations
+ */
 final class EventStaffingPositionModel extends Model
 {
     use HasUuids;

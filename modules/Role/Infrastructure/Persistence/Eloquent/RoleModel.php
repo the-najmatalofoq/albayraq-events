@@ -7,7 +7,19 @@ namespace Modules\Role\Infrastructure\Persistence\Eloquent;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Modules\Role\Domain\Enum\RoleLevelEnum;
+use Carbon\Carbon;
 
+/**
+ * Role model
+ *
+ * @property string $id
+ * @property string $slug
+ * @property array $name
+ * @property bool $is_global
+ * @property RoleLevelEnum $level
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ */
 final class RoleModel extends Model
 {
     use HasUuids;

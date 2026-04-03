@@ -13,9 +13,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Modules\Role\Infrastructure\Persistence\Eloquent\RoleModel;
 use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
+use Illuminate\Database\Eloquent\Collection;
 use Carbon\Carbon;
 
 /**
+ * User model - Primary authentication and authorization model
+ *
  * @property string $id
  * @property array $name
  * @property string|null $email
@@ -25,13 +28,14 @@ use Carbon\Carbon;
  * @property string|null $avatar
  * @property bool $is_active
  * @property Carbon|null $phone_verified_at
+ * @property string|null $remember_token
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Carbon|null $deleted_at
- * @property-read \Illuminate\Database\Eloquent\Collection|\Modules\Role\Infrastructure\Persistence\Eloquent\RoleModel[] $roles
- * @property-read \Modules\User\Infrastructure\Persistence\Eloquent\Models\EmployeeProfileModel|null $profile
- * @property-read \Modules\User\Infrastructure\Persistence\Eloquent\Models\BankDetailModel|null $bankDetails
- * @property-read \Illuminate\Database\Eloquent\Collection|\Modules\User\Infrastructure\Persistence\Eloquent\Models\ContactPhoneModel[] $contactPhones
+ * @property-read Collection|RoleModel[] $roles
+ * @property-read EmployeeProfileModel|null $profile
+ * @property-read BankDetailModel|null $bankDetails
+ * @property-read Collection|ContactPhoneModel[] $contactPhones
  */
 final class UserModel extends Authenticatable implements JWTSubject
 {

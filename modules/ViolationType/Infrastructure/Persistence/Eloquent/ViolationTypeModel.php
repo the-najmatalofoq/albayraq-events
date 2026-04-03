@@ -6,7 +6,20 @@ namespace Modules\ViolationType\Infrastructure\Persistence\Eloquent;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Carbon\Carbon;
 
+/**
+ * Violation type model
+ *
+ * @property string $id
+ * @property array $name
+ * @property float $default_deduction_amount
+ * @property string $default_deduction_currency
+ * @property string $severity
+ * @property bool $is_active
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ */
 final class ViolationTypeModel extends Model
 {
     use HasUuids;

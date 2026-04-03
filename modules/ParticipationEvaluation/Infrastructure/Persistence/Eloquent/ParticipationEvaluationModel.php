@@ -9,7 +9,24 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Modules\User\Infrastructure\Persistence\Eloquent\Models\UserModel;
 use Modules\EventParticipation\Infrastructure\Persistence\Eloquent\EventParticipationModel;
+use Carbon\Carbon;
 
+/**
+ * Participation evaluation model
+ *
+ * @property string $id
+ * @property string $event_participation_id
+ * @property string $evaluator_id
+ * @property Carbon $date
+ * @property float $score
+ * @property string|null $notes
+ * @property bool $is_locked
+ * @property Carbon|null $locked_at
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ * @property-read EventParticipationModel $participation
+ * @property-read UserModel $evaluator
+ */
 final class ParticipationEvaluationModel extends Model
 {
     use HasUuids;

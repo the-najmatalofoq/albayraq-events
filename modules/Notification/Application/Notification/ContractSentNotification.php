@@ -5,12 +5,14 @@ declare(strict_types=1);
 namespace Modules\Notification\Application\Notification;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 use Kreait\Firebase\Messaging\CloudMessage;
 use Kreait\Firebase\Messaging\Notification as FcmNotification;
+use Modules\Notification\Infrastructure\Channel\FcmChannel;
 
-final class ContractSentNotification extends Notification
+final class ContractSentNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -21,7 +23,7 @@ final class ContractSentNotification extends Notification
 
     public function via(object $notifiable): array
     {
-        return ['database', \Modules\Notification\Infrastructure\Channel\FcmChannel::class, 'broadcast'];
+        return ['database', FcmChannel::class, 'broadcast'];
     }
 
     public function toArray(object $notifiable): array
@@ -51,19 +53,3 @@ final class ContractSentNotification extends Notification
     }
 }
 
-
-// code review:
-/**
- * CodeRabbit
-Queueable trait without ShouldQueue interface has no effect.
-
-The class uses the Queueable trait but doesn't implement Illuminate\Contracts\Queue\ShouldQueue. Without the interface, notifications will be sent synchronously regardless of the trait.
-
-If queueing is intended:
-
-+use Illuminate\Contracts\Queue\ShouldQueue;
- use Illuminate\Notifications\Notification;
- use Illuminate\Notifications\Messages\BroadcastMessage;
--final class ContractSentNotification extends Notification
-+final class ContractSentNotification extends Notification implements ShouldQueue
- */

@@ -12,9 +12,13 @@ use Modules\User\Infrastructure\Persistence\Eloquent\Models\ContactPhoneModel;
 
 final class EloquentContactPhoneRepository implements ContactPhoneRepositoryInterface
 {
+    public function __construct(
+        private readonly ContactPhoneModel $model
+    ) {}
+
     public function save(ContactPhone $contactPhone): void
     {
-        ContactPhoneModel::query()->updateOrCreate(
+        $this->model->updateOrCreate(
             ['id' => $contactPhone->uuid->value],
             [
                 'user_id' => $contactPhone->userId->value,
@@ -27,14 +31,14 @@ final class EloquentContactPhoneRepository implements ContactPhoneRepositoryInte
 
     public function findByUserId(UserId $userId): array
     {
-        $models = ContactPhoneModel::where('user_id', $userId->value)->get();
+        $models = $this->model->where('user_id', $userId->value)->get();
 
-        return $models->map(fn($model) => $this->toDomain($model))->toArray();
+        return $models->map(fn(ContactPhoneModel $model) => $this->toDomain($model))->toArray();
     }
 
     public function findById(ContactPhoneId $uuid): ?ContactPhone
     {
-        $model = ContactPhoneModel::find($uuid->value);
+        $model = $this->model->find($uuid->value);
 
         return $model ? $this->toDomain($model) : null;
     }
@@ -42,6 +46,11 @@ final class EloquentContactPhoneRepository implements ContactPhoneRepositoryInte
     public function nextIdentity(): ContactPhoneId
     {
         return ContactPhoneId::generate();
+    }
+
+    public function delete(ContactPhoneId $uuid): void
+    {
+        $this->model->destroy($uuid->value);
     }
 
     private function toDomain(ContactPhoneModel $model): ContactPhone

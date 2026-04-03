@@ -11,10 +11,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Modules\FileAttachment\Infrastructure\Persistence\Eloquent\AttachmentModel;
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
+use Carbon\Carbon;
 
 /**
+ * Employee profile model - Extended user profile with personal details
+ *
  * @property string $id
  * @property string $user_id
  * @property Carbon|null $birth_date

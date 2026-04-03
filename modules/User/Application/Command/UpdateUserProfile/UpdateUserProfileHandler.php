@@ -28,13 +28,11 @@ final readonly class UpdateUserProfileHandler
             return;
         }
 
-        // 1. Update User (National ID if provided)
         if ($command->nationalId !== null) {
             $user->updateNationalId($command->nationalId);
             $this->userRepository->save($user);
         }
 
-        // 2. Update/Create Profile
         $profile = $this->profileRepository->findByUserId($userId);
         
         if ($profile) {

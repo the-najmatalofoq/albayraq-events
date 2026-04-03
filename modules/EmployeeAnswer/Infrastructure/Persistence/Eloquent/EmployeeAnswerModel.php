@@ -9,7 +9,21 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Modules\Question\Infrastructure\Persistence\Eloquent\QuestionModel;
 use Modules\EmployeeQuizAttempt\Infrastructure\Persistence\Eloquent\EmployeeQuizAttemptModel;
+use Carbon\Carbon;
 
+/**
+ * Employee quiz answer model
+ * 
+ * @property string $id
+ * @property string $attempt_id
+ * @property string $question_id
+ * @property string $answer_id
+ * @property bool $is_correct
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ * @property-read EmployeeQuizAttemptModel $attempt
+ * @property-read QuestionModel $question
+ */
 final class EmployeeAnswerModel extends Model
 {
     use HasUuids;

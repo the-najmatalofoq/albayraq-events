@@ -12,7 +12,6 @@ use Modules\FileAttachment\Domain\FileAttachment;
 use Modules\User\Domain\ValueObject\UserId;
 use Modules\User\Infrastructure\Persistence\Eloquent\Models\EmployeeProfileModel;
 
-// fix: make EmployeeProfileModel EloquentRepository and inject it in the hanlder.
 final readonly class RegisterAttachmentHandler
 {
     public function __construct(
@@ -56,7 +55,7 @@ final readonly class RegisterAttachmentHandler
         $attachment = FileAttachment::create(
             uuid: $this->attachmentRepository->nextIdentity(),
             attachableId: $profile->uuid->value,
-            attachableType: EmployeeProfileModel::class,
+            attachableType: 'employee_profile',
             filePath: $filePath->value,
             fileName: $command->file->getClientOriginalName(),
             fileType: $command->file->getClientMimeType(),

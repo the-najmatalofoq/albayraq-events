@@ -10,6 +10,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Carbon\Carbon;
 
 /**
+ * Contact phone model - Emergency contact phone numbers
+ *
  * @property string $id
  * @property string $user_id
  * @property string $name

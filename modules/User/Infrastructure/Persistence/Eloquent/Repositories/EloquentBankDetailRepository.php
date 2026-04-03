@@ -12,43 +12,56 @@ use Modules\User\Infrastructure\Persistence\Eloquent\Models\BankDetailModel;
 
 final class EloquentBankDetailRepository implements BankDetailRepositoryInterface
 {
+    public function __construct(
+        private readonly BankDetailModel $bankDetailModel
+    ) {
+    }
+
     public function save(BankDetail $bankDetail): void
     {
-        BankDetailModel::query()->updateOrCreate(
+        $this->bankDetailModel->query()->updateOrCreate(
             ['id' => $bankDetail->uuid->value],
             [
                 'user_id' => $bankDetail->userId->value,
                 'account_owner' => $bankDetail->accountOwner,
                 'bank_name' => $bankDetail->bankName,
                 'iban' => $bankDetail->iban,
+                'account_contact' => $bankDetail->accountContact,
             ]
         );
     }
 
+    public function updateOrCreate(
+        UserId $userId,
+        string $accountOwner,
+        string $bankName,
+        string $iban,
+        ?string $accountContact = null
+    ): BankDetail {
+        $model = $this->bankDetailModel->updateOrCreate(
+            ['user_id' => $userId->value],
+            [
+                'id' => $this->nextIdentity()->value,
+                'account_owner' => $accountOwner,
+                'bank_name' => $bankName,
+                'iban' => $iban,
+                'account_contact' => $accountContact,
+            ]
+        );
+        
+        return $this->toDomain($model);
+    }
+
     public function findByUserId(UserId $userId): ?BankDetail
     {
-        $model = BankDetailModel::where('user_id', $userId->value)->first();
+        $model = $this->bankDetailModel->where('user_id', $userId->value)->first();
 
         return $model ? $this->toDomain($model) : null;
     }
 
     public function findById(BankDetailId $uuid): ?BankDetail
     {
-        $model = BankDetailModel::find($uuid->value);
-
-        return $model ? $this->toDomain($model) : null;
-    }
-
-    public function findByIban(string $iban): ?BankDetail
-    {
-        $model = BankDetailModel::where('iban', $iban)->first();
-
-        return $model ? $this->toDomain($model) : null;
-    }
-
-    public function findByAccountOwner(string $accountOwner): ?BankDetail
-    {
-        $model = BankDetailModel::where('account_owner', $accountOwner)->first();
+        $model = $this->bankDetailModel->find($uuid->value);
 
         return $model ? $this->toDomain($model) : null;
     }
@@ -60,22 +73,13 @@ final class EloquentBankDetailRepository implements BankDetailRepositoryInterfac
 
     private function toDomain(BankDetailModel $model): BankDetail
     {
-        $reflection = new \ReflectionClass(BankDetail::class);
-        $bankDetail = $reflection->newInstanceWithoutConstructor();
-
-        $properties = [
-            'uuid' => BankDetailId::fromString($model->id),
-            'userId' => UserId::fromString($model->user_id),
-            'accountOwner' => $model->account_owner,
-            'bankName' => $model->bank_name,
-            'iban' => $model->iban,
-        ];
-
-        foreach ($properties as $field => $value) {
-            $prop = $reflection->getProperty($field);
-            $prop->setValue($bankDetail, $value);
-        }
-
-        return $bankDetail;
+        return BankDetail::fromPersistence(
+            uuid: BankDetailId::fromString($model->id),
+            userId: UserId::fromString($model->user_id),
+            accountOwner: $model->account_owner,
+            bankName: $model->bank_name,
+            iban: $model->iban,
+            accountContact: $model->account_contact,
+        );
     }
 }

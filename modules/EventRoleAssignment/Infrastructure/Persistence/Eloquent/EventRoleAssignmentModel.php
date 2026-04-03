@@ -10,7 +10,21 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Modules\User\Infrastructure\Persistence\Eloquent\Models\UserModel;
 use Modules\Event\Infrastructure\Persistence\Eloquent\EventModel;
 use Modules\Role\Infrastructure\Persistence\Eloquent\RoleModel;
+use Carbon\Carbon;
 
+/**
+ * Event role assignment model
+ *
+ * @property string $id
+ * @property string $event_id
+ * @property string $user_id
+ * @property string $role_id
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ * @property-read EventModel $event
+ * @property-read UserModel $user
+ * @property-read RoleModel $role
+ */
 final class EventRoleAssignmentModel extends Model
 {
     use HasUuids;

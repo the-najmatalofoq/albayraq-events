@@ -7,7 +7,6 @@ namespace Modules\Shared\Infrastructure\Validation\Rules;
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 
-// fix: use private helper methods
 final class TranslatableJsonRule implements ValidationRule
 {
     public function __construct(
@@ -18,26 +17,38 @@ final class TranslatableJsonRule implements ValidationRule
 
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
+        $value = $this->decodeValue($value, $fail);
+        if ($value === null) {
+            return;
+        }
+
+        $this->checkRequiredLocale($value, 'ar', $this->arRequired, $fail);
+        $this->checkRequiredLocale($value, 'en', $this->enRequired, $fail);
+    }
+
+    private function decodeValue(mixed $value, Closure $fail): ?array
+    {
         if (is_string($value)) {
             $decoded = json_decode($value, true);
             if (json_last_error() !== JSON_ERROR_NONE) {
                 $fail('validation.translatable_json')->translate();
-                return;
+                return null;
             }
             $value = $decoded;
         }
 
         if (!is_array($value)) {
             $fail('validation.translatable_json')->translate();
-            return;
+            return null;
         }
 
-        if ($this->arRequired && (!isset($value['ar']) || trim((string) $value['ar']) === '')) {
-            $fail('validation.translatable_ar_required')->translate();
-        }
+        return $value;
+    }
 
-        if ($this->enRequired && (!isset($value['en']) || trim((string) $value['en']) === '')) {
-            $fail('validation.translatable_en_required')->translate();
+    private function checkRequiredLocale(array $value, string $locale, bool $isRequired, Closure $fail): void
+    {
+        if ($isRequired && (!isset($value[$locale]) || trim((string) $value[$locale]) === '')) {
+            $fail("validation.translatable_{$locale}_required")->translate();
         }
     }
 }

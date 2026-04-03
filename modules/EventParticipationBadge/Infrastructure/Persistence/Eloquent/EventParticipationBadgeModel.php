@@ -8,7 +8,19 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Modules\EventParticipation\Infrastructure\Persistence\Eloquent\EventParticipationModel;
+use Carbon\Carbon;
 
+/**
+ * Event participation badge model
+ *
+ * @property string $id
+ * @property string $event_participation_id
+ * @property array $badge_data
+ * @property Carbon $generated_at
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ * @property-read EventParticipationModel $participation
+ */
 final class EventParticipationBadgeModel extends Model
 {
     use HasUuids;

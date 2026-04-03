@@ -11,9 +11,9 @@ final class ParticipationEvaluationPresenter
     public function present(ParticipationEvaluation $evaluation): array
     {
         return [
-            'uuid'              => $evaluation->uuid->value(),
-            'participation_id'   => $evaluation->participationId->value(),
-            'evaluator_id'       => $evaluation->evaluatorId->value(),
+            'uuid'              => $evaluation->uuid->value,
+            'participation_id'   => $evaluation->participationId->value,
+            'evaluator_id'       => $evaluation->evaluatorId->value,
             'date'              => $evaluation->date->format('Y-m-d'),
             'score'             => $evaluation->score,
             'notes'             => $evaluation->notes,

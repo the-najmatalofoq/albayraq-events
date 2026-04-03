@@ -4,11 +4,14 @@ declare(strict_types=1);
 
 namespace Modules\WorkSchedule\Infrastructure\Persistence\Eloquent\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 /**
+ * Work schedule model for morphable resources
+ *
  * @property string $id
  * @property string $schedulable_id
  * @property string $schedulable_type
@@ -16,6 +19,9 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
  * @property string $start_time
  * @property string $end_time
  * @property bool $is_active
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ * @property-read Model $schedulable
  */
 final class WorkScheduleModel extends Model
 {

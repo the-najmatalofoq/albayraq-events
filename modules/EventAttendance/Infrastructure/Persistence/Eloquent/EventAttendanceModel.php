@@ -10,7 +10,27 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Modules\EventAttendance\Domain\Enum\AttendanceMethodEnum;
 use Modules\User\Infrastructure\Persistence\Eloquent\Models\UserModel;
 use Modules\EventParticipation\Infrastructure\Persistence\Eloquent\EventParticipationModel;
+use Carbon\Carbon;
 
+/**
+ * Event attendance record model
+ *
+ * @property string $id
+ * @property string $event_participation_id
+ * @property Carbon $date
+ * @property Carbon $check_in_at
+ * @property Carbon|null $check_out_at
+ * @property float $check_in_latitude
+ * @property float $check_in_longitude
+ * @property float|null $check_out_latitude
+ * @property float|null $check_out_longitude
+ * @property AttendanceMethodEnum $method
+ * @property string|null $verified_by
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ * @property-read EventParticipationModel $participation
+ * @property-read UserModel|null $verifier
+ */
 final class EventAttendanceModel extends Model
 {
     use HasUuids;

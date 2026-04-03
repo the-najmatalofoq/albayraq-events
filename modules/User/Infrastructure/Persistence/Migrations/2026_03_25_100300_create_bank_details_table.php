@@ -6,8 +6,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     public function up(): void
     {
         Schema::create('bank_details', function (Blueprint $table): void {
@@ -16,6 +15,7 @@ return new class extends Migration
             $table->string('account_owner');
             $table->string('bank_name');
             $table->string('iban')->unique();
+            $table->string('account_contact')->nullable();
             $table->timestamps();
         });
     }

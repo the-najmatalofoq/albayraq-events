@@ -6,7 +6,7 @@ namespace Modules\IAM\Domain\Exception;
 
 use Modules\Shared\Domain\Exception\DomainException;
 use Modules\Shared\Domain\Enum\ErrorCodeEnum;
-// fix: all Exception must extends DomainException and be like the others and work correct with bootstrap/app.phpfinal class BankAlreadyExistsException extends DomainException
+final class BankAlreadyExistsException extends DomainException
 {
     public static function withIban(string $iban): self
     {

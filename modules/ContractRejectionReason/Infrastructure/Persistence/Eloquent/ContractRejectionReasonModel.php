@@ -6,7 +6,17 @@ namespace Modules\ContractRejectionReason\Infrastructure\Persistence\Eloquent;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Carbon\Carbon;
 
+/**
+ * Contract rejection reason model
+ *
+ * @property string $id
+ * @property array $reason
+ * @property bool $is_active
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ */
 final class ContractRejectionReasonModel extends Model
 {
     use HasUuids;

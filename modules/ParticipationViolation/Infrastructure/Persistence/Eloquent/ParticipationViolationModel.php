@@ -10,8 +10,30 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Modules\ParticipationViolation\Domain\Enum\ViolationStatusEnum;
 use Modules\User\Infrastructure\Persistence\Eloquent\Models\UserModel;
 use Modules\ViolationType\Infrastructure\Persistence\Eloquent\ViolationTypeModel;
-use Modules\EventParticipation\Infrastructure\Persistence\Eloquent\EventParticipationModel;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection;
 
+/**
+ * Participation violation model
+ *
+ * @property string $id
+ * @property string $event_participation_id
+ * @property string $violation_type_id
+ * @property string $reported_by
+ * @property string $description
+ * @property Carbon $date
+ * @property int $current_tier
+ * @property ViolationStatusEnum $status
+ * @property float $deduction_amount
+ * @property string|null $approved_by
+ * @property Carbon|null $approved_at
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ * @property-read EventParticipationModel $participation
+ * @property-read ViolationTypeModel $type
+ * @property-read UserModel $reporter
+ * @property-read UserModel|null $approver
+ */
 final class ParticipationViolationModel extends Model
 {
     use HasUuids;

@@ -10,11 +10,11 @@ use Modules\User\Domain\ValueObject\UserId;
 use Modules\User\Infrastructure\Persistence\Eloquent\Models\UserModel;
 use Modules\User\Infrastructure\Persistence\UserReflector;
 
-// fix: inject the model (UserModel) in the __construct
 final class EloquentUserRepository implements UserRepositoryInterface
 {
     public function __construct(
         private readonly UserReflector $reflector,
+        private readonly UserModel $model,
     ) {
     }
 
@@ -25,21 +25,21 @@ final class EloquentUserRepository implements UserRepositoryInterface
 
     public function findById(UserId $id): ?User
     {
-        $model = UserModel::with('roles')->find($id->value);
+        $model = $this->model->with('roles')->find($id->value);
 
         return $model ? $this->reflector->toEntity($model) : null;
     }
 
     public function findByPhone(string $phone): ?User
     {
-        $model = UserModel::with('roles')->where('phone', $phone)->first();
+        $model = $this->model->with('roles')->where('phone', $phone)->first();
 
         return $model ? $this->reflector->toEntity($model) : null;
     }
 
     public function findByEmail(string $email): ?User
     {
-        $model = UserModel::with('roles')->where('email', $email)->first();
+        $model = $this->model->with('roles')->where('email', $email)->first();
 
         return $model ? $this->reflector->toEntity($model) : null;
     }
@@ -49,22 +49,23 @@ final class EloquentUserRepository implements UserRepositoryInterface
         $data = $this->reflector->fromEntity($user);
         $roleIds = array_map(fn($roleId) => $roleId->value, $user->roleIds);
 
-        $model = UserModel::updateOrCreate(['id' => $user->uuid->value], $data);
+        $modelInstance = clone $this->model;
+        $model = $modelInstance->updateOrCreate(['id' => $user->uuid->value], $data);
         $model->roles()->sync($roleIds);
     }
 
     public function existsWithPhone(string $phone): bool
     {
-        return UserModel::where('phone', $phone)->exists();
+        return $this->model->where('phone', $phone)->exists();
     }
 
     public function existsWithEmail(string $email): bool
     {
-        return UserModel::where('email', $email)->exists();
+        return $this->model->where('email', $email)->exists();
     }
 
     public function delete(UserId $id): void
     {
-        UserModel::destroy($id->value);
+        $this->model->destroy($id->value);
     }
 }
