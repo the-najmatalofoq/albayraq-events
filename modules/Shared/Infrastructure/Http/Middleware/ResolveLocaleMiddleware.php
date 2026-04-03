@@ -10,33 +10,17 @@ use Symfony\Component\HttpFoundation\Response;
 
 final class ResolveLocaleMiddleware
 {
-    // fix: make them config driven, and use private helper methods.
-    private const SUPPORTED_LOCALES = ['ar', 'en'];
-    private const DEFAULT_LOCALE = 'ar';
-
     public function handle(Request $request, Closure $next): Response
     {
-        $locale = $this->resolveLocale($request);
+        $supportedLocales = config('app.supported_locales', ['ar', 'en']);
+        $locale = $request->header('Accept-Language');
 
-        app()->setLocale($locale);
-        $request->attributes->set('locale', $locale);
-
-        $response = $next($request);
-
-        if ($response instanceof Response) {
-            $response->headers->set('Content-Language', $locale);
+        if (!$locale || !in_array($locale, $supportedLocales, true)) {
+            $locale = config('app.locale', 'ar');
         }
 
-        return $response;
-    }
+        app()->setLocale($locale);
 
-    private function resolveLocale(Request $request): string
-    {
-        $header = $request->header('Accept-Language', self::DEFAULT_LOCALE);
-        $locale = strtolower(substr((string) $header, 0, 2));
-
-        return in_array($locale, self::SUPPORTED_LOCALES, true)
-            ? $locale
-            : self::DEFAULT_LOCALE;
+        return $next($request);
     }
 }

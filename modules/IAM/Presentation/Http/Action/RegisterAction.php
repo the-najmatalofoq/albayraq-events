@@ -6,27 +6,26 @@ namespace Modules\IAM\Presentation\Http\Action;
 
 use Illuminate\Http\JsonResponse;
 use Modules\IAM\Application\Command\RegisterUser\RegisterUserCommand;
+use Modules\IAM\Application\Command\RegisterUser\RegisterUserHandler;
 use Modules\IAM\Presentation\Http\Request\RegisterRequest;
-use Modules\Shared\Application\Command\CommandBusInterface;
 use Modules\Shared\Presentation\Http\JsonResponder;
-use Modules\User\Domain\ValueObject\UserId;
-
-// fix: fix the return type and also we must use the handler ? or what? and what about the CommandBusInterface?
+use Modules\User\Domain\Repository\UserRepositoryInterface;
 
 final class RegisterAction
 {
     public function __construct(
-        private readonly CommandBusInterface $commandBus,
+        private readonly RegisterUserHandler $handler,
         private readonly JsonResponder $responder,
+        private readonly UserRepositoryInterface $userRepository,
     ) {
     }
 
     public function __invoke(RegisterRequest $request): JsonResponse
     {
-        $userId = UserId::next();
+        $userId = $this->userRepository->nextIdentity();
 
         $command = new RegisterUserCommand(
-            userId: $userId->value(),
+            userId: $userId->value,
             name: $request->validated('name'),
             email: $request->validated('email'),
             phone: $request->validated('phone'),
@@ -45,10 +44,10 @@ final class RegisterAction
             idCopy: $request->file('id_copy'),
         );
 
-        $this->commandBus->dispatch($command);
+        $this->handler->handle($command);
 
         return $this->responder->created(
-            data: ['id' => $userId->value()],
+            data: ['id' => $userId->value],
             messageKey: 'auth.registered'
         );
     }

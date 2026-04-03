@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Modules\IAM\Presentation\Http\Request;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Modules\Shared\Infrastructure\Validation\Rules\SaudiPhoneRule;
 
 final class LoginRequest extends FormRequest
 {
@@ -15,9 +16,8 @@ final class LoginRequest extends FormRequest
 
     public function rules(): array
     {
-        // fix: login must be with email
         return [
-            'login' => ['required', 'string'],
+            'phone' => ['required', 'string', new SaudiPhoneRule()],
             'password' => ['required', 'string'],
         ];
     }

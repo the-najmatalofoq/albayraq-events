@@ -11,7 +11,6 @@ use Modules\User\Domain\ValueObject\UserId;
 use Modules\User\Infrastructure\Persistence\Eloquent\Models\EmployeeProfileModel;
 use Modules\User\Infrastructure\Persistence\EmployeeProfileReflector;
 
-// fix: in all the EloquentRepository files, we must add the implement abstract methods: function nextIdentity(): 
 final class EloquentEmployeeProfileRepository implements EmployeeProfileRepositoryInterface
 {
     public function __construct(
@@ -19,16 +18,21 @@ final class EloquentEmployeeProfileRepository implements EmployeeProfileReposito
     ) {
     }
 
+    public function nextIdentity(): EmployeeProfileId
+    {
+        return EmployeeProfileId::generate();
+    }
+
     public function findById(EmployeeProfileId $id): ?EmployeeProfile
     {
-        $model = EmployeeProfileModel::find($id->value());
+        $model = EmployeeProfileModel::find($id->value);
 
         return $model ? $this->reflector->toEntity($model) : null;
     }
 
     public function findByUserId(UserId $userId): ?EmployeeProfile
     {
-        $model = EmployeeProfileModel::where('user_id', $userId->value())->first();
+        $model = EmployeeProfileModel::where('user_id', $userId->value)->first();
 
         return $model ? $this->reflector->toEntity($model) : null;
     }
@@ -38,13 +42,13 @@ final class EloquentEmployeeProfileRepository implements EmployeeProfileReposito
         $data = $this->reflector->fromEntity($profile);
 
         EmployeeProfileModel::updateOrCreate(
-            ['id' => $profile->uuid->value()],
+            ['id' => $profile->uuid->value],
             $data
         );
     }
 
     public function delete(EmployeeProfileId $id): void
     {
-        EmployeeProfileModel::destroy($id->value());
+        EmployeeProfileModel::destroy($id->value);
     }
 }

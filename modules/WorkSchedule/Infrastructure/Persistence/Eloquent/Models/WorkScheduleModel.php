@@ -1,13 +1,22 @@
 <?php
-// modules/Shared/Infrastructure/Persistence/Eloquent/WorkScheduleModel.php
+// modules/WorkSchedule/Infrastructure/Persistence/Eloquent/Models/WorkScheduleModel.php
 declare(strict_types=1);
 
-namespace Modules\Shared\Infrastructure\Persistence\Eloquent\Models;
+namespace Modules\WorkSchedule\Infrastructure\Persistence\Eloquent\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
-// fix: we must move into its own module,
+
+/**
+ * @property string $id
+ * @property string $schedulable_id
+ * @property string $schedulable_type
+ * @property array $days_of_week
+ * @property string $start_time
+ * @property string $end_time
+ * @property bool $is_active
+ */
 final class WorkScheduleModel extends Model
 {
     use HasUuids;

@@ -4,12 +4,10 @@ declare(strict_types=1);
 
 namespace Modules\IAM\Application\Command\AuthenticateUser;
 
-use Modules\Shared\Application\Command\CommandInterface;
-// fix: the CommandInterface.
-final readonly class AuthenticateUserCommand implements CommandInterface
+final readonly class AuthenticateUserCommand
 {
     public function __construct(
-        public string $login,
+        public string $phone,
         public string $password,
     ) {
     }

@@ -4,32 +4,31 @@ declare(strict_types=1);
 
 namespace Modules\IAM\Application\Command\AuthenticateUser;
 
-use Modules\IAM\Domain\Exception\InvalidCredentialsException;
-use Modules\IAM\Domain\Exception\UserNotActiveException;
-use Modules\IAM\Domain\Service\TokenManagerInterface;
-use Modules\Shared\Application\Command\CommandHandlerInterface;
 use Modules\User\Domain\Repository\UserRepositoryInterface;
-// fix: the CommandHandlerInterface and the password->verify() method. 
-final readonly class AuthenticateUserHandler implements CommandHandlerInterface
+use Modules\IAM\Domain\Service\PasswordHasher;
+use Modules\IAM\Domain\Service\TokenManagerInterface;
+use Modules\Shared\Domain\Exception\UserNotActiveException;
+use Modules\IAM\Domain\Exception\CredentialsInvalidException;
+
+final readonly class AuthenticateUserHandler
 {
     public function __construct(
         private UserRepositoryInterface $userRepository,
+        private PasswordHasher $passwordHasher,
         private TokenManagerInterface $tokenManager,
     ) {
     }
 
     public function handle(AuthenticateUserCommand $command): array
     {
-        $user = filter_var($command->login, FILTER_VALIDATE_EMAIL)
-            ? $this->userRepository->findByEmail($command->login)
-            : $this->userRepository->findByPhone($command->login);
+        $user = $this->userRepository->findByPhone($command->phone);
 
-        if (!$user || !$user->password->verify($command->password)) {
-            throw new InvalidCredentialsException();
+        if (!$user || !$this->passwordHasher->check($command->password, $user->password)) {
+            throw new CredentialsInvalidException("Invalid credentials.");
         }
 
         if (!$user->isActive) {
-            throw new UserNotActiveException();
+            throw UserNotActiveException::forUser($user->uuid->value);
         }
 
         return $this->tokenManager->issueFromUserId($user->uuid);

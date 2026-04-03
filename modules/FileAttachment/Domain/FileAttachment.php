@@ -34,6 +34,19 @@ final class FileAttachment extends AggregateRoot
         return new self($uuid, $attachableId, $attachableType, $filePath, $fileName, $fileType, $fileSize, $collection);
     }
 
+    public static function reconstitute(
+        AttachmentId $uuid,
+        string $attachableId,
+        string $attachableType,
+        string $filePath,
+        string $fileName,
+        string $fileType,
+        int $fileSize,
+        string $collection,
+    ): self {
+        return new self($uuid, $attachableId, $attachableType, $filePath, $fileName, $fileType, $fileSize, $collection);
+    }
+
     public function id(): Identity
     {
         return $this->uuid;

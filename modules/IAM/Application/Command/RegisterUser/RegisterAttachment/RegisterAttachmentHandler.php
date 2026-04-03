@@ -6,46 +6,64 @@ namespace Modules\IAM\Application\Command\RegisterUser\RegisterAttachment;
 
 use Modules\Shared\Domain\Service\FileStorageInterface;
 use Modules\User\Domain\Repository\UserRepositoryInterface;
+use Modules\User\Domain\Repository\EmployeeProfileRepositoryInterface;
+use Modules\FileAttachment\Domain\Repository\FileAttachmentRepositoryInterface;
+use Modules\FileAttachment\Domain\FileAttachment;
 use Modules\User\Domain\ValueObject\UserId;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
+use Modules\User\Infrastructure\Persistence\Eloquent\Models\EmployeeProfileModel;
 
-// fix: use Eloquent Model and Eloquent Repositoy Injected here for file_attachments table
+// fix: make EmployeeProfileModel EloquentRepository and inject it in the hanlder.
 final readonly class RegisterAttachmentHandler
 {
     public function __construct(
         private FileStorageInterface $fileStorage,
         private UserRepositoryInterface $userRepository,
+        private EmployeeProfileRepositoryInterface $profileRepository,
+        private FileAttachmentRepositoryInterface $attachmentRepository,
     ) {
     }
 
     public function handle(RegisterAttachmentCommand $command): void
     {
-        $filePath = $this->fileStorage->uploadForUser(
-            $command->file,
-            $command->userId,
-            $command->collection
-        );
+        $userId = new UserId($command->userId);
 
         if ($command->collection === 'avatar') {
-            $user = $this->userRepository->findById(new UserId($command->userId));
+            $filePath = $this->fileStorage->uploadForUser(
+                $command->file,
+                $userId,
+                'avatar'
+            );
+
+            $user = $this->userRepository->findById($userId);
             if ($user) {
                 $user->updateAvatar($filePath);
                 $this->userRepository->save($user);
             }
-        } else {
-            DB::table('file_attachments')->insert([
-                'id' => Str::uuid()->toString(),
-                'attachable_id' => $command->userId,
-                'attachable_type' => 'user',
-                'collection' => $command->collection,
-                'path' => $filePath->value,
-                'file_name' => $command->file->getClientOriginalName(),
-                'mime_type' => $command->file->getClientMimeType(),
-                'size' => $command->file->getSize(),
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
+            return;
         }
+
+        $profile = $this->profileRepository->findByUserId($userId);
+        if (!$profile) {
+            return;
+        }
+
+        $filePath = $this->fileStorage->uploadForUser(
+            $command->file,
+            $userId,
+            $command->collection
+        );
+
+        $attachment = FileAttachment::create(
+            uuid: $this->attachmentRepository->nextIdentity(),
+            attachableId: $profile->uuid->value,
+            attachableType: EmployeeProfileModel::class,
+            filePath: $filePath->value,
+            fileName: $command->file->getClientOriginalName(),
+            fileType: $command->file->getClientMimeType(),
+            fileSize: $command->file->getSize(),
+            collection: $command->collection
+        );
+
+        $this->attachmentRepository->save($attachment);
     }
 }

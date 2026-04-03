@@ -4,26 +4,33 @@ declare(strict_types=1);
 
 namespace Modules\IAM\Application\Command\RegisterUser;
 
-use Modules\IAM\Application\Command\RegisterUser\RegisterAuth\RegisterAuthCommand;
-use Modules\IAM\Application\Command\RegisterUser\RegisterProfile\RegisterProfileCommand;
-use Modules\IAM\Application\Command\RegisterUser\RegisterBankDetails\RegisterBankDetailsCommand;
-use Modules\IAM\Application\Command\RegisterUser\RegisterContactPhone\RegisterContactPhoneCommand;
-use Modules\IAM\Application\Command\RegisterUser\RegisterAttachment\RegisterAttachmentCommand;
-use Modules\Shared\Application\Command\CommandHandlerInterface;
-use Modules\Shared\Application\Command\CommandBusInterface;
 use Illuminate\Support\Facades\DB;
-// fix: what is the CommandHandlerInterface and the CommandBusInterface?  
-final readonly class RegisterUserHandler implements CommandHandlerInterface
+use Modules\IAM\Application\Command\RegisterUser\RegisterAuth\RegisterAuthCommand;
+use Modules\IAM\Application\Command\RegisterUser\RegisterAuth\RegisterAuthHandler;
+use Modules\IAM\Application\Command\RegisterUser\RegisterProfile\RegisterProfileCommand;
+use Modules\IAM\Application\Command\RegisterUser\RegisterProfile\RegisterProfileHandler;
+use Modules\IAM\Application\Command\RegisterUser\RegisterBankDetails\RegisterBankDetailsCommand;
+use Modules\IAM\Application\Command\RegisterUser\RegisterBankDetails\RegisterBankDetailsHandler;
+use Modules\IAM\Application\Command\RegisterUser\RegisterContactPhone\RegisterContactPhoneCommand;
+use Modules\IAM\Application\Command\RegisterUser\RegisterContactPhone\RegisterContactPhoneHandler;
+use Modules\IAM\Application\Command\RegisterUser\RegisterAttachment\RegisterAttachmentCommand;
+use Modules\IAM\Application\Command\RegisterUser\RegisterAttachment\RegisterAttachmentHandler;
+
+final readonly class RegisterUserHandler
 {
     public function __construct(
-        private CommandBusInterface $commandBus,
+        private RegisterAuthHandler $authHandler,
+        private RegisterProfileHandler $profileHandler,
+        private RegisterBankDetailsHandler $bankHandler,
+        private RegisterContactPhoneHandler $contactPhoneHandler,
+        private RegisterAttachmentHandler $attachmentHandler,
     ) {
     }
 
     public function handle(RegisterUserCommand $command): void
     {
         DB::transaction(function () use ($command) {
-            $this->commandBus->dispatch(new RegisterAuthCommand(
+            $this->authHandler->handle(new RegisterAuthCommand(
                 userId: $command->userId,
                 name: $command->name,
                 email: $command->email,
@@ -32,7 +39,7 @@ final readonly class RegisterUserHandler implements CommandHandlerInterface
                 nationalId: $command->nationalId,
             ));
 
-            $this->commandBus->dispatch(new RegisterProfileCommand(
+            $this->profileHandler->handle(new RegisterProfileCommand(
                 userId: $command->userId,
                 birthDate: $command->birthDate,
                 nationality: $command->nationality,
@@ -41,7 +48,7 @@ final readonly class RegisterUserHandler implements CommandHandlerInterface
                 weight: $command->weight
             ));
 
-            $this->commandBus->dispatch(new RegisterBankDetailsCommand(
+            $this->bankHandler->handle(new RegisterBankDetailsCommand(
                 userId: $command->userId,
                 accountOwner: $command->accountOwner,
                 bankName: $command->bankName,
@@ -49,15 +56,15 @@ final readonly class RegisterUserHandler implements CommandHandlerInterface
             ));
 
             foreach ($command->contactPhones as $cp) {
-                $this->commandBus->dispatch(new RegisterContactPhoneCommand(
+                $this->contactPhoneHandler->handle(new RegisterContactPhoneCommand(
                     userId: $command->userId,
-                    label: $cp['label'],
+                    label: $cp['label'] ?? $cp['name'] ?? 'emergency',
                     phone: $cp['phone']
                 ));
             }
 
             if ($command->avatar) {
-                $this->commandBus->dispatch(new RegisterAttachmentCommand(
+                $this->attachmentHandler->handle(new RegisterAttachmentCommand(
                     userId: $command->userId,
                     file: $command->avatar,
                     collection: 'avatar'
@@ -65,7 +72,7 @@ final readonly class RegisterUserHandler implements CommandHandlerInterface
             }
 
             if ($command->idCopy) {
-                $this->commandBus->dispatch(new RegisterAttachmentCommand(
+                $this->attachmentHandler->handle(new RegisterAttachmentCommand(
                     userId: $command->userId,
                     file: $command->idCopy,
                     collection: 'id_copy'

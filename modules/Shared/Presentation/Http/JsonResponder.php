@@ -1,13 +1,13 @@
 <?php
-
+// modules/Shared/Presentation/Http/JsonResponder.php
 declare(strict_types=1);
 
 namespace Modules\Shared\Presentation\Http;
 
+use Illuminate\Http\JsonResponse;
 use Modules\Shared\Domain\Service\TranslatorInterface;
 use Modules\Shared\Domain\Enum\ErrorCodeEnum;
-use Nyholm\Psr7\Response;
-use Psr\Http\Message\ResponseInterface;
+use Carbon\Carbon;
 
 final readonly class JsonResponder
 {
@@ -16,80 +16,47 @@ final readonly class JsonResponder
     ) {
     }
 
-    public function success(
-        mixed $data = null,
-        int $status = 200,
-        ?string $messageKey = null,
-        array $messageReplace = []
-    ): ResponseInterface {
-        $message = $messageKey
-            ? $this->translator->trans($messageKey, $messageReplace)
-            : 'OK';
-
-        return $this->respond([
-            'message' => $message,
+    public function success(mixed $data = null, int $status = 200, ?string $messageKey = null): JsonResponse
+    {
+        return new JsonResponse([
+            'message' => $messageKey ? $this->translator->trans($messageKey) : 'OK',
             'statusCode' => $status,
             'errorCode' => null,
-            'timestamp' => now()->toIso8601String(),
+            'timestamp' => Carbon::now()->toIso8601String(),
             'data' => $data,
             'errors' => null,
-            //todo: remove the errors key when the response is "success"
         ], $status);
     }
 
-    public function error(
-        string $errorCode,
-        int $status,
-        ?string $messageKey = null,
-        array $messageReplace = [],
-        mixed $errors = null
-    ): ResponseInterface {
-        $message = $messageKey
-            ? $this->translator->trans($messageKey, $messageReplace)
-            : 'Error';
+    public function created(mixed $data = null, ?string $messageKey = 'messages.created'): JsonResponse
+    {
+        return $this->success($data, 201, $messageKey);
+    }
 
-        return $this->respond([
-            'message' => $message,
+    public function error(string $errorCode, int $status, ?string $messageKey = null, mixed $errors = null): JsonResponse
+    {
+        return new JsonResponse([
+            'message' => $messageKey ? $this->translator->trans($messageKey) : 'Error',
             'statusCode' => $status,
             'errorCode' => $errorCode,
-            'timestamp' => now()->toIso8601String(),
+            'timestamp' => Carbon::now()->toIso8601String(),
             'data' => null,
             'errors' => $errors,
         ], $status);
     }
 
-    public function ok(mixed $data): ResponseInterface
-    {
-        return $this->success($data, 200);
-    }
-
-    public function created(mixed $data): ResponseInterface
-    {
-        return $this->success($data, 201);
-    }
-
-    public function noContent(): ResponseInterface
-    {
-        return new Response(204);
-    }
-
-    public function validationError(array $errors, string $messageKey = 'messages.errors.validation_failed'): ResponseInterface
+    public function validationError(array $errors): JsonResponse
     {
         return $this->error(
             errorCode: ErrorCodeEnum::VALIDATION_FAILED->value,
             status: 422,
-            messageKey: $messageKey,
+            messageKey: 'validation.failed',
             errors: $errors
         );
     }
 
-    private function respond(array $data, int $status): ResponseInterface
+    public function noContent(): JsonResponse
     {
-        return new Response(
-            status: $status,
-            headers: ['Content-Type' => 'application/json'],
-            body: json_encode($data, JSON_THROW_ON_ERROR),
-        );
+        return new JsonResponse(status: 204);
     }
 }
-

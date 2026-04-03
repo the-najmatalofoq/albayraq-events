@@ -1,5 +1,5 @@
 <?php
-
+// modules/IAM/Infrastructure/Services/BcryptPasswordHasher.php
 declare(strict_types=1);
 
 namespace Modules\IAM\Infrastructure\Services;
@@ -15,7 +15,7 @@ final class BcryptPasswordHasher implements PasswordHasher
         return new HashedPassword(Hash::make($plainPassword));
     }
 
-    public function verify(string $plainPassword, HashedPassword $hashedPassword): bool
+    public function check(string $plainPassword, HashedPassword $hashedPassword): bool
     {
         return Hash::check($plainPassword, $hashedPassword->value);
     }

@@ -1,5 +1,5 @@
 <?php
-// modules/User/Infrastructure/Persistence/Eloquent/ContactPhoneModel.php
+// modules/User/Infrastructure/Persistence/Eloquent/Models/ContactPhoneModel.php
 declare(strict_types=1);
 
 namespace Modules\User\Infrastructure\Persistence\Eloquent\Models;
@@ -7,14 +7,23 @@ namespace Modules\User\Infrastructure\Persistence\Eloquent\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Carbon\Carbon;
 
+/**
+ * @property string $id
+ * @property string $user_id
+ * @property string $name
+ * @property string $phone
+ * @property string $relation
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ * @property-read UserModel $user
+ */
 final class ContactPhoneModel extends Model
 {
     use HasUuids;
 
     protected $table = 'contact_phones';
-    public $incrementing = false;
-    protected $keyType = 'string';
 
     protected $fillable = [
         'user_id',

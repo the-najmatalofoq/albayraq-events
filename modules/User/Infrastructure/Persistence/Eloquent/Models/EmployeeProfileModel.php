@@ -11,8 +11,23 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Modules\FileAttachment\Infrastructure\Persistence\Eloquent\AttachmentModel;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection;
 
-// fix: we must use the php Docs in the Eloquent Models for better ide. 
+/**
+ * @property string $id
+ * @property string $user_id
+ * @property Carbon|null $birth_date
+ * @property string|null $nationality
+ * @property string|null $gender
+ * @property float|null $height
+ * @property float|null $weight
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ * @property Carbon|null $deleted_at
+ * @property-read UserModel $user
+ * @property-read Collection|AttachmentModel[] $attachments
+ */
 final class EmployeeProfileModel extends Model
 {
     use HasFactory, HasUuids, SoftDeletes;

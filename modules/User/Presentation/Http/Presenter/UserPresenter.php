@@ -12,10 +12,13 @@ final class UserPresenter
     {
         return [
             'id' => $user->uuid->value,
-            'name' => $user->name->values['ar'],
+            'name' => $user->name->getFor(app()->getLocale()),
             'email' => $user->email,
             'phone' => $user->phone->value,
-            'avatar' => $user->avatar->value,
+            'avatar' => $user->avatar?->value,
+            'national_id' => $user->nationalId,
+            'is_active' => $user->isActive,
+            'created_at' => \Carbon\Carbon::instance($user->createdAt)->toIso8601String(),
         ];
     }
 }

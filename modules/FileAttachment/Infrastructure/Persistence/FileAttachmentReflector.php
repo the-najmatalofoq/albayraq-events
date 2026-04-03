@@ -6,30 +6,35 @@ namespace Modules\FileAttachment\Infrastructure\Persistence;
 
 use Modules\FileAttachment\Domain\FileAttachment;
 use Modules\FileAttachment\Domain\ValueObject\AttachmentId;
-use Modules\User\Domain\ValueObject\UserId;
-use Modules\FileAttachment\Infrastructure\Persistence\Eloquent\FileAttachmentModel;
+use Modules\FileAttachment\Infrastructure\Persistence\Eloquent\AttachmentModel;
 
 final class FileAttachmentReflector
 {
-    public static function fromModel(FileAttachmentModel $model): FileAttachment
+    public function fromEntity(FileAttachment $attachment): array
     {
-        $reflection = new \ReflectionClass(FileAttachment::class);
-        $attachment = $reflection->newInstanceWithoutConstructor();
-
-        $properties = [
-            'uuid' => AttachmentId::fromString($model->id),
-            'originalName' => $model->original_name,
-            'storagePath' => $model->storage_path,
-            'mimeType' => $model->mime_type,
-            'size' => $model->size,
-            'uploaderId' => UserId::fromString($model->uploader_id),
+        return [
+            'id' => $attachment->uuid->value,
+            'attachable_id' => $attachment->attachableId,
+            'attachable_type' => $attachment->attachableType,
+            'file_path' => $attachment->filePath,
+            'file_name' => $attachment->fileName,
+            'file_type' => $attachment->fileType,
+            'file_size' => $attachment->fileSize,
+            'collection' => $attachment->collection,
         ];
+    }
 
-        foreach ($properties as $field => $value) {
-            $prop = $reflection->getProperty($field);
-            $prop->setValue($attachment, $value);
-        }
-
-        return $attachment;
+    public function toEntity(AttachmentModel $model): FileAttachment
+    {
+        return FileAttachment::reconstitute(
+            uuid: new AttachmentId($model->id),
+            attachableId: $model->attachable_id,
+            attachableType: $model->attachable_type,
+            filePath: $model->file_path,
+            fileName: $model->file_name,
+            fileType: $model->file_type,
+            fileSize: (int) $model->file_size,
+            collection: $model->collection,
+        );
     }
 }

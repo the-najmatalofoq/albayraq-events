@@ -5,10 +5,8 @@ declare(strict_types=1);
 namespace Modules\IAM\Application\Command\RegisterUser;
 
 use Illuminate\Http\UploadedFile;
-use Modules\Shared\Application\Command\CommandInterface;
 
-// fix: what is the CommandInterface? 
-final readonly class RegisterUserCommand implements CommandInterface
+final readonly class RegisterUserCommand
 {
     public function __construct(
         public string $userId,
@@ -16,7 +14,7 @@ final readonly class RegisterUserCommand implements CommandInterface
         public ?string $email,
         public string $phone,
         public string $password,
-        public string $nationalId,
+        public ?string $nationalId = null,
         public ?string $birthDate = null,
         public ?string $nationality = null,
         public ?string $gender = null,

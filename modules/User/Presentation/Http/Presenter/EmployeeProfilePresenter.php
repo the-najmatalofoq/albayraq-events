@@ -4,36 +4,22 @@ declare(strict_types=1);
 
 namespace Modules\User\Presentation\Http\Presenter;
 
+use Carbon\Carbon;
 use Modules\User\Domain\EmployeeProfile;
 
 final class EmployeeProfilePresenter
 {
-    public function present(EmployeeProfile $profile): array
+    public static function fromDomain(EmployeeProfile $profile): array
     {
         return [
-            'user_id'           => $profile->userId->value(),
-            'personal'          => [
-                'full_name'     => $profile->fullName,
-                'birth_date'    => $profile->birthDate?->format('Y-m-d'),
-                'gender'        => $profile->gender,
-                'national_id'   => $profile->nationalId,
-            ],
-            'contact'           => [
-                'emergency_contact' => $profile->emergencyContact,
-                'emergency_phone'   => $profile->emergencyPhone,
-            ],
-            'medical'           => [
-                'blood_type'        => $profile->bloodType,
-                'chronic_diseases'  => $profile->chronicDiseases,
-            ],
-            'bank'              => [
-                'bank_name'         => $profile->bankName,
-                'iban'              => $profile->iban,
-            ],
-            'physical'          => [
-                'tshirt_size'       => $profile->tshirtSize,
-            ],
-            'created_at'        => $profile->createdAt->format(DATE_ATOM),
+            'id' => $profile->uuid->value,
+            'user_id' => $profile->userId->value,
+            'birth_date' => $profile->birthDate?->format('Y-m-d'),
+            'nationality' => $profile->nationality,
+            'gender' => $profile->gender?->value,
+            'height' => $profile->height,
+            'weight' => $profile->weight,
+            'created_at' => Carbon::instance($profile->createdAt)->toIso8601String(),
         ];
     }
 }

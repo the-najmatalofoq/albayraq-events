@@ -8,59 +8,42 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Modules\Shared\Domain\Service\FileStorageInterface;
 use Modules\Shared\Domain\ValueObject\FilePath;
+use Modules\Shared\Domain\Exception\FileUploadException;
+use Modules\User\Domain\ValueObject\UserId;
 
-// fix: make the name of the file better, user the "Service" suffix.
 final class FileStorage implements FileStorageInterface
 {
-    private readonly string $disk;
+    private string $disk;
 
     public function __construct()
     {
-        $this->disk = config('filesystems.upload_disk', 'public');
+        $this->disk = (string) config('filesystems.upload_disk', 'public');
     }
 
     public function upload(UploadedFile $file, string $directory): FilePath
     {
         $path = $file->store($directory, $this->disk);
 
-        if ($path === false) {
-            // fix: don't use RuntimeException, use custome exceptions that work with bootstrap/app.php
-            throw new \RuntimeException("Failed to upload file to {$directory}");
+        if (!$path) {
+            throw FileUploadException::failed('Could not store file.');
         }
 
         return new FilePath($path);
     }
 
-    public function uploadForUser(UploadedFile $file, string $userId, string $collection): FilePath
+    public function uploadForUser(UploadedFile $file, UserId $userId, string $collection): FilePath
     {
-        $directory = "users/{$userId}/{$collection}";
-
+        $directory = "users/{$userId->value}/{$collection}";
         return $this->upload($file, $directory);
     }
 
-    public function delete(FilePath $filePath): void
+    public function delete(FilePath $path): void
     {
-        if (Storage::disk($this->disk)->exists($filePath->value)) {
-            Storage::disk($this->disk)->delete($filePath->value);
-        }
+        Storage::disk($this->disk)->delete($path->value);
     }
 
-    public function exists(FilePath $filePath): bool
+    public function getUrl(FilePath $path): string
     {
-        return Storage::disk($this->disk)->exists($filePath->value);
-    }
-
-    public function size(FilePath $filePath): int
-    {
-        if (!$this->exists($filePath)) {
-            return 0;
-        }
-
-        return (int) Storage::disk($this->disk)->size($filePath->value);
-    }
-
-    public function url(FilePath $filePath): string
-    {
-        return Storage::disk($this->disk)->url($filePath->value);
+        return Storage::disk($this->disk)->url($path->value);
     }
 }

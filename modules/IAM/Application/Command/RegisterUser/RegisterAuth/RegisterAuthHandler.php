@@ -5,40 +5,44 @@ declare(strict_types=1);
 namespace Modules\IAM\Application\Command\RegisterUser\RegisterAuth;
 
 use DateTimeImmutable;
-use Modules\Role\Domain\ValueObject\RoleName;
+use Modules\Role\Domain\Enum\RoleSlugEnum;
+use Modules\Role\Domain\Repository\RoleRepository;
 use Modules\Shared\Domain\ValueObject\TranslatableText;
 use Modules\User\Domain\Repository\UserRepositoryInterface;
 use Modules\User\Domain\User;
-use Modules\User\Domain\ValueObject\HashedPassword;
 use Modules\User\Domain\ValueObject\Phone;
 use Modules\User\Domain\ValueObject\UserId;
+use Modules\IAM\Domain\Service\PasswordHasher;
 
-// fix: we must make the RoleRepositoryInterface
 final readonly class RegisterAuthHandler
 {
     public function __construct(
         private UserRepositoryInterface $userRepository,
-        private RoleRepositoryInterface $roleRepository,
+        private RoleRepository $roleRepository,
+        private PasswordHasher $passwordHasher,
     ) {
     }
 
     public function handle(RegisterAuthCommand $command): void
     {
         $userId = new UserId($command->userId);
-        // fix the RoleName
-        $role = $this->roleRepository->findByName(new RoleName('employee'));
+        
+        $role = $this->roleRepository->findBySlug(RoleSlugEnum::EMPLOYEE);
 
         if (!$role) {
             throw new \RuntimeException('Employee role not found.');
         }
 
+        $name = is_array($command->name) 
+            ? $command->name 
+            : ['ar' => $command->name, 'en' => $command->name];
+
         $user = User::register(
             uuid: $userId,
-            name: TranslatableText::fromArray($command->name),
+            name: TranslatableText::fromArray($name),
             email: $command->email,
             phone: new Phone($command->phone),
-            // fix the fromRaw
-            password: HashedPassword::fromRaw($command->password),
+            password: $this->passwordHasher->hash($command->password),
             roleIds: [$role->uuid],
             createdAt: new DateTimeImmutable(),
             nationalId: $command->nationalId,

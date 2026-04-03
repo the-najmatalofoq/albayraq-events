@@ -10,7 +10,7 @@ use Modules\User\Domain\ValueObject\UserId;
 use Modules\User\Infrastructure\Persistence\Eloquent\Models\UserModel;
 use Modules\User\Infrastructure\Persistence\UserReflector;
 
-// fix: in all the EloquentRepository files, we must add the implement abstract methods: function nextIdentity(): 
+// fix: inject the model (UserModel) in the __construct
 final class EloquentUserRepository implements UserRepositoryInterface
 {
     public function __construct(
@@ -18,9 +18,14 @@ final class EloquentUserRepository implements UserRepositoryInterface
     ) {
     }
 
+    public function nextIdentity(): UserId
+    {
+        return UserId::generate();
+    }
+
     public function findById(UserId $id): ?User
     {
-        $model = UserModel::with('roles')->find($id->value());
+        $model = UserModel::with('roles')->find($id->value);
 
         return $model ? $this->reflector->toEntity($model) : null;
     }
@@ -42,9 +47,9 @@ final class EloquentUserRepository implements UserRepositoryInterface
     public function save(User $user): void
     {
         $data = $this->reflector->fromEntity($user);
-        $roleIds = array_map(fn($roleId) => $roleId->value(), $user->roleIds);
+        $roleIds = array_map(fn($roleId) => $roleId->value, $user->roleIds);
 
-        $model = UserModel::updateOrCreate(['id' => $user->uuid->value()], $data);
+        $model = UserModel::updateOrCreate(['id' => $user->uuid->value], $data);
         $model->roles()->sync($roleIds);
     }
 
@@ -60,6 +65,6 @@ final class EloquentUserRepository implements UserRepositoryInterface
 
     public function delete(UserId $id): void
     {
-        UserModel::destroy($id->value());
+        UserModel::destroy($id->value);
     }
 }

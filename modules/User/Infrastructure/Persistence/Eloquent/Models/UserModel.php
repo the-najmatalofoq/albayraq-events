@@ -7,12 +7,32 @@ namespace Modules\User\Infrastructure\Persistence\Eloquent\Models;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Modules\Role\Infrastructure\Persistence\Eloquent\RoleModel;
 use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
+use Carbon\Carbon;
 
-// fix: add php docs.
+/**
+ * @property string $id
+ * @property array $name
+ * @property string|null $email
+ * @property string $phone
+ * @property string $password
+ * @property string|null $national_id
+ * @property string|null $avatar
+ * @property bool $is_active
+ * @property Carbon|null $phone_verified_at
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ * @property Carbon|null $deleted_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Modules\Role\Infrastructure\Persistence\Eloquent\RoleModel[] $roles
+ * @property-read \Modules\User\Infrastructure\Persistence\Eloquent\Models\EmployeeProfileModel|null $profile
+ * @property-read \Modules\User\Infrastructure\Persistence\Eloquent\Models\BankDetailModel|null $bankDetails
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Modules\User\Infrastructure\Persistence\Eloquent\Models\ContactPhoneModel[] $contactPhones
+ */
 final class UserModel extends Authenticatable implements JWTSubject
 {
     use HasFactory, HasUuids, SoftDeletes;
@@ -55,16 +75,31 @@ final class UserModel extends Authenticatable implements JWTSubject
         );
     }
 
+    public function profile(): HasOne
+    {
+        return $this->hasOne(EmployeeProfileModel::class, 'user_id');
+    }
+
+    public function bankDetails(): HasOne
+    {
+        return $this->hasOne(BankDetailModel::class, 'user_id');
+    }
+
+    public function contactPhones(): HasMany
+    {
+        return $this->hasMany(ContactPhoneModel::class, 'user_id');
+    }
+
     public function getJWTIdentifier(): mixed
     {
-        return $this->getKey();
+        return $this->id;
     }
 
     public function getJWTCustomClaims(): array
     {
         return [
             'email' => $this->email,
-            'name' => $this->name,
+            'phone' => $this->phone,
         ];
     }
 }

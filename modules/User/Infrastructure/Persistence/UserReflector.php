@@ -18,13 +18,12 @@ final class UserReflector
 {
     public function fromEntity(User $user): array
     {
-        // fix: check the ->value() method in this file
         return [
-            'id' => $user->uuid->value(),
+            'id' => $user->uuid->value,
             'name' => $user->name->toArray(),
             'email' => $user->email,
-            'phone' => $user->phone->value(),
-            'password' => $user->password->value(),
+            'phone' => $user->phone->value,
+            'password' => $user->password->value,
             'national_id' => $user->nationalId,
             'avatar' => $user->avatar?->value,
             'is_active' => $user->isActive,

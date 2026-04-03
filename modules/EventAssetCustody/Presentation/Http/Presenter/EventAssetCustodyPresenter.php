@@ -19,6 +19,7 @@ final class EventAssetCustodyPresenter
             'item_name' => $custody->itemName->toArray(),
             'description' => $custody->description?->toArray(),
             'status' => $custody->status->value,
+            // fix: use and make s deep Presenter for the handed, check the needed files
             'handed' => [
                 'at' => $custody->handedAt->format(DATE_ATOM),
                 'by' => $custody->handedBy->value,

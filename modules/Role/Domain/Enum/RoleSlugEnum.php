@@ -15,6 +15,8 @@ enum RoleSlugEnum: string
     case SUPERVISOR         = 'supervisor';
     case INDIVIDUAL         = 'individual';
     case ADMISSIONS_ADMIN   = 'admissions_admin';
+    case EMPLOYEE           = 'employee';
+    case CONTRACTOR         = 'contractor';
 
     public function level(): RoleLevelEnum
     {
@@ -27,7 +29,9 @@ enum RoleSlugEnum: string
             self::ADMISSIONS_ADMIN   => RoleLevelEnum::AREA,
             self::SITE_MANAGER       => RoleLevelEnum::SITE,
             self::SUPERVISOR         => RoleLevelEnum::SUPERVISOR,
-            self::INDIVIDUAL         => RoleLevelEnum::INDIVIDUAL,
+            self::INDIVIDUAL,
+            self::EMPLOYEE,
+            self::CONTRACTOR         => RoleLevelEnum::INDIVIDUAL,
         };
     }
 

@@ -1,53 +1,47 @@
 <?php
-
+// modules/IAM/Infrastructure/Services/JwtTokenManager.php
 declare(strict_types=1);
 
 namespace Modules\IAM\Infrastructure\Services;
 
-use Modules\IAM\Domain\Service\TokenManager;
-use Modules\User\Infrastructure\Persistence\Eloquent\Models\UserModel;
+use Modules\IAM\Domain\Service\TokenManagerInterface;
+use Modules\User\Domain\ValueObject\UserId;
 use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
+use Modules\User\Infrastructure\Persistence\Eloquent\Models\UserModel;
 
-// fix: we have two files are JwtTokenManager, keep the one in the IAM and in the Service folder but merge the two to make them powerfull
-final readonly class JwtTokenManager implements TokenManager
+final class JwtTokenManager implements TokenManagerInterface
 {
-    public function createToken(string $userId): array
+    public function issueFromUserId(UserId $userId): array
     {
-        $user = UserModel::findOrFail($userId);
-        $accessTtl = (int) config('jwt.ttl');
+        $user = UserModel::findOrFail($userId->value);
+        $token = auth('api')->login($user);
 
+        return $this->respondWithToken($token);
+    }
+
+    public function refresh(): array
+    {
+        $token = auth('api')->refresh();
+        return $this->respondWithToken($token);
+    }
+
+    public function invalidate(): void
+    {
+        auth('api')->logout();
+    }
+
+    public function getUserIdFromToken(): ?UserId
+    {
+        $user = auth('api')->user();
+        return $user ? new UserId($user->id) : null;
+    }
+
+    private function respondWithToken(string $token): array
+    {
         return [
-            'access_token' => $this->generateAccessToken($user, $accessTtl),
-            // fix: fix the Too many arguments to function generateRefreshToken(). 2 provided, but 1 accepted.PHP(PHP0443)
-            'refresh_token' => $this->generateRefreshToken($user, $accessTtl),
-            'expires_in' => $accessTtl * 60,
-            'token_type' => 'Bearer',
+            'access_token' => $token,
+            'token_type' => 'bearer',
+            'expires_in' => auth('api')->factory()->getTTL() * 60,
         ];
-    }
-
-    private function generateAccessToken(UserModel $user, int $ttl): string
-    {
-        JWTAuth::factory()->setTTL($ttl);
-
-        return JWTAuth::fromUser($user);
-    }
-
-    private function generateRefreshToken(UserModel $user): string
-    {
-        $ttl = (int) config('jwt.refresh_ttl');
-
-        JWTAuth::factory()->setTTL($ttl);
-
-        return JWTAuth::claims(['type' => 'refresh'])->fromUser($user);
-    }
-
-    public function revokeAllTokens(string $userId): void
-    {
-        try {
-            if ($token = JWTAuth::getToken()) {
-                JWTAuth::invalidate($token);
-            }
-        } catch (\Exception $e) {
-        }
     }
 }

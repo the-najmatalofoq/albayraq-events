@@ -1,12 +1,21 @@
 <?php
 // modules/IAM/Infrastructure/Routes/api.php
-use Illuminate\Support\Facades\Route;
-use Modules\IAM\Presentation\Http\Action\LoginAction;
-use Modules\IAM\Presentation\Http\Action\LogoutAction;
-use Modules\IAM\Presentation\Http\Action\RegisterAction;
+declare(strict_types=1);
 
-Route::prefix('auth')->group(function () {
+use Illuminate\Support\Facades\Route;
+use Modules\IAM\Presentation\Http\Action\{
+    LoginAction,
+    LogoutAction,
+    RegisterAction,
+    RefreshTokenAction
+};
+
+Route::prefix('auth')->middleware(['throttle:auth'])->group(function () {
     Route::post('/register', RegisterAction::class);
     Route::post('/login', LoginAction::class);
-    Route::post('/logout', LogoutAction::class)->middleware('auth:api');
+    
+    Route::middleware('auth:api')->group(function () {
+        Route::post('/logout', LogoutAction::class);
+        Route::post('/refresh', RefreshTokenAction::class);
+    });
 });

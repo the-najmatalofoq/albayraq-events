@@ -12,20 +12,22 @@ enum ErrorCodeEnum: string
     case FORBIDDEN = 'FORBIDDEN';
     case INTERNAL_ERROR = 'INTERNAL_ERROR';
     case USER_ALREADY_EXISTS = 'USER_ALREADY_EXISTS';
+    case USER_NOT_ACTIVE = 'USER_NOT_ACTIVE';
     case INVALID_CREDENTIALS = 'INVALID_CREDENTIALS';
     case BANK_ALREADY_EXISTS = 'BANK_ALREADY_EXISTS';
+    case FILE_UPLOAD_FAILED = 'FILE_UPLOAD_FAILED';
+    case TOKEN_EXPIRED = 'TOKEN_EXPIRED';
+    case TOKEN_INVALID = 'TOKEN_INVALID';
 
     public function getHttpStatus(): int
     {
         return match ($this) {
             self::NOT_FOUND => 404,
             self::VALIDATION_FAILED => 422,
-            self::UNAUTHORIZED => 401,
-            self::FORBIDDEN => 403,
-            self::INTERNAL_ERROR => 500,
-            self::USER_ALREADY_EXISTS => 409,
-            self::INVALID_CREDENTIALS => 401,
-            self::BANK_ALREADY_EXISTS => 409,
+            self::UNAUTHORIZED, self::TOKEN_EXPIRED, self::TOKEN_INVALID, self::INVALID_CREDENTIALS => 401,
+            self::FORBIDDEN, self::USER_NOT_ACTIVE => 403,
+            self::INTERNAL_ERROR, self::FILE_UPLOAD_FAILED => 500,
+            self::USER_ALREADY_EXISTS, self::BANK_ALREADY_EXISTS => 409,
         };
     }
 }
