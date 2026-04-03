@@ -8,6 +8,7 @@ use Modules\IAM\Domain\Service\TokenManager;
 use Modules\User\Infrastructure\Persistence\Eloquent\Models\UserModel;
 use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
 
+// fix: we have two files are JwtTokenManager, keep the one in the IAM and in the Service folder but merge the two to make them powerfull
 final readonly class JwtTokenManager implements TokenManager
 {
     public function createToken(string $userId): array
@@ -16,20 +17,18 @@ final readonly class JwtTokenManager implements TokenManager
         $accessTtl = (int) config('jwt.ttl');
 
         return [
-            'access_token'  => $this->generateAccessToken($user, $accessTtl),
-            // todo
+            'access_token' => $this->generateAccessToken($user, $accessTtl),
+            // fix: fix the Too many arguments to function generateRefreshToken(). 2 provided, but 1 accepted.PHP(PHP0443)
             'refresh_token' => $this->generateRefreshToken($user, $accessTtl),
-            'expires_in'    => $accessTtl * 60,
-            'token_type'    => 'Bearer',
+            'expires_in' => $accessTtl * 60,
+            'token_type' => 'Bearer',
         ];
     }
 
     private function generateAccessToken(UserModel $user, int $ttl): string
     {
-        // نضبط الـ TTL في الـ Factory أولاً بسطر منفصل
         JWTAuth::factory()->setTTL($ttl);
 
-        // نولد التوكن في سطر منفصل لضمان الحصول على string
         return JWTAuth::fromUser($user);
     }
 
@@ -37,10 +36,8 @@ final readonly class JwtTokenManager implements TokenManager
     {
         $ttl = (int) config('jwt.refresh_ttl');
 
-        // نضبط الـ TTL لتوكن التجديد
         JWTAuth::factory()->setTTL($ttl);
 
-        // نستخدم الـ claims ثم نولد التوكن
         return JWTAuth::claims(['type' => 'refresh'])->fromUser($user);
     }
 
@@ -51,7 +48,6 @@ final readonly class JwtTokenManager implements TokenManager
                 JWTAuth::invalidate($token);
             }
         } catch (\Exception $e) {
-            // صامت
         }
     }
 }

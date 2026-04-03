@@ -1,90 +1,48 @@
 <?php
-
+// modules/IAM/Presentation/Http/Request/RegisterRequest.php
 declare(strict_types=1);
 
 namespace Modules\IAM\Presentation\Http\Request;
 
-use Illuminate\Http\Request;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\Password;
-use Modules\Shared\Presentation\Validation\InputValidator;
+use Modules\Shared\Infrastructure\Validation\Rules\SaudiPhoneRule;
+use Modules\Shared\Infrastructure\Validation\Rules\TranslatableJsonRule;
+use Modules\Shared\Infrastructure\ValidationRule\IbanRule;
 
-final readonly class RegisterRequest
+final class RegisterRequest extends FormRequest
 {
-    public function __construct(
-        private InputValidator $validator,
-    ) {}
-
-    public function validated(Request $request): array
+    public function authorize(): bool
     {
-        return $this->validator->validate(
-            (array) $request->all(),
-            array_merge(
-                $this->userRules(),
-                $this->profileRules(),
-                $this->bankRules(),
-                $this->contactRules(),
-                $this->attachmentRules()
-            )
-        );
+        return true;
     }
 
-    private function userRules(): array
+    public function rules(): array
     {
-    return [
-            'user' => ['required', 'array'],
-            'user.name' => ['required', 'json'],
-            'user.email' => ['nullable', 'email', 'max:255'],
-            'user.phone' => ['required', 'string', 'regex:/^(?:\+966|966|0)?5\d{8}$/', 'unique:users,phone'],
-            'user.password' => [
-                'required',
-                'string',
-                'confirmed',
-                Password::min(8)->uncompromised()->mixedCase()->numbers()->symbols()
-            ],
-            'user.avatar' => ['nullable', 'image', 'max:1024', 'mimes:jpg,jpeg,png'],
-        ];
-    }
-
-    private function profileRules(): array
-    {
+        // fix: name must be strig and to locale must handled in the actin
         return [
-            'profile' => ['required', 'array'],
-            'profile.full_name' => ['required', 'json'],
-            'profile.birth_date' => ['required', 'date', 'before:today'],
-            'profile.nationality' => ['required', 'string', 'max:255'],
-            'profile.gender' => ['required'],
-            'profile.height' => ['required', 'numeric', 'min:50', 'max:250'],
-            'profile.weight' => ['required', 'numeric', 'min:20', 'max:300'],
-        ];
-    }
+            'name' => ['required', new TranslatableJsonRule()],
+            'email' => ['nullable', 'email', 'unique:users,email'],
+            'phone' => ['required', 'string', new SaudiPhoneRule(), 'unique:users,phone'],
+            'password' => ['required', 'confirmed', Password::defaults()],
+            'national_id' => ['required', 'string', 'unique:users,national_id'],
 
-    private function bankRules(): array
-    {
-        return [
-            'bank' => ['required', 'array'],
-            'bank.account_owner' => ['required', 'string', 'max:255'],
-            'bank.bank_name' => ['required', 'string', 'max:255'],
-            'bank.iban' => ['required', 'string', 'unique:bank_details,iban'],
-        ];
-    }
+            'birth_date' => ['nullable', 'date', 'before:today'],
+            'nationality' => ['nullable', 'string', 'max:100'],
+            'gender' => ['nullable', 'string', 'in:male,female,other'],
+            'height' => ['nullable', 'numeric', 'min:50', 'max:300'],
+            'weight' => ['nullable', 'numeric', 'min:20', 'max:500'],
 
-    private function contactRules(): array
-    {
-        return [
-            'contact_phones' => ['required', 'array'],
-            'contact_phones.name' => ['required', 'string', 'max:255'],
-            'contact_phones.phone' => ['required', 'string', 'regex:/^(?:\+966|966|0)?5\d{8}$/'],
-            'contact_phones.relation' => ['nullable', 'string', 'max:255'],
-        ];
-    }
+            'account_owner' => ['required', 'string', 'max:255'],
+            'bank_name' => ['required', 'string', 'max:255'],
+            'iban' => ['required', 'string', new IbanRule(), 'unique:bank_details,iban'],
 
-    private function attachmentRules(): array
-    {
-        return [
-            'attachments' => ['required', 'array'],
-            'attachments.medical_record' => ['nullable', 'file', 'max:2048', 'mimes:pdf,png,jpg'],
-            'attachments.identity_personal' => ['required', 'file', 'max:2048', 'mimes:pdf'],
-            'attachments.cv' => ['required', 'file', 'max:2048', 'mimes:pdf'],
+            'contact_phones' => ['nullable', 'array'],
+            'contact_phones.*.label' => ['required_with:contact_phones', 'string', 'max:50'],
+            'contact_phones.*.phone' => ['required_with:contact_phones', new SaudiPhoneRule()],
+
+            'avatar' => ['nullable', 'image', 'max:2048'],
+            'id_copy' => ['required', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:5120'],
         ];
     }
 }

@@ -5,4 +5,6 @@ namespace Modules\User\Domain\ValueObject;
 
 use Modules\Shared\Domain\Identity;
 
-final  readonly class UserId extends Identity {}
+final readonly class UserId extends Identity
+{
+}

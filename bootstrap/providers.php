@@ -5,6 +5,7 @@ use App\Providers\DocumentationServiceProvider;
 use Modules\{
     Shared\Infrastructure\Providers\PsrHttpServiceProvider,
     IAM\Infrastructure\Providers\IAMServiceProvider,
+    Shared\Infrastructure\Providers\SecurityServiceProvider,
     Shared\Infrastructure\Providers\SharedServiceProvider,
     ViolationType\Infrastructure\Providers\ViolationTypeServiceProvider,
     ContractRejectionReason\Infrastructure\Providers\ContractRejectionReasonServiceProvider,
@@ -46,6 +47,7 @@ return [
     IAMServiceProvider::class,
     DocumentationServiceProvider::class,
     SharedServiceProvider::class,
+    SecurityServiceProvider::class,
     ViolationTypeServiceProvider::class,
     ContractRejectionReasonServiceProvider::class,
     ReportTypeServiceProvider::class,

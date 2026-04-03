@@ -4,30 +4,30 @@ declare(strict_types=1);
 
 namespace Modules\IAM\Application\Command\RegisterUser;
 
-use Modules\IAM\Application\Command\RegisterUser\RegisterAuth\RegisterAuthCommand;
-use Modules\IAM\Application\Command\RegisterUser\RegisterProfile\RegisterProfileCommand;
-use Modules\IAM\Application\Command\RegisterUser\RegisterBankDetails\RegisterBankDetailsCommand;
-use Modules\IAM\Application\Command\RegisterUser\RegisterContactPhone\RegisterContactPhoneCommand;
-use Modules\IAM\Application\Command\RegisterUser\RegisterAttachment\RegisterAttachmentCommand;
+use Illuminate\Http\UploadedFile;
+use Modules\Shared\Application\Command\CommandInterface;
 
-final readonly class RegisterUserCommand
+// fix: what is the CommandInterface? 
+final readonly class RegisterUserCommand implements CommandInterface
 {
     public function __construct(
-        public RegisterAuthCommand $auth,
-        public RegisterProfileCommand $profile,
-        public RegisterBankDetailsCommand $bank,
-        public RegisterContactPhoneCommand $contact,
-        public RegisterAttachmentCommand $attachments,
-    ) {}
-
-    public static function fromRequest(array $data): self
-    {
-        return new self(
-            auth: RegisterAuthCommand::fromRequest($data['user']),
-            profile: RegisterProfileCommand::fromRequest($data['profile']),
-            bank: RegisterBankDetailsCommand::fromRequest($data['bank']),
-            contact: RegisterContactPhoneCommand::fromRequest($data['contact']),
-            attachments: RegisterAttachmentCommand::fromRequest($data['attachments']),
-        );
+        public string $userId,
+        public array|string $name,
+        public ?string $email,
+        public string $phone,
+        public string $password,
+        public string $nationalId,
+        public ?string $birthDate = null,
+        public ?string $nationality = null,
+        public ?string $gender = null,
+        public ?float $height = null,
+        public ?float $weight = null,
+        public string $accountOwner = '',
+        public string $bankName = '',
+        public string $iban = '',
+        public array $contactPhones = [],
+        public ?UploadedFile $avatar = null,
+        public ?UploadedFile $idCopy = null,
+    ) {
     }
 }

@@ -7,7 +7,7 @@ namespace Modules\Shared\Infrastructure\Persistence\Eloquent\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
-// todo: we must move into its own module,
+// fix: we must move into its own module,
 final class WorkScheduleModel extends Model
 {
     use HasUuids;

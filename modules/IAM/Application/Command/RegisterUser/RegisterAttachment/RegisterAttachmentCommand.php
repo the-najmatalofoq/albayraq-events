@@ -4,20 +4,13 @@ declare(strict_types=1);
 
 namespace Modules\IAM\Application\Command\RegisterUser\RegisterAttachment;
 
+use Illuminate\Http\UploadedFile;
+
 final readonly class RegisterAttachmentCommand
 {
     public function __construct(
-        public string $cv,
-        public string $medical_record,
-        public string $personal_identity,
+        public string $userId,
+        public UploadedFile $file,
+        public string $collection,
     ) {}
-
-    public static function fromRequest(array $data): self
-    {
-        return new self(
-            cv: $data['cv'],
-            medical_record: $data['medical_record'],
-            personal_identity: $data['personal_identity'],
-        );
-    }
 }

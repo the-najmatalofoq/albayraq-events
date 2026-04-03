@@ -1,43 +1,36 @@
 <?php
-
+// modules/IAM/Presentation/Http/Action/LoginAction.php
 declare(strict_types=1);
 
 namespace Modules\IAM\Presentation\Http\Action;
 
-use Dedoc\Scramble\Attributes\BodyParameter;
-use Dedoc\Scramble\Attributes\Endpoint;
-use Dedoc\Scramble\Attributes\Group;
-use Modules\IAM\Application\Command\Authenticate\AuthenticateUserCommand;
-use Modules\IAM\Application\Command\Authenticate\AuthenticateUserHandler;
-use Modules\IAM\Presentation\Http\Presenter\AuthenticationPresenter;
+use Illuminate\Http\JsonResponse;
+use Modules\IAM\Application\Command\AuthenticateUser\AuthenticateUserCommand;
 use Modules\IAM\Presentation\Http\Request\LoginRequest;
+use Modules\Shared\Application\Command\CommandBusInterface;
 use Modules\Shared\Presentation\Http\JsonResponder;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
 
-#[Group('Authentication')]
-final readonly class LoginAction
+// fix: check the CommandBusInterface and the return type.
+final class LoginAction
 {
     public function __construct(
-        private AuthenticateUserHandler $handler,
-        private LoginRequest $request,
-        private JsonResponder $responder,
-    ) {}
+        private readonly CommandBusInterface $commandBus,
+        private readonly JsonResponder $responder,
+    ) {
+    }
 
-    #[Endpoint('Authenticate user and return token')]
-    #[BodyParameter('email', type: 'string', format: 'email', description: 'User email', required: true)]
-    #[BodyParameter('password', type: 'string', description: 'User password', required: true)]
-    public function __invoke(ServerRequestInterface $request): ResponseInterface
+    public function __invoke(LoginRequest $request): JsonResponse
     {
-        $data = $this->request->validated($request);
+        $command = new AuthenticateUserCommand(
+            login: $request->validated('login'),
+            password: $request->validated('password')
+        );
 
-        $result = $this->handler->handle(new AuthenticateUserCommand(
-            email: $data['email'],
-            password: $data['password'],
-        ));
+        $tokenData = $this->commandBus->dispatch($command);
+
         return $this->responder->success(
-            data: AuthenticationPresenter::fromResult($result),
-            messageKey: 'messages.auth.login_success'
+            data: $tokenData,
+            messageKey: 'auth.logged_in'
         );
     }
 }

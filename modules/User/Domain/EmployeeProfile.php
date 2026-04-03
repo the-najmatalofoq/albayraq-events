@@ -4,50 +4,76 @@ declare(strict_types=1);
 
 namespace Modules\User\Domain;
 
+use DateTimeImmutable;
+use Modules\User\Domain\ValueObject\EmployeeProfileId;
+use Modules\User\Domain\ValueObject\UserId;
 use Modules\Shared\Domain\AggregateRoot;
 use Modules\Shared\Domain\Identity;
-use Modules\Shared\Domain\ValueObject\TranslatableText;
-use Modules\User\Domain\ValueObject\UserId;
-use Modules\User\Domain\ValueObject\EmployeeProfileId;
+use Modules\User\Domain\Enum\Gender;
 
+// fix: we must make the Gender Enum, and we must name it GenderEnum file and the enum must have two values only, and we must name the Enum as GenderEnum
 final class EmployeeProfile extends AggregateRoot
 {
     private function __construct(
         public readonly EmployeeProfileId $uuid,
         public readonly UserId $userId,
-        public private(set) ?TranslatableText $fullName = null,
-        public private(set) ?\DateTimeImmutable $birthDate = null,
-        public private(set) ?string $nationality = null,
-        public private(set) ?string $gender = null,
-        public private(set) ?float $height = null,
-        public private(set) ?float $weight = null,
-    ) {}
+        public readonly ?DateTimeImmutable $birthDate,
+        public readonly ?string $nationality,
+        public readonly ?Gender $gender,
+        public readonly ?float $height,
+        public readonly ?float $weight,
+        public readonly DateTimeImmutable $createdAt,
+        public private(set) ?DateTimeImmutable $updatedAt = null,
+        public private(set) ?DateTimeImmutable $deletedAt = null,
+    ) {
+    }
 
     public static function create(
         EmployeeProfileId $uuid,
         UserId $userId,
+        ?DateTimeImmutable $birthDate,
+        ?string $nationality,
+        ?Gender $gender,
+        ?float $height,
+        ?float $weight,
+        DateTimeImmutable $createdAt,
     ): self {
-        return new self($uuid, $userId);
+        return new self(
+            uuid: $uuid,
+            userId: $userId,
+            birthDate: $birthDate,
+            nationality: $nationality,
+            gender: $gender,
+            height: $height,
+            weight: $weight,
+            createdAt: $createdAt,
+        );
     }
 
-    public function updatePersonalData(
-        TranslatableText $fullName,
-        \DateTimeImmutable $birthDate,
-        string $nationality,
-        string $gender,
-    ): void {
-        $this->fullName = $fullName;
-        $this->birthDate = $birthDate;
-        $this->nationality = $nationality;
-        $this->gender = $gender;
-    }
-
-    public function updatePhysicalData(
-        float $height,
-        float $weight,
-    ): void {
-        $this->height = $height;
-        $this->weight = $weight;
+    public static function reconstitute(
+        EmployeeProfileId $uuid,
+        UserId $userId,
+        ?DateTimeImmutable $birthDate,
+        ?string $nationality,
+        ?Gender $gender,
+        ?float $height,
+        ?float $weight,
+        DateTimeImmutable $createdAt,
+        ?DateTimeImmutable $updatedAt = null,
+        ?DateTimeImmutable $deletedAt = null,
+    ): self {
+        return new self(
+            uuid: $uuid,
+            userId: $userId,
+            birthDate: $birthDate,
+            nationality: $nationality,
+            gender: $gender,
+            height: $height,
+            weight: $weight,
+            createdAt: $createdAt,
+            updatedAt: $updatedAt,
+            deletedAt: $deletedAt,
+        );
     }
 
     public function id(): Identity

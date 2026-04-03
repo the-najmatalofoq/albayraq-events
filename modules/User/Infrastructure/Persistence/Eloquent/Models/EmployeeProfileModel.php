@@ -1,27 +1,26 @@
 <?php
-// modules/User/Infrastructure/Persistence/Eloquent/EmployeeProfileModel.php
+// modules/User/Infrastructure/Persistence/Eloquent/Models/EmployeeProfileModel.php
 declare(strict_types=1);
 
 namespace Modules\User\Infrastructure\Persistence\Eloquent\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
-use \Modules\Shared\Infrastructure\Laravel\Casts\TranslatableTextCast;
-use \Modules\FileAttachment\Infrastructure\Persistence\Eloquent\AttachmentModel;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Modules\FileAttachment\Infrastructure\Persistence\Eloquent\AttachmentModel;
 
+// fix: we must use the php Docs in the Eloquent Models for better ide. 
 final class EmployeeProfileModel extends Model
 {
-    use HasUuids;
+    use HasFactory, HasUuids, SoftDeletes;
 
     protected $table = 'employee_profiles';
-    public $incrementing = false;
-    protected $keyType = 'string';
 
     protected $fillable = [
         'user_id',
-        'full_name',
         'birth_date',
         'nationality',
         'gender',
@@ -29,12 +28,14 @@ final class EmployeeProfileModel extends Model
         'weight',
     ];
 
-    protected $casts = [
-        'full_name' => TranslatableTextCast::class,
-        'birth_date' => 'date',
-        'height' => 'float',
-        'weight' => 'float',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'birth_date' => 'date',
+            'height' => 'float',
+            'weight' => 'float',
+        ];
+    }
 
     public function user(): BelongsTo
     {

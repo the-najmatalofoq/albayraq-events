@@ -7,7 +7,7 @@ namespace Modules\EventAssetCustody\Presentation\Http\Presenter;
 use Modules\EventAssetCustody\Domain\EventAssetCustody;
 use Modules\EventParticipation\Presentation\Http\Presenter\EventParticipationPresenter;
 use Modules\EventParticipation\Domain\EventParticipation;
-// todo: use deep presenters
+// fix: use deep presenters
 
 final class EventAssetCustodyPresenter
 {

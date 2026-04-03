@@ -4,64 +4,52 @@ declare(strict_types=1);
 
 namespace Modules\IAM\Presentation\Http\Action;
 
-use Dedoc\Scramble\Attributes\Group;
+use Illuminate\Http\JsonResponse;
 use Modules\IAM\Application\Command\RegisterUser\RegisterUserCommand;
-use Modules\IAM\Application\Command\RegisterUser\RegisterUserHandler;
-use Modules\User\Presentation\Http\Presenter\UserPresenter;
 use Modules\IAM\Presentation\Http\Request\RegisterRequest;
+use Modules\Shared\Application\Command\CommandBusInterface;
 use Modules\Shared\Presentation\Http\JsonResponder;
-use Modules\User\Domain\Repository\UserRepositoryInterface;
+use Modules\User\Domain\ValueObject\UserId;
 
-use Illuminate\Http\Request;
-use Modules\Shared\Infrastructure\Services\FileStorage;
+// fix: fix the return type and also we must use the handler ? or what? and what about the CommandBusInterface?
 
-#[Group('Auth')]
-final readonly class RegisterAction
+final class RegisterAction
 {
     public function __construct(
-        private RegisterUserHandler $handler,
-        private UserRepositoryInterface $repository,
-        private JsonResponder $responder,
-        private FileStorage $fileStorage,
-    ) {}
+        private readonly CommandBusInterface $commandBus,
+        private readonly JsonResponder $responder,
+    ) {
+    }
 
-    public function __invoke(Request $request, RegisterRequest $registerRequest)
+    public function __invoke(RegisterRequest $request): JsonResponse
     {
-        $data = $registerRequest->validated($request);
+        $userId = UserId::next();
 
-        // todo: move into private method
-        if ($request->hasFile('avatar')) {
-            $avatarFilePath = $this->fileStorage->upload($request->file('avatar'), 'user//avatars');
-            $data['user']['avatar'] = $avatarFilePath->value;
-        } else {
-            $data['user']['avatar'] = null;
-        }
+        $command = new RegisterUserCommand(
+            userId: $userId->value(),
+            name: $request->validated('name'),
+            email: $request->validated('email'),
+            phone: $request->validated('phone'),
+            password: $request->validated('password'),
+            nationalId: $request->validated('national_id'),
+            birthDate: $request->validated('birth_date'),
+            nationality: $request->validated('nationality'),
+            gender: $request->validated('gender'),
+            height: $request->validated('height') ? (float) $request->validated('height') : null,
+            weight: $request->validated('weight') ? (float) $request->validated('weight') : null,
+            accountOwner: $request->validated('account_owner'),
+            bankName: $request->validated('bank_name'),
+            iban: $request->validated('iban'),
+            contactPhones: $request->validated('contact_phones', []),
+            avatar: $request->file('avatar'),
+            idCopy: $request->file('id_copy'),
+        );
 
-        // todo: move into private method
-        $data['attachments'] = [
-            'cv' => $request->hasFile('attachments.cv')
-                ? $this->fileStorage->upload($request->file('attachments.cv'), 'user/cvs')->value
-                : null,
-            'medical_record' => $request->hasFile('attachments.medical_record')
-                ? $this->fileStorage->upload($request->file('attachments.medical_record'), 'user/medicals')->value
-                : null,
-            'personal_identity' => $request->hasFile('attachments.personal_identity')
-                ? $this->fileStorage->upload($request->file('attachments.personal_identity'), 'user/ids')->value
-                : null,
-        ];
+        $this->commandBus->dispatch($command);
 
-        $command = RegisterUserCommand::fromRequest($data);
-
-        $userId = $this->handler->handle($command);
-
-        $user = $this->repository->findById($userId);
-        if (!$user) {
-            throw new \RuntimeException('User registered but not found');
-        }
-
-        return $this->responder->success(
-            data: UserPresenter::fromDomain($user),
-            messageKey: 'messages.auth.registered'
+        return $this->responder->created(
+            data: ['id' => $userId->value()],
+            messageKey: 'auth.registered'
         );
     }
 }

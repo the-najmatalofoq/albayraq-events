@@ -1,56 +1,48 @@
 <?php
-// modules/User/Infrastructure/Persistence/Eloquent/UserModel.php
+// modules/User/Infrastructure/Persistence/Eloquent/Models/UserModel.php
 declare(strict_types=1);
 
 namespace Modules\User\Infrastructure\Persistence\Eloquent\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
-use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Modules\Role\Infrastructure\Persistence\Eloquent\RoleModel;
+use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
 
+// fix: add php docs.
 final class UserModel extends Authenticatable implements JWTSubject
 {
-    use HasUuids, Notifiable, SoftDeletes;
+    use HasFactory, HasUuids, SoftDeletes;
 
     protected $table = 'users';
-    protected $keyType = 'string';
-    public $incrementing = false;
 
     protected $fillable = [
-        'id',
         'name',
         'email',
         'phone',
         'password',
+        'national_id',
         'avatar',
         'is_active',
-        'national_id',
         'phone_verified_at',
     ];
 
-    protected $hidden = ['password', 'remember_token'];
-
-    protected $casts = [
-        'name' => \Modules\Shared\Infrastructure\Laravel\Casts\TranslatableTextCast::class,
-        'is_active' => 'boolean',
-        'phone_verified_at' => 'datetime',
+    protected $hidden = [
+        'password',
+        'remember_token',
     ];
 
-    public function getJWTIdentifier(): mixed
+    protected function casts(): array
     {
-        return $this->getKey();
-    }
-
-    public function getJWTCustomClaims(): array
-    {
-        return [];
+        return [
+            'name' => 'array',
+            'is_active' => 'boolean',
+            'phone_verified_at' => 'datetime',
+            'password' => 'hashed',
+        ];
     }
 
     public function roles(): BelongsToMany
@@ -63,18 +55,16 @@ final class UserModel extends Authenticatable implements JWTSubject
         );
     }
 
-    public function profile(): HasOne
+    public function getJWTIdentifier(): mixed
     {
-        return $this->hasOne(EmployeeProfileModel::class, 'user_id');
+        return $this->getKey();
     }
 
-    public function contactPhones(): HasMany
+    public function getJWTCustomClaims(): array
     {
-        return $this->hasMany(ContactPhoneModel::class, 'user_id');
-    }
-
-    public function bankDetails(): HasOne
-    {
-        return $this->hasOne(BankDetailModel::class, 'user_id');
+        return [
+            'email' => $this->email,
+            'name' => $this->name,
+        ];
     }
 }

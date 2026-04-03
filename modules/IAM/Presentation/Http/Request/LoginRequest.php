@@ -1,25 +1,24 @@
 <?php
+// modules/IAM/Presentation/Http/Request/LoginRequest.php
 declare(strict_types=1);
 
 namespace Modules\IAM\Presentation\Http\Request;
 
-use Modules\Shared\Presentation\Validation\InputValidator;
-use Psr\Http\Message\ServerRequestInterface;
+use Illuminate\Foundation\Http\FormRequest;
 
-final readonly class LoginRequest
+final class LoginRequest extends FormRequest
 {
-    public function __construct(
-        private InputValidator $validator,
-    ) {}
-
-    public function validated(ServerRequestInterface $request): array
+    public function authorize(): bool
     {
-        return $this->validator->validate(
-            (array) $request->getParsedBody(),
-            [
-                'email'    => ['required', 'email'],
-                'password' => ['required', 'string'],
-            ]
-        );
+        return true;
+    }
+
+    public function rules(): array
+    {
+        // fix: login must be with email
+        return [
+            'login' => ['required', 'string'],
+            'password' => ['required', 'string'],
+        ];
     }
 }

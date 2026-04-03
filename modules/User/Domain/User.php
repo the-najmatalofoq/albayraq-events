@@ -27,6 +27,7 @@ final class User extends AggregateRoot
         public private(set) array $roleIds,
         public private(set) bool $isActive,
         public readonly DateTimeImmutable $createdAt,
+        public private(set) ?string $nationalId = null,
         public private(set) ?FilePath $avatar = null,
         public private(set) ?DateTimeImmutable $updatedAt = null,
         public private(set) ?DateTimeImmutable $phoneVerifiedAt = null,
@@ -38,10 +39,11 @@ final class User extends AggregateRoot
         TranslatableText $name,
         ?string $email,
         Phone $phone,
-        FilePath $avatar,
         HashedPassword $password,
         array $roleIds,
         DateTimeImmutable $createdAt,
+        ?string $nationalId = null,
+        ?FilePath $avatar = null,
         bool $isActive = false,
     ): self {
         $user = new self(
@@ -50,19 +52,56 @@ final class User extends AggregateRoot
             email: $email,
             phone: $phone,
             password: $password,
-            avatar: $avatar,
             roleIds: $roleIds,
             isActive: $isActive,
             createdAt: $createdAt,
+            nationalId: $nationalId,
+            avatar: $avatar,
         );
+
         $user->recordEvent(new UserRegistered($uuid, $phone));
+
         return $user;
+    }
+
+    public static function reconstitute(
+        UserId $uuid,
+        TranslatableText $name,
+        ?string $email,
+        Phone $phone,
+        HashedPassword $password,
+        array $roleIds,
+        bool $isActive,
+        DateTimeImmutable $createdAt,
+        ?string $nationalId = null,
+        ?FilePath $avatar = null,
+        ?DateTimeImmutable $updatedAt = null,
+        ?DateTimeImmutable $phoneVerifiedAt = null,
+        ?DateTimeImmutable $deletedAt = null,
+    ): self {
+        return new self(
+            uuid: $uuid,
+            name: $name,
+            email: $email,
+            phone: $phone,
+            password: $password,
+            roleIds: $roleIds,
+            isActive: $isActive,
+            createdAt: $createdAt,
+            nationalId: $nationalId,
+            avatar: $avatar,
+            updatedAt: $updatedAt,
+            phoneVerifiedAt: $phoneVerifiedAt,
+            deletedAt: $deletedAt,
+        );
     }
 
     public function hasRole(RoleId $roleId): bool
     {
         foreach ($this->roleIds as $id) {
-            if ($id->equals($roleId)) return true;
+            if ($id->equals($roleId)) {
+                return true;
+            }
         }
         return false;
     }
@@ -71,14 +110,32 @@ final class User extends AggregateRoot
     {
         if (!$this->hasRole($roleId)) {
             $this->roleIds[] = $roleId;
-            $this->updatedAt = new DateTimeImmutable;
+            $this->updatedAt = new DateTimeImmutable();
         }
+    }
+
+    public function activate(): void
+    {
+        $this->isActive = true;
+        $this->updatedAt = new DateTimeImmutable();
+    }
+
+    public function deactivate(): void
+    {
+        $this->isActive = false;
+        $this->updatedAt = new DateTimeImmutable();
     }
 
     public function changePassword(HashedPassword $password): void
     {
         $this->password = $password;
-        $this->updatedAt = new DateTimeImmutable;
+        $this->updatedAt = new DateTimeImmutable();
+    }
+
+    public function updateAvatar(FilePath $avatar): void
+    {
+        $this->avatar = $avatar;
+        $this->updatedAt = new DateTimeImmutable();
     }
 
     public function id(): Identity

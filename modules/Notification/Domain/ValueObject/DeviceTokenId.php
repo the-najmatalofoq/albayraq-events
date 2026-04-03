@@ -7,7 +7,7 @@ namespace Modules\Notification\Domain\ValueObject;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 
-// todo: extend the base class for value objects if you have one in our project
+// fix: extend the base class for value objects if you have one in our project
 final class DeviceTokenId
 {
     private UuidInterface $value;

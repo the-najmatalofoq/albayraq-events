@@ -13,7 +13,8 @@ final readonly class JsonResponder
 {
     public function __construct(
         private TranslatorInterface $translator
-    ) {}
+    ) {
+    }
 
     public function success(
         mixed $data = null,
@@ -26,12 +27,12 @@ final readonly class JsonResponder
             : 'OK';
 
         return $this->respond([
-            'message'    => $message,
+            'message' => $message,
             'statusCode' => $status,
-            'errorCode'  => null,
-            'timestamp'  => now()->toIso8601String(),
-            'data'       => $data,
-            'errors'     => null,
+            'errorCode' => null,
+            'timestamp' => now()->toIso8601String(),
+            'data' => $data,
+            'errors' => null,
             //todo: remove the errors key when the response is "success"
         ], $status);
     }
@@ -48,12 +49,12 @@ final readonly class JsonResponder
             : 'Error';
 
         return $this->respond([
-            'message'    => $message,
+            'message' => $message,
             'statusCode' => $status,
-            'errorCode'  => $errorCode,
-            'timestamp'  => now()->toIso8601String(),
-            'data'       => null,
-            'errors'     => $errors,
+            'errorCode' => $errorCode,
+            'timestamp' => now()->toIso8601String(),
+            'data' => null,
+            'errors' => $errors,
         ], $status);
     }
 

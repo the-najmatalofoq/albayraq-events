@@ -7,7 +7,7 @@ namespace Modules\Notification\Application\Listeners;
 use Modules\EventContract\Domain\Events\ContractSent;
 use Modules\Notification\Application\Notification\ContractSentNotification;
 use Modules\User\Infrastructure\Persistence\Eloquent\Models\UserModel;
-// todo: fix
+// fix: fix
 final class SendContractSentNotification
 {
     public function handle(ContractSent $event): void

@@ -1,29 +1,30 @@
 <?php
-// modules/IAM/Application/Command/RegisterUser/RegisterBankDetalis/RegisterBankDetailsHandler.php
+// modules/IAM/Application/Command/RegisterUser/RegisterBankDetails/RegisterBankDetailsHandler.php
 declare(strict_types=1);
 
 namespace Modules\IAM\Application\Command\RegisterUser\RegisterBankDetails;
 
-use Modules\User\Domain\Repository\BankDetailRepositoryInterface;
-use Modules\User\Domain\BankDetail;
-use Modules\User\Domain\ValueObject\UserId;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
+// fix: use Eloquent Model and Eloquent Repositoy Injected here for bank_details table
 final readonly class RegisterBankDetailsHandler
 {
-    public function __construct(
-        private BankDetailRepositoryInterface $bankRepository,
-    ) {}
-
-    public function handle(RegisterBankDetailsCommand $command, UserId $userId): void
+    public function handle(RegisterBankDetailsCommand $command): void
     {
-        $bankId = $this->bankRepository->nextIdentity();
-        $bankDetail = BankDetail::create(
-            uuid: $bankId,
-            userId: $userId,
-            accountOwner: $command->accountOwner,
-            bankName: $command->bankName,
-            iban: $command->iban
-        );
-        $this->bankRepository->save($bankDetail);
+        $exists = DB::table('bank_details')->where('iban', $command->iban)->exists();
+        if ($exists) {
+            return;
+        }
+
+        DB::table('bank_details')->insert([
+            'id' => Str::uuid()->toString(),
+            'user_id' => $command->userId,
+            'account_owner' => $command->accountOwner,
+            'bank_name' => $command->bankName,
+            'iban' => $command->iban,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
     }
 }

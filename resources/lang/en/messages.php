@@ -1,6 +1,21 @@
 <?php
 // resources/lang/en/messages.php
 return [
+    'success' => 'Success',
+    'created' => 'Created successfully',
+    'not_found' => 'Not found',
+    'forbidden' => 'Forbidden',
+    'unauthorized' => 'Unauthorized',
+    'validation_failed' => 'Validation failed',
+    'error' => 'An error occurred',
+    'auth' => [
+        'registered' => 'Registration successful',
+        'logged_in' => 'Logged in successfully',
+        'logged_out' => 'Logged out successfully',
+        'token_refreshed' => 'Token refreshed successfully',
+        'invalid_credentials' => 'Invalid credentials',
+        'token_mismatch' => 'Session expired. Please login again.',
+    ],
     'errors' => [
         'validation_failed' => 'The given data was invalid.',
         'unauthenticated' => 'You are not authenticated.',
@@ -12,17 +27,5 @@ return [
         'service_unavailable' => 'The service is temporarily unavailable.',
         'user_already_exists' => 'A user with this email already exists.',
         'invalid_credentials' => 'Invalid email or password.',
-    ],
-    'auth' => [
-        'login_success' => 'Logged in successfully.',
-        'logged_out' => 'Logged out successfully.',
-        'registration_success' => 'Registration successful.',
-        'token_mismatch' => 'Session expired. Please login again.',
-    ],
-    'event' => [
-        'created' => 'Event created successfully.',
-        'updated' => 'Event updated successfully.',
-        'deleted' => 'Event deleted successfully.',
-        'not_found' => 'Event not found.',
     ],
 ];

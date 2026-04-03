@@ -4,51 +4,73 @@ declare(strict_types=1);
 
 namespace Modules\IAM\Application\Command\RegisterUser;
 
+use Modules\IAM\Application\Command\RegisterUser\RegisterAuth\RegisterAuthCommand;
+use Modules\IAM\Application\Command\RegisterUser\RegisterProfile\RegisterProfileCommand;
+use Modules\IAM\Application\Command\RegisterUser\RegisterBankDetails\RegisterBankDetailsCommand;
+use Modules\IAM\Application\Command\RegisterUser\RegisterContactPhone\RegisterContactPhoneCommand;
+use Modules\IAM\Application\Command\RegisterUser\RegisterAttachment\RegisterAttachmentCommand;
+use Modules\Shared\Application\Command\CommandHandlerInterface;
+use Modules\Shared\Application\Command\CommandBusInterface;
 use Illuminate\Support\Facades\DB;
-use Modules\User\Domain\Repository\UserRepositoryInterface;
-use Modules\User\Domain\ValueObject\UserId;
-use Modules\Shared\Application\EventDispatcher;
-use Modules\Shared\Application\EventDispatchingHandler;
-
-use Modules\IAM\Application\Command\RegisterUser\RegisterAuth\RegisterAuthHandler;
-use Modules\IAM\Application\Command\RegisterUser\RegisterProfile\RegisterProfileHandler;
-use Modules\IAM\Application\Command\RegisterUser\RegisterBankDetails\RegisterBankDetailsHandler;
-use Modules\IAM\Application\Command\RegisterUser\RegisterContactPhone\RegisterContactPhoneHandler;
-use Modules\IAM\Application\Command\RegisterUser\RegisterAttachment\RegisterAttachmentHandler;
-
-final readonly class RegisterUserHandler extends EventDispatchingHandler
+// fix: what is the CommandHandlerInterface and the CommandBusInterface?  
+final readonly class RegisterUserHandler implements CommandHandlerInterface
 {
     public function __construct(
-        private RegisterAuthHandler $authHandler,
-        private RegisterProfileHandler $profileHandler,
-        private RegisterBankDetailsHandler $bankHandler,
-        private RegisterContactPhoneHandler $contactHandler,
-        private RegisterAttachmentHandler $attachmentHandler,
-        private UserRepositoryInterface $userRepository,
-        EventDispatcher $dispatcher,
+        private CommandBusInterface $commandBus,
     ) {
-        parent::__construct($dispatcher);
     }
 
-    public function handle(RegisterUserCommand $command): UserId
+    public function handle(RegisterUserCommand $command): void
     {
-        return DB::transaction(function () use ($command) {
-            $userId = $this->authHandler->handle($command->auth);
+        DB::transaction(function () use ($command) {
+            $this->commandBus->dispatch(new RegisterAuthCommand(
+                userId: $command->userId,
+                name: $command->name,
+                email: $command->email,
+                phone: $command->phone,
+                password: $command->password,
+                nationalId: $command->nationalId,
+            ));
 
-            $this->profileHandler->handle($command->profile, $userId);
+            $this->commandBus->dispatch(new RegisterProfileCommand(
+                userId: $command->userId,
+                birthDate: $command->birthDate,
+                nationality: $command->nationality,
+                gender: $command->gender,
+                height: $command->height,
+                weight: $command->weight
+            ));
 
-            $this->attachmentHandler->handle($command->attachments, $userId);
+            $this->commandBus->dispatch(new RegisterBankDetailsCommand(
+                userId: $command->userId,
+                accountOwner: $command->accountOwner,
+                bankName: $command->bankName,
+                iban: $command->iban
+            ));
 
-            $this->bankHandler->handle($command->bank, $userId);
-
-            $this->contactHandler->handle($command->contact, $userId);
-
-            $user = $this->userRepository->findById($userId);
-            if ($user) {
-                $this->dispatchEvents($user);
+            foreach ($command->contactPhones as $cp) {
+                $this->commandBus->dispatch(new RegisterContactPhoneCommand(
+                    userId: $command->userId,
+                    label: $cp['label'],
+                    phone: $cp['phone']
+                ));
             }
 
-            return $userId;
+            if ($command->avatar) {
+                $this->commandBus->dispatch(new RegisterAttachmentCommand(
+                    userId: $command->userId,
+                    file: $command->avatar,
+                    collection: 'avatar'
+                ));
+            }
+
+            if ($command->idCopy) {
+                $this->commandBus->dispatch(new RegisterAttachmentCommand(
+                    userId: $command->userId,
+                    file: $command->idCopy,
+                    collection: 'id_copy'
+                ));
+            }
         });
     }
 }
