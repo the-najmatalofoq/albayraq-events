@@ -1,3 +1,6 @@
+<?php
+declare(strict_types=1);
+
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
@@ -47,13 +50,13 @@ final class UserServiceProvider extends ServiceProvider
     private function registerRoutes(): void
     {
         $sharedMiddleware = ['api', 'auth:api'];
-        $basePath         = __DIR__ . '/../Routes';
+        $basePath = __DIR__ . '/../Routes';
 
         $entityRoutes = [
-            'User'            => 'api/me',
+            'User' => 'api/me',
             'EmployeeProfile' => 'api/me',
-            'BankDetail'      => 'api/me',
-            'ContactPhone'    => 'api/me',
+            'BankDetail' => 'api/me',
+            'ContactPhone' => 'api/me',
             'UserJoinRequest' => 'api/join-requests',
         ];
 
@@ -65,8 +68,8 @@ final class UserServiceProvider extends ServiceProvider
             }
 
             Route::prefix($prefix)
-                 ->middleware($sharedMiddleware)
-                 ->group($routeFile);
+                ->middleware($sharedMiddleware)
+                ->group($routeFile);
         }
     }
 }

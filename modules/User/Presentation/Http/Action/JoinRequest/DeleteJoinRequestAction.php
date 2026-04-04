@@ -13,8 +13,9 @@ final class DeleteJoinRequestAction
 {
     public function __construct(
         private readonly DeleteJoinRequestHandler $handler,
-        private readonly JsonResponder            $responder,
-    ) {}
+        private readonly JsonResponder $responder,
+    ) {
+    }
 
     public function __invoke(string $id): JsonResponse
     {

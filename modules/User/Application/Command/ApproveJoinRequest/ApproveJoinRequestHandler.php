@@ -22,7 +22,7 @@ final readonly class ApproveJoinRequestHandler
         );
 
         if ($joinRequest === null) {
-            // fix:
+            // fix: make JoinRequestNotFoundException file like the UserNotFoundException
             throw new NotFoundException('Join request not found.');
         }
 

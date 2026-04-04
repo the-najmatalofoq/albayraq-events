@@ -20,6 +20,7 @@ final class ListJoinRequestsAction
 
     public function __invoke(Request $request): JsonResponse
     {
+        // fix: make ListJoinRequestsFormReqest file 
         $page = (int) $request->query('page', 1);
         $perPage = (int) $request->query('per_page', 15);
 

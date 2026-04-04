@@ -7,7 +7,7 @@ namespace Modules\User\Domain\Enum;
 enum JoinRequestStatusEnum: string
 {
     case Pending = 'pending';
-    case Active  = 'active';
+    case Active = 'active';
 
     public function isActive(): bool
     {

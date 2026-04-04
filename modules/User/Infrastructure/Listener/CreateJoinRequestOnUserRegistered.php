@@ -12,7 +12,8 @@ final readonly class CreateJoinRequestOnUserRegistered
 {
     public function __construct(
         private CreateJoinRequestHandler $handler,
-    ) {}
+    ) {
+    }
 
     public function handle(UserRegistered $event): void
     {

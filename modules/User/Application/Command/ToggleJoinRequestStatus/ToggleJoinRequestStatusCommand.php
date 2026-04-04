@@ -8,5 +8,6 @@ final readonly class ToggleJoinRequestStatusCommand
 {
     public function __construct(
         public string $joinRequestId,
-    ) {}
+    ) {
+    }
 }

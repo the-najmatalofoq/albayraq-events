@@ -26,15 +26,15 @@ final readonly class RegisterAuthHandler
     public function handle(RegisterAuthCommand $command): void
     {
         $userId = new UserId($command->userId);
-        
+
         $role = $this->roleRepository->findBySlug(RoleSlugEnum::EMPLOYEE);
 
         if (!$role) {
             throw new \RuntimeException('Employee role not found.');
         }
 
-        $name = is_array($command->name) 
-            ? $command->name 
+        $name = is_array($command->name)
+            ? $command->name
             : ['ar' => $command->name, 'en' => $command->name];
 
         $user = User::register(

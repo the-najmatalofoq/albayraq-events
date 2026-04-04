@@ -13,8 +13,9 @@ final class ToggleJoinRequestStatusAction
 {
     public function __construct(
         private readonly ToggleJoinRequestStatusHandler $handler,
-        private readonly JsonResponder                  $responder,
-    ) {}
+        private readonly JsonResponder $responder,
+    ) {
+    }
 
     public function __invoke(string $id): JsonResponse
     {

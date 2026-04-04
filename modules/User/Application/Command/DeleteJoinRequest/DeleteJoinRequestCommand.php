@@ -8,5 +8,6 @@ final readonly class DeleteJoinRequestCommand
 {
     public function __construct(
         public string $joinRequestId,
-    ) {}
+    ) {
+    }
 }

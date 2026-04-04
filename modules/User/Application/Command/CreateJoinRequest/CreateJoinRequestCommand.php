@@ -8,5 +8,6 @@ final readonly class CreateJoinRequestCommand
 {
     public function __construct(
         public string $userId,
-    ) {}
+    ) {
+    }
 }

@@ -22,7 +22,7 @@ final readonly class ToggleJoinRequestStatusHandler
         );
 
         if ($joinRequest === null) {
-            // fix: make custome NotFoundException 
+            // fix: make JoinRequestNotFoundException file like the UserNotFoundException
             throw new NotFoundException('Join request not found.');
         }
 

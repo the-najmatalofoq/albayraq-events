@@ -12,24 +12,26 @@ final class GetAllJoinRequestsAction
 {
     public function __construct(
         private readonly UserJoinRequestRepositoryInterface $repository,
-        private readonly JsonResponder                      $responder,
-    ) {}
+        private readonly JsonResponder $responder,
+    ) {
+    }
 
     public function __invoke(): JsonResponse
     {
         $all = $this->repository->findAll();
 
+        // fix: make our JoinRequestsPresnter
         return $this->responder->success(
             array_map(
                 fn($jr) => [
-                    'id'          => $jr->uuid->value,
-                    'user_id'     => $jr->userId->value,
-                    'status'      => $jr->status->value,
+                    'id' => $jr->uuid->value,
+                    'user_id' => $jr->userId->value,
+                    'status' => $jr->status->value,
                     'reviewed_by' => $jr->reviewedBy,
                     'reviewed_at' => $jr->reviewedAt?->format('c'),
-                    'notes'       => $jr->notes,
-                    'created_at'  => $jr->createdAt->format('c'),
-                    'updated_at'  => $jr->updatedAt?->format('c'),
+                    'notes' => $jr->notes,
+                    'created_at' => $jr->createdAt->format('c'),
+                    'updated_at' => $jr->updatedAt?->format('c'),
                 ],
                 $all
             )

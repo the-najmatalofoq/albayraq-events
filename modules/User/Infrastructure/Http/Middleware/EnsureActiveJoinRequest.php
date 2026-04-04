@@ -9,25 +9,27 @@ use Illuminate\Http\Request;
 use Modules\Shared\Presentation\Http\JsonResponder;
 use Modules\User\Domain\Repository\UserJoinRequestRepositoryInterface;
 use Modules\User\Domain\ValueObject\UserId;
+use Modules\User\Infrastructure\Persistence\Eloquent\Models\UserModel;
 use Symfony\Component\HttpFoundation\Response;
 
 final readonly class EnsureActiveJoinRequest
 {
     public function __construct(
         private UserJoinRequestRepositoryInterface $joinRequestRepository,
-        private JsonResponder                      $responder,
-    ) {}
+        private JsonResponder $responder,
+    ) {
+    }
 
     public function handle(Request $request, Closure $next): Response
     {
-        /** @var \Modules\User\Infrastructure\Persistence\Eloquent\Models\UserModel $user */
-        $user        = $request->user();
-        
+        /** @var UserModel $user */
+        $user = $request->user();
+
         if (!$user) {
             return $this->responder->unauthorized();
         }
 
-        $userId      = new UserId($user->id);
+        $userId = new UserId($user->id);
         $joinRequest = $this->joinRequestRepository->findLatestByUserId($userId);
 
         if ($joinRequest === null || !$joinRequest->isActive()) {

@@ -13,13 +13,14 @@ final readonly class CreateJoinRequestHandler
 {
     public function __construct(
         private UserJoinRequestRepositoryInterface $joinRequestRepository,
-    ) {}
+    ) {
+    }
 
     public function handle(CreateJoinRequestCommand $command): void
     {
         $joinRequest = UserJoinRequest::create(
-            uuid:      $this->joinRequestRepository->nextIdentity(),
-            userId:    new UserId($command->userId),
+            uuid: $this->joinRequestRepository->nextIdentity(),
+            userId: new UserId($command->userId),
             createdAt: new DateTimeImmutable(),
         );
 

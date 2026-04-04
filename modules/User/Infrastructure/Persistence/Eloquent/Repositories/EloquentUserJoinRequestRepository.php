@@ -71,6 +71,7 @@ final class EloquentUserJoinRequestRepository implements UserJoinRequestReposito
             ->paginate($perPage, ['*'], 'page', $page);
     }
 
+    // fix: for any Repository File in the project, make and inejct the XModuleReflector, so, the toDomain move from the Repository files.
     private function toDomain(UserJoinRequestModel $model): UserJoinRequest
     {
         return UserJoinRequest::reconstitute(
