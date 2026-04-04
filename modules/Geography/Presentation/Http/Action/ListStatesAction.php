@@ -10,9 +10,7 @@ use Modules\Geography\Domain\ValueObject\CountryId;
 use Modules\Geography\Presentation\Http\Request\ListStatesRequest;
 use Modules\Shared\Infrastructure\Services\CacheService;
 use Modules\Shared\Presentation\Http\JsonResponder;
-use App\Http\Controllers\Controller;
-
-final class ListStatesAction extends Controller
+final class ListStatesAction
 {
     public function __construct(
         private readonly StateRepositoryInterface $repository,

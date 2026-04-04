@@ -2,9 +2,7 @@
 
 return [
     'default' => env('FILESYSTEM_DISK', 'local'),
-
     'upload_disk' => env('UPLOAD_DISK', 'public'),
-    
     'disks' => [
         'local' => [
             'driver' => 'local',
@@ -13,7 +11,6 @@ return [
             'throw' => false,
             'report' => false,
         ],
-
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),
@@ -22,7 +19,6 @@ return [
             'throw' => false,
             'report' => false,
         ],
-
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),
@@ -35,10 +31,8 @@ return [
             'throw' => false,
             'report' => false,
         ],
-
     ],
     'links' => [
         public_path('storage') => storage_path('app/public'),
     ],
-
 ];

@@ -15,7 +15,7 @@ final class ListStatesRequest extends FormRequest
     public function rules(): array
     {
         return [
-            // route param implicitly validated in action or here if merged
+            'country_id' => ['required', 'uuid', 'exists:countries,id'],
         ];
     }
 }

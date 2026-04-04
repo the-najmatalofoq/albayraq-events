@@ -14,6 +14,8 @@ final class ListCitiesByStateRequest extends FormRequest
 
     public function rules(): array
     {
-        return [];
+        return [
+            'state_id' => ['required', 'uuid', 'exists:states,id'],
+        ];
     }
 }

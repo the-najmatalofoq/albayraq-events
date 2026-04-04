@@ -5,12 +5,10 @@ declare(strict_types=1);
 use Modules\User\Infrastructure\Persistence\Eloquent\Models\UserModel;
 
 return [
-
     'defaults' => [
         'guard' => env('AUTH_GUARD', 'web'),
         'passwords' => env('AUTH_PASSWORD_BROKER', 'users'),
     ],
-
     'guards' => [
         'web' => [
             'driver' => 'session',
@@ -21,7 +19,6 @@ return [
             'provider' => 'users',
         ],
     ],
-
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
@@ -37,7 +34,5 @@ return [
             'throttle' => 60,
         ],
     ],
-
     'password_timeout' => env('AUTH_PASSWORD_TIMEOUT', 10800),
-
 ];

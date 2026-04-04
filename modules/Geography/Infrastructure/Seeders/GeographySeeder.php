@@ -6,8 +6,10 @@ namespace Modules\Geography\Infrastructure\Seeders;
 use Illuminate\Database\Seeder;
 use Modules\Geography\Infrastructure\Persistence\Eloquent\Models\{
     CountryModel,
+    NationalityModel,
+    StateModel,
+    CityModel,
 };
-
 
 final class GeographySeeder extends Seeder
 {

@@ -10,9 +10,7 @@ use Modules\Geography\Domain\ValueObject\CountryId;
 use Modules\Geography\Presentation\Http\Request\ListNationalitiesRequest;
 use Modules\Shared\Infrastructure\Services\CacheService;
 use Modules\Shared\Presentation\Http\JsonResponder;
-use App\Http\Controllers\Controller;
-
-final class ListNationalitiesAction extends Controller
+final class ListNationalitiesAction
 {
     public function __construct(
         private readonly NationalityRepositoryInterface $repository,
@@ -36,4 +34,6 @@ final class ListNationalitiesAction extends Controller
             return array_map(fn($nat) => $this->presenter->present($nat), $domainNationalities);
         });
 
+        return $this->responder->success(data: $nationalities);
+    }
 }

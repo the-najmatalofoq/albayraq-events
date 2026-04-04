@@ -14,6 +14,8 @@ final class ListCitiesByCountryRequest extends FormRequest
 
     public function rules(): array
     {
-        return [];
+        return [
+            'country_id' => ['required', 'uuid', 'exists:countries,id'],
+        ];
     }
 }

@@ -8,9 +8,7 @@ use Modules\Geography\Domain\Repository\CountryRepositoryInterface;
 use Modules\Geography\Presentation\Http\Presenter\CountryPresenter;
 use Modules\Shared\Infrastructure\Services\CacheService;
 use Modules\Shared\Presentation\Http\JsonResponder;
-use App\Http\Controllers\Controller;
-
-final class ListCountriesAction extends Controller
+final class ListCountriesAction
 {
     public function __construct(
         private readonly CountryRepositoryInterface $repository,

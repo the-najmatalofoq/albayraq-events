@@ -12,33 +12,57 @@ return [
     ],
     'states' => [
         'SA' => [
-            ['en' => 'Riyadh Province', 'ar' => 'منطقة الرياض', 'cities' => [
-                ['en' => 'Riyadh', 'ar' => 'الرياض'],
-                ['en' => 'Al Kharj', 'ar' => 'الخرج'],
-            ]],
-            ['en' => 'Makkah Province', 'ar' => 'منطقة مكة المكرمة', 'cities' => [
-                ['en' => 'Makkah', 'ar' => 'مكة المكرمة'],
-                ['en' => 'Jeddah', 'ar' => 'جدة'],
-                ['en' => 'Taif', 'ar' => 'الطائف'],
-            ]],
-            ['en' => 'Eastern Province', 'ar' => 'المنطقة الشرقية', 'cities' => [
-                ['en' => 'Dammam', 'ar' => 'الدمام'],
-                ['en' => 'Khobar', 'ar' => 'الخبر'],
-                ['en' => 'Dhahran', 'ar' => 'الظهران'],
-            ]],
-            ['en' => 'Madinah Province', 'ar' => 'منطقة المدينة المنورة', 'cities' => [
-                ['en' => 'Madinah', 'ar' => 'المدينة المنورة'],
-                ['en' => 'Yanbu', 'ar' => 'ينبع'],
-            ]],
-            ['en' => 'Asir Province', 'ar' => 'منطقة عسير', 'cities' => [
-                ['en' => 'Abha', 'ar' => 'أبها'],
-                ['en' => 'Khamis Mushait', 'ar' => 'خميس مشيط'],
-            ]],
+            [
+                'en' => 'Riyadh Province',
+                'ar' => 'منطقة الرياض',
+                'cities' => [
+                    ['en' => 'Riyadh', 'ar' => 'الرياض'],
+                    ['en' => 'Al Kharj', 'ar' => 'الخرج'],
+                ]
+            ],
+            [
+                'en' => 'Makkah Province',
+                'ar' => 'منطقة مكة المكرمة',
+                'cities' => [
+                    ['en' => 'Makkah', 'ar' => 'مكة المكرمة'],
+                    ['en' => 'Jeddah', 'ar' => 'جدة'],
+                    ['en' => 'Taif', 'ar' => 'الطائف'],
+                ]
+            ],
+            [
+                'en' => 'Eastern Province',
+                'ar' => 'المنطقة الشرقية',
+                'cities' => [
+                    ['en' => 'Dammam', 'ar' => 'الدمام'],
+                    ['en' => 'Khobar', 'ar' => 'الخبر'],
+                    ['en' => 'Dhahran', 'ar' => 'الظهران'],
+                ]
+            ],
+            [
+                'en' => 'Madinah Province',
+                'ar' => 'منطقة المدينة المنورة',
+                'cities' => [
+                    ['en' => 'Madinah', 'ar' => 'المدينة المنورة'],
+                    ['en' => 'Yanbu', 'ar' => 'ينبع'],
+                ]
+            ],
+            [
+                'en' => 'Asir Province',
+                'ar' => 'منطقة عسير',
+                'cities' => [
+                    ['en' => 'Abha', 'ar' => 'أبها'],
+                    ['en' => 'Khamis Mushait', 'ar' => 'خميس مشيط'],
+                ]
+            ],
         ],
         'AE' => [
-            ['en' => 'Dubai', 'ar' => 'دبي', 'cities' => [
-                ['en' => 'Dubai City', 'ar' => 'مدينة دبي'],
-            ]],
+            [
+                'en' => 'Dubai',
+                'ar' => 'دبي',
+                'cities' => [
+                    ['en' => 'Dubai City', 'ar' => 'مدينة دبي'],
+                ]
+            ],
         ],
     ],
 ];

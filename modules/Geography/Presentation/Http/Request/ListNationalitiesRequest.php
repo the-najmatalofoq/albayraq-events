@@ -15,7 +15,7 @@ final class ListNationalitiesRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'country_id' => ['nullable', 'string', 'exists:countries,id'],
+            'country_id' => ['nullable', 'uuid', 'exists:countries,id'],
         ];
     }
 }
