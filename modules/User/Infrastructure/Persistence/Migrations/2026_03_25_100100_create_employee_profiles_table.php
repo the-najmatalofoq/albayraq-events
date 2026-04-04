@@ -14,7 +14,7 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->foreignUuid('user_id')->constrained('users')->cascadeOnDelete();
             $table->date('birth_date')->nullable();
-            $table->string('nationality')->nullable();
+            $table->foreignUuid('city_id')->nullable()->constrained('cities');
             $table->enum('gender', ['male', 'female', 'other'])->nullable();
             $table->float('height')->nullable();
             $table->float('weight')->nullable();

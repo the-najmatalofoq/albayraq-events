@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Modules\IAM\Application\Command\RegisterUser\RegisterBankDetails;
 
-use Modules\User\Domain\BankDetail;
 use Modules\User\Domain\Repository\BankDetailRepositoryInterface;
 use Modules\User\Domain\ValueObject\UserId;
 

@@ -13,6 +13,13 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Modules\FileAttachment\Infrastructure\Persistence\Eloquent\AttachmentModel;
 use Illuminate\Database\Eloquent\Collection;
 use Carbon\Carbon;
+use Modules\Geography\Infrastructure\Persistence\Eloquent\Models\{
+    CityModel,
+    CountryModel,
+    NationalityModel
+};
+
+
 
 /**
  * Employee profile model - Extended user profile with personal details
@@ -20,7 +27,7 @@ use Carbon\Carbon;
  * @property string $id
  * @property string $user_id
  * @property Carbon|null $birth_date
- * @property string|null $nationality
+ * @property string|null $city_id
  * @property string|null $gender
  * @property float|null $height
  * @property float|null $weight
@@ -29,6 +36,10 @@ use Carbon\Carbon;
  * @property Carbon|null $deleted_at
  * @property-read UserModel $user
  * @property-read Collection|AttachmentModel[] $attachments
+ * @property-read CityModel|null $city
+ * @property-read Collection|NationalityModel[] $nationalities
+ * @property-read NationalityModel|null $primary_nationality
+ * @property-read CountryModel|null $residence_country
  */
 final class EmployeeProfileModel extends Model
 {
@@ -39,7 +50,7 @@ final class EmployeeProfileModel extends Model
     protected $fillable = [
         'user_id',
         'birth_date',
-        'nationality',
+        'city_id',
         'gender',
         'height',
         'weight',
@@ -77,5 +88,30 @@ final class EmployeeProfileModel extends Model
     public function medicalRecord()
     {
         return $this->attachments()->where('collection', 'medical_record');
+    }
+
+    public function city(): BelongsTo
+    {
+        return $this->belongsTo(CityModel::class, 'city_id');
+    }
+
+    public function nationalities()
+    {
+        return $this->belongsToMany(
+            NationalityModel::class,
+            'employee_nationalities',
+            'employee_profile_id',
+            'nationality_id'
+        )->withPivot('is_primary')->withTimestamps();
+    }
+
+    public function getPrimaryNationalityAttribute()
+    {
+        return $this->nationalities->firstWhere('pivot.is_primary', true);
+    }
+
+    public function getResidenceCountryAttribute()
+    {
+        return $this->city ? $this->city->country : null;
     }
 }
