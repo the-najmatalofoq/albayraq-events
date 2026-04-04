@@ -7,7 +7,18 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-// fix: add php docs
+use Carbon\Carbon;
+
+/**
+ * @property string $id
+ * @property string $country_id
+ * @property string|null $state_id
+ * @property array|null $name
+ * @property Carbon $created_at
+ * @property Carbon|null $updated_at
+ * @property-read CountryModel $country
+ * @property-read StateModel|null $state
+ */
 final class CityModel extends Model
 {
     use HasFactory, HasUuids;
@@ -15,7 +26,6 @@ final class CityModel extends Model
     protected $table = 'cities';
 
     protected $fillable = [
-        'id',
         'country_id',
         'state_id',
         'name',

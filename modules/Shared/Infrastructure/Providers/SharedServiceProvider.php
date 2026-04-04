@@ -6,14 +6,18 @@ namespace Modules\Shared\Infrastructure\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Modules\Shared\Application\EventDispatcher;
-use Modules\Shared\Domain\Service\LoggerInterface;
-use Modules\Shared\Domain\Service\TranslatorInterface;
-use Modules\Shared\Domain\Service\FileStorageInterface;
-use Modules\Shared\Application\Service\AvatarUploadService;
+use Modules\Shared\Domain\Service\{
+    LoggerInterface,
+    TranslatorInterface,
+    FileStorageInterface
+};
 use Modules\Shared\Infrastructure\Messaging\LaravelEventDispatcher;
-use Modules\Shared\Infrastructure\Services\LaravelTranslator;
-use Modules\Shared\Infrastructure\Services\Logger;
-use Modules\Shared\Infrastructure\Services\FileStorage;
+use Modules\Shared\Infrastructure\Services\{
+    CacheService,
+    LaravelTranslator,
+    Logger,
+    FileStorage
+};
 use Modules\Shared\Presentation\Http\JsonResponder;
 
 final class SharedServiceProvider extends ServiceProvider
@@ -25,7 +29,7 @@ final class SharedServiceProvider extends ServiceProvider
             LaravelEventDispatcher::class
         );
 
-         $this->app->bind(LoggerInterface::class, function ($app) {
+        $this->app->bind(LoggerInterface::class, function ($app) {
             return new Logger('daily');
         });
 
@@ -36,6 +40,6 @@ final class SharedServiceProvider extends ServiceProvider
         });
 
         $this->app->bind(FileStorageInterface::class, FileStorage::class);
-
+        $this->app->singleton(CacheService::class);
     }
 }

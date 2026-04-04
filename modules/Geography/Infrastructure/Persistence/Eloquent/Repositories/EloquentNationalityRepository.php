@@ -12,16 +12,20 @@ use DateTimeImmutable;
 
 final class EloquentNationalityRepository implements NationalityRepositoryInterface
 {
-    // fix: use constructure for all the model
+    public function nextIdentity(): NationalityId
+    {
+        return NationalityId::generate();
+    }
+
     public function findById(NationalityId $id): ?Nationality
     {
-        $model = NationalityModel::find($id->value);
+        $model = NationalityModel::query()->find($id->value);
         return $model ? $this->toEntity($model) : null;
     }
 
     public function findActiveByCountryId(CountryId $countryId): array
     {
-        return NationalityModel::where('country_id', $countryId->value)
+        return NationalityModel::query()->where('country_id', $countryId->value)
             ->where('is_active', true)
             ->get()
             ->map(fn(NationalityModel $model) => $this->toEntity($model))
@@ -30,7 +34,7 @@ final class EloquentNationalityRepository implements NationalityRepositoryInterf
 
     public function findAllActive(): array
     {
-        return NationalityModel::where('is_active', true)
+        return NationalityModel::query()->where('is_active', true)
             ->get()
             ->map(fn(NationalityModel $model) => $this->toEntity($model))
             ->toArray();
@@ -46,5 +50,22 @@ final class EloquentNationalityRepository implements NationalityRepositoryInterf
             new DateTimeImmutable($model->created_at->toDateTimeString()),
             $model->updated_at ? new DateTimeImmutable($model->updated_at->toDateTimeString()) : null
         );
+    }
+
+    public function save(Nationality $nationality): void
+    {
+        NationalityModel::query()->updateOrCreate(
+            ['id' => $nationality->id()->value],
+            [
+                'country_id' => $nationality->countryId()->value,
+                'name' => $nationality->names(),
+                'is_active' => $nationality->isActive(),
+            ]
+        );
+    }
+
+    public function delete(NationalityId $id): void
+    {
+        NationalityModel::query()->where('id', $id->value)->delete();
     }
 }

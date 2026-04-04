@@ -4,12 +4,14 @@ declare(strict_types=1);
 namespace Modules\Geography\Domain;
 
 use Modules\Geography\Domain\ValueObject\CountryId;
+use Modules\Shared\Domain\Entity;
+use Modules\Shared\Domain\Identity;
 use DateTimeImmutable;
 
-final class Country
+final class Country extends Entity
 {
     public function __construct(
-        private readonly CountryId $id,
+        private readonly CountryId $uuid,
         private readonly string $code, // ISO 3166-1 alpha-2
         private readonly array $names, // ['ar' => '...', 'en' => '...']
         private readonly ?string $phoneCode,
@@ -19,9 +21,9 @@ final class Country
     ) {
     }
 
-    public function id(): CountryId
+    public function id(): Identity
     {
-        return $this->id;
+        return $this->uuid;
     }
 
     public function code(): string

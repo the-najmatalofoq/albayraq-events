@@ -9,7 +9,10 @@ use Modules\Geography\Domain\ValueObject\CountryId;
 
 interface NationalityRepositoryInterface
 {
+    public function nextIdentity(): NationalityId;
     public function findById(NationalityId $id): ?Nationality;
     public function findActiveByCountryId(CountryId $countryId): array;
     public function findAllActive(): array;
+    public function save(Nationality $nationality): void;
+    public function delete(NationalityId $id): void;
 }

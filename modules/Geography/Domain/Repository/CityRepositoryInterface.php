@@ -10,7 +10,10 @@ use Modules\Geography\Domain\ValueObject\StateId;
 
 interface CityRepositoryInterface
 {
+    public function nextIdentity(): CityId;
     public function findById(CityId $id): ?City;
     public function findByCountryId(CountryId $countryId): array;
     public function findByStateId(StateId $stateId): array;
+    public function save(City $city): void;
+    public function delete(CityId $id): void;
 }

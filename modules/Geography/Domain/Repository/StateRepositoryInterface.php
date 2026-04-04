@@ -9,6 +9,9 @@ use Modules\Geography\Domain\ValueObject\CountryId;
 
 interface StateRepositoryInterface
 {
+    public function nextIdentity(): StateId;
     public function findById(StateId $id): ?State;
     public function findByCountryId(CountryId $countryId): array;
+    public function save(State $state): void;
+    public function delete(StateId $id): void;
 }

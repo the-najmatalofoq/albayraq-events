@@ -4,37 +4,36 @@ declare(strict_types=1);
 namespace Modules\Geography\Presentation\Http\Action;
 
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Modules\Geography\Domain\Repository\NationalityRepositoryInterface;
 use Modules\Geography\Presentation\Http\Presenter\NationalityPresenter;
 use Modules\Geography\Domain\ValueObject\CountryId;
-use Illuminate\Support\Facades\Cache;
+use Modules\Geography\Presentation\Http\Request\ListNationalitiesRequest;
+use Modules\Shared\Infrastructure\Services\CacheService;
+use Modules\Shared\Presentation\Http\JsonResponder;
+use App\Http\Controllers\Controller;
 
-final class ListNationalitiesAction
+final class ListNationalitiesAction extends Controller
 {
     public function __construct(
-        private readonly NationalityRepositoryInterface $repository
+        private readonly NationalityRepositoryInterface $repository,
+        private readonly NationalityPresenter $presenter,
+        private readonly CacheService $cache,
+        private readonly JsonResponder $responder
     ) {
     }
 
-    public function __invoke(Request $request): JsonResponse
+    public function __invoke(ListNationalitiesRequest $request): JsonResponse
     {
-        $countryId = $request->query('country_id');
-        $cacheKey = 'geography_nationalities_' . ($countryId ?? 'all');
+        $countryId = $request->validated('country_id');
 
-        $nationalities = Cache::remember($cacheKey, 86400, function () use ($countryId) {
-            // fix: Hint: Replace with ?:PHP(PHP7103)
-            if ($countryId) {
-                $entities = $this->repository->findActiveByCountryId(new CountryId($countryId));
-            } else {
-                $entities = $this->repository->findAllActive();
-            }
-            // fix: Hint: Convert to callable syntaxPHP(PHP7103)
-            return array_map(fn($nat) => NationalityPresenter::present($nat), $entities);
+        $cacheKey = $countryId ? "nationalities:country:{$countryId}" : 'nationalities:all';
+
+        $nationalities = $this->cache->remember('geography', $cacheKey, function () use ($countryId) {
+            $domainNationalities = $countryId
+                ? $this->repository->findActiveByCountryId(new CountryId($countryId))
+                : $this->repository->findAllActive();
+
+            return array_map(fn($nat) => $this->presenter->present($nat), $domainNationalities);
         });
 
-        return response()->json([
-            'data' => $nationalities,
-        ]);
-    }
 }

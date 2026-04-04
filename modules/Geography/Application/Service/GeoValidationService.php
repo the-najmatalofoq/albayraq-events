@@ -4,36 +4,55 @@ declare(strict_types=1);
 namespace Modules\Geography\Application\Service;
 
 use Illuminate\Validation\ValidationException;
-use Modules\User\Infrastructure\Persistence\Eloquent\Models\EmployeeProfileModel;
+use Modules\Geography\Domain\Repository\{
+    CityRepositoryInterface,
+    NationalityRepositoryInterface
+};
+use Modules\Geography\Domain\ValueObject\CityId;
+use Modules\Geography\Domain\ValueObject\NationalityId;
 
 final class GeoValidationService
 {
-    /**
-     * Rules:
-     * 1. If city_id is set, city's country must be in the user's nationality countries
-     * 2. Exactly one nationality must be marked is_primary = true
-     * 3. At least one nationality required
-     */
-    public function validateProfileGeo(EmployeeProfileModel $profile): void
+    public function __construct(
+        private readonly CityRepositoryInterface $cityRepository,
+        private readonly NationalityRepositoryInterface $nationalityRepository
+    ) {
+    }
+
+    public function validateProfileGeo(?CityId $cityId, array $nationalityIds): void
     {
-        $nationalities = $profile->nationalities;
-        
-        if ($nationalities->isEmpty()) {
+        if (empty($nationalityIds)) {
             throw ValidationException::withMessages([
                 'profile.nationalities' => __('validation.required', ['attribute' => 'nationalities'])
             ]);
         }
-        
-        $primaryCount = $nationalities->where('pivot.is_primary', true)->count();
+
+        $primaryCount = count(array_filter($nationalityIds, fn($n) => $n['is_primary']));
         if ($primaryCount !== 1) {
             throw ValidationException::withMessages([
                 'profile.nationalities' => 'Exactly one nationality must be marked as primary.'
             ]);
         }
-        
-        if ($profile->city_id) {
-            $city = $profile->city;
-            if ($city && !$nationalities->pluck('country_id')->contains($city->country_id)) {
+
+        if ($cityId) {
+            $city = $this->cityRepository->findById($cityId);
+            if (!$city) {
+                throw ValidationException::withMessages([
+                    'profile.city_id' => __('validation.exists', ['attribute' => 'city_id'])
+                ]);
+            }
+
+            $natCountryIds = [];
+            foreach ($nationalityIds as $nat) {
+                $nationality = $this->nationalityRepository->findById(
+                    new NationalityId($nat['id'])
+                );
+                if ($nationality) {
+                    $natCountryIds[] = $nationality->countryId()->value;
+                }
+            }
+
+            if (!in_array($city->countryId()->value, $natCountryIds, true)) {
                 throw ValidationException::withMessages([
                     'profile.city_id' => 'The selected city does not belong to any of the user\'s registered nationalities.'
                 ]);

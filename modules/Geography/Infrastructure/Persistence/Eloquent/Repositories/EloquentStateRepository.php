@@ -10,19 +10,22 @@ use Modules\Geography\Domain\ValueObject\CountryId;
 use Modules\Geography\Infrastructure\Persistence\Eloquent\Models\StateModel;
 use DateTimeImmutable;
 
-// fix: use __construct in all the EloquentRepository 
 final class EloquentStateRepository implements StateRepositoryInterface
 {
-    public function __construct(private readonly StateModel $model) {}
+    public function nextIdentity(): StateId
+    {
+        return StateId::generate();
+    }
+
     public function findById(StateId $id): ?State
     {
-        $model = StateModel::find($id->value);
+        $model = StateModel::query()->find($id->value);
         return $model ? $this->toEntity($model) : null;
     }
 
     public function findByCountryId(CountryId $countryId): array
     {
-        return StateModel::where('country_id', $countryId->value)
+        return StateModel::query()->where('country_id', $countryId->value)
             ->get()
             ->map(fn(StateModel $model) => $this->toEntity($model))
             ->toArray();
@@ -37,5 +40,21 @@ final class EloquentStateRepository implements StateRepositoryInterface
             new DateTimeImmutable($model->created_at->toDateTimeString()),
             $model->updated_at ? new DateTimeImmutable($model->updated_at->toDateTimeString()) : null
         );
+    }
+
+    public function save(State $state): void
+    {
+        StateModel::query()->updateOrCreate(
+            ['id' => $state->id()->value],
+            [
+                'country_id' => $state->countryId()->value,
+                'name' => $state->names(),
+            ]
+        );
+    }
+
+    public function delete(StateId $id): void
+    {
+        StateModel::query()->where('id', $id->value)->delete();
     }
 }

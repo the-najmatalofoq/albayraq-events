@@ -5,12 +5,14 @@ namespace Modules\Geography\Domain;
 
 use Modules\Geography\Domain\ValueObject\StateId;
 use Modules\Geography\Domain\ValueObject\CountryId;
+use Modules\Shared\Domain\Entity;
+use Modules\Shared\Domain\Identity;
 use DateTimeImmutable;
 
-final class State
+final class State extends Entity
 {
     public function __construct(
-        private readonly StateId $id,
+        private readonly StateId $uuid,
         private readonly CountryId $countryId,
         private readonly array $names,
         private readonly DateTimeImmutable $createdAt,
@@ -18,9 +20,9 @@ final class State
     ) {
     }
 
-    public function id(): StateId
+    public function id(): Identity
     {
-        return $this->id;
+        return $this->uuid;
     }
 
     public function countryId(): CountryId

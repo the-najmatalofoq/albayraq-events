@@ -8,7 +8,21 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-// fix: add php docs for all the models
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection;
+
+/**
+ * @property string $id
+ * @property string $code
+ * @property array|null $name
+ * @property string|null $phone_code
+ * @property bool $is_active
+ * @property Carbon $created_at
+ * @property Carbon|null $updated_at
+ * @property-read NationalityModel|null $nationality
+ * @property-read Collection|StateModel[] $states
+ * @property-read Collection|CityModel[] $cities
+ */
 final class CountryModel extends Model
 {
     use HasFactory, HasUuids;
@@ -16,7 +30,6 @@ final class CountryModel extends Model
     protected $table = 'countries';
 
     protected $fillable = [
-        'id',
         'code',
         'name',
         'phone_code',

@@ -7,28 +7,28 @@ use Illuminate\Http\JsonResponse;
 use Modules\Geography\Domain\Repository\StateRepositoryInterface;
 use Modules\Geography\Presentation\Http\Presenter\StatePresenter;
 use Modules\Geography\Domain\ValueObject\CountryId;
-use Illuminate\Support\Facades\Cache;
+use Modules\Geography\Presentation\Http\Request\ListStatesRequest;
+use Modules\Shared\Infrastructure\Services\CacheService;
+use Modules\Shared\Presentation\Http\JsonResponder;
+use App\Http\Controllers\Controller;
 
-final class ListStatesAction
+final class ListStatesAction extends Controller
 {
     public function __construct(
-        private readonly StateRepositoryInterface $repository
+        private readonly StateRepositoryInterface $repository,
+        private readonly StatePresenter $presenter,
+        private readonly CacheService $cache,
+        private readonly JsonResponder $responder
     ) {
     }
 
-    public function __invoke(string $countryId): JsonResponse
+    public function __invoke(ListStatesRequest $request, string $countryId): JsonResponse
     {
-        // fix: Hint: Convert to string interpolationPHP(PHP7103)
-        $cacheKey = 'geography_states_country_' . $countryId;
-
-        $states = Cache::remember($cacheKey, 86400, function () use ($countryId) {
-            $entities = $this->repository->findByCountryId(new CountryId($countryId));
-            // fix: Hint: Convert to callable syntaxPHP(PHP7103)
-            return array_map(fn($state) => StatePresenter::present($state), $entities);
+        $states = $this->cache->remember('geography', "states:country:{$countryId}", function () use ($countryId) {
+            $domainStates = $this->repository->findByCountryId(new CountryId($countryId));
+            return array_map(fn($state) => $this->presenter->present($state), $domainStates);
         });
 
-        return response()->json([
-            'data' => $states,
-        ]);
+        return $this->responder->success(data: $states);
     }
 }

@@ -9,18 +9,22 @@ use Modules\Geography\Domain\ValueObject\CountryId;
 use Modules\Geography\Infrastructure\Persistence\Eloquent\Models\CountryModel;
 use DateTimeImmutable;
 
-// fix: use __construct in all the EloquentRepository 
 final class EloquentCountryRepository implements CountryRepositoryInterface
 {
+    public function nextIdentity(): CountryId
+    {
+        return CountryId::generate();
+    }
+
     public function findById(CountryId $id): ?Country
     {
-        $model = CountryModel::find($id->value);
+        $model = CountryModel::query()->find($id->value);
         return $model ? $this->toEntity($model) : null;
     }
 
     public function findAllActive(): array
     {
-        return CountryModel::where('is_active', true)
+        return CountryModel::query()->where('is_active', true)
             ->get()
             ->map(fn(CountryModel $model) => $this->toEntity($model))
             ->toArray();
@@ -37,5 +41,23 @@ final class EloquentCountryRepository implements CountryRepositoryInterface
             new DateTimeImmutable($model->created_at->toDateTimeString()),
             $model->updated_at ? new DateTimeImmutable($model->updated_at->toDateTimeString()) : null
         );
+    }
+
+    public function save(Country $country): void
+    {
+        CountryModel::query()->updateOrCreate(
+            ['id' => $country->id()->value],
+            [
+                'code' => $country->code(),
+                'name' => $country->names(),
+                'phone_code' => $country->phoneCode(),
+                'is_active' => $country->isActive(),
+            ]
+        );
+    }
+
+    public function delete(CountryId $id): void
+    {
+        CountryModel::query()->where('id', $id->value)->delete();
     }
 }
