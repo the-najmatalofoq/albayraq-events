@@ -1,11 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
+declare(strict_types=1);
 
-Route::prefix('event-contracts')
-    ->middleware(['api'])
-    ->group(function () {
-        // Define EventContract routes here
-        // Example:
-        // Route::get('/', [EventContractController::class, 'index']);
-    });
+use Illuminate\Support\Facades\Route;
+use Modules\EventContract\Presentation\Http\Action\ListAllEventContractPaginatedAction;
+
+Route::get('/', ListAllEventContractPaginatedAction::class);

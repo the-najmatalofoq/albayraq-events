@@ -42,6 +42,7 @@ use Modules\{
     AttendanceBarcode\Infrastructure\Providers\AttendanceBarcodeServiceProvider,
     Discount\Infrastructure\Providers\DiscountServiceProvider,
     DigitalSignature\Infrastructure\Providers\DigitalSignatureServiceProvider,
+    HealthModule\Infrastructure\Providers\HealthModuleServiceProvider,
 };
 
 return [
@@ -86,4 +87,5 @@ return [
     EmployeeQuizAttemptServiceProvider::class,
     EmployeeAnswerServiceProvider::class,
     DiscountServiceProvider::class,
+    HealthModuleServiceProvider::class,
 ];

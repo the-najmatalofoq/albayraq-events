@@ -47,6 +47,36 @@ final class EventContract extends AggregateRoot
         );
     }
 
+    public static function reconstitute(
+        ContractId $uuid,
+        ParticipationId $participationId,
+        string $contractType,
+        float $wageAmount,
+        array $terms,
+        ContractStatusEnum $status,
+        DateTimeImmutable $createdAt,
+        ?ContractRejectionReasonId $rejectionReasonId = null,
+        ?string $rejectionNotes = null,
+        ?DateTimeImmutable $sentAt = null,
+        ?DateTimeImmutable $acceptedAt = null,
+        ?DateTimeImmutable $rejectedAt = null,
+    ): self {
+        return new self(
+            uuid: $uuid,
+            participationId: $participationId,
+            contractType: $contractType,
+            wageAmount: $wageAmount,
+            terms: $terms,
+            status: $status,
+            createdAt: $createdAt,
+            rejectionReasonId: $rejectionReasonId,
+            rejectionNotes: $rejectionNotes,
+            sentAt: $sentAt,
+            acceptedAt: $acceptedAt,
+            rejectedAt: $rejectedAt,
+        );
+    }
+
     public function send(): void
     {
         $this->status = ContractStatusEnum::SENT;
