@@ -50,7 +50,6 @@ final class UserModel extends Authenticatable implements JWTSubject
         'password',
         'national_id',
         'avatar',
-        'is_active',
         'phone_verified_at',
     ];
 
@@ -63,7 +62,6 @@ final class UserModel extends Authenticatable implements JWTSubject
     {
         return [
             'name' => 'array',
-            'is_active' => 'boolean',
             'phone_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
@@ -92,6 +90,17 @@ final class UserModel extends Authenticatable implements JWTSubject
     public function contactPhones(): HasMany
     {
         return $this->hasMany(ContactPhoneModel::class, 'user_id');
+    }
+
+    public function joinRequests(): HasMany
+    {
+        return $this->hasMany(UserJoinRequestModel::class, 'user_id');
+    }
+
+    public function latestJoinRequest(): HasOne
+    {
+        return $this->hasOne(UserJoinRequestModel::class, 'user_id')
+                    ->latestOfMany();
     }
 
     public function getJWTIdentifier(): mixed

@@ -26,7 +26,6 @@ final class UserReflector
             'password' => $user->password->value,
             'national_id' => $user->nationalId,
             'avatar' => $user->avatar?->value,
-            'is_active' => $user->isActive,
             'created_at' => $user->createdAt->format('Y-m-d H:i:s'),
             'updated_at' => $user->updatedAt?->format('Y-m-d H:i:s'),
             'phone_verified_at' => $user->phoneVerifiedAt?->format('Y-m-d H:i:s'),
@@ -41,6 +40,11 @@ final class UserReflector
             $roleIds = $model->roles->map(fn($role) => new RoleId($role->id))->toArray();
         }
 
+        $isActive = false;
+        if ($model->relationLoaded('latestJoinRequest') && $model->latestJoinRequest) {
+            $isActive = $model->latestJoinRequest->status->isActive();
+        }
+
         return User::reconstitute(
             uuid: new UserId($model->id),
             name: TranslatableText::fromArray($model->name),
@@ -48,7 +52,7 @@ final class UserReflector
             phone: new Phone($model->phone),
             password: new HashedPassword($model->password),
             roleIds: $roleIds,
-            isActive: (bool) $model->is_active,
+            isActive: $isActive,
             createdAt: new DateTimeImmutable($model->created_at->toDateTimeString()),
             nationalId: $model->national_id,
             avatar: $model->avatar ? new FilePath($model->avatar) : null,

@@ -32,9 +32,31 @@ final class UserServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->loadMigrationsFrom(__DIR__ . '/../Persistence/Migrations');
+        $this->registerRoutes();
+    }
 
-        Route::prefix('api/me')
-            ->middleware(['api', 'auth:api'])
-            ->group(__DIR__ . '/../Routes/api.php');
+    private function registerRoutes(): void
+    {
+        $sharedMiddleware = ['api', 'auth:api'];
+        $basePath         = __DIR__ . '/../Routes';
+
+        $entityRoutes = [
+            'User'            => 'api/me',
+            'EmployeeProfile' => 'api/me',
+            'BankDetail'      => 'api/me',
+            'ContactPhone'    => 'api/me',
+        ];
+
+        foreach ($entityRoutes as $entity => $prefix) {
+            $routeFile = "{$basePath}/{$entity}/api.php";
+
+            if (!file_exists($routeFile)) {
+                continue;
+            }
+
+            Route::prefix($prefix)
+                 ->middleware($sharedMiddleware)
+                 ->group($routeFile);
+        }
     }
 }
