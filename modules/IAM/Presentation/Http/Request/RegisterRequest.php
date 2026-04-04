@@ -26,7 +26,10 @@ final class RegisterRequest extends FormRequest
             'national_id' => ['required', 'string', 'max:20', 'unique:users,national_id'],
 
             'birth_date' => ['nullable', 'date', 'before:today'],
-            'nationality' => ['nullable', 'string', 'max:100'],
+            'city_id' => ['nullable', 'uuid', 'exists:cities,id'],
+            'nationalities' => ['required', 'array', 'min:1'],
+            'nationalities.*.id' => ['required', 'uuid', 'exists:nationalities,id'],
+            'nationalities.*.is_primary' => ['required', 'boolean'],
             'gender' => ['nullable', 'string', 'in:male,female,other'],
             'height' => ['nullable', 'numeric', 'min:50', 'max:300'],
             'weight' => ['nullable', 'numeric', 'min:20', 'max:500'],

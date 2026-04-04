@@ -42,7 +42,8 @@ final readonly class RegisterUserHandler
             $this->profileHandler->handle(new RegisterProfileCommand(
                 userId: $command->userId,
                 birthDate: $command->birthDate,
-                nationality: $command->nationality,
+                cityId: $command->cityId,
+                nationalities: $command->nationalities,
                 gender: $command->gender,
                 height: $command->height,
                 weight: $command->weight

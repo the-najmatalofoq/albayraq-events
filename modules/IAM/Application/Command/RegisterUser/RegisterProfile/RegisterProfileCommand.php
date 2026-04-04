@@ -9,7 +9,8 @@ final readonly class RegisterProfileCommand
     public function __construct(
         public string $userId,
         public ?string $birthDate = null,
-        public ?string $nationality = null,
+        public ?string $cityId = null,
+        public array $nationalities = [],
         public ?string $gender = null,
         public ?float $height = null,
         public ?float $weight = null,

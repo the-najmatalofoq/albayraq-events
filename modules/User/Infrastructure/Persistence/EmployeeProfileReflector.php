@@ -5,11 +5,15 @@ declare(strict_types=1);
 namespace Modules\User\Infrastructure\Persistence;
 
 use DateTimeImmutable;
+use Modules\Geography\Domain\ValueObject\NationalityId;
 use Modules\User\Domain\EmployeeProfile;
 use Modules\User\Domain\Enum\GenderEnum;
 use Modules\User\Domain\ValueObject\EmployeeProfileId;
 use Modules\User\Domain\ValueObject\UserId;
 use Modules\User\Infrastructure\Persistence\Eloquent\Models\EmployeeProfileModel;
+
+use Modules\Geography\Domain\ValueObject\CityId;
+use Modules\User\Domain\ValueObject\EmployeeNationality;
 
 final class EmployeeProfileReflector
 {
@@ -19,7 +23,7 @@ final class EmployeeProfileReflector
             'id' => $profile->uuid->value,
             'user_id' => $profile->userId->value,
             'birth_date' => $profile->birthDate?->format('Y-m-d'),
-            'nationality' => $profile->nationality,
+            'city_id' => $profile->cityId?->value,
             'gender' => $profile->gender?->value,
             'height' => $profile->height,
             'weight' => $profile->weight,
@@ -31,11 +35,22 @@ final class EmployeeProfileReflector
 
     public function toEntity(EmployeeProfileModel $model): EmployeeProfile
     {
+        $nationalities = [];
+        if ($model->relationLoaded('nationalities')) {
+            foreach ($model->nationalities as $nationality) {
+                $nationalities[] = new EmployeeNationality(
+                    new NationalityId($nationality->id),
+                    (bool) $nationality->pivot->is_primary
+                );
+            }
+        }
+
         return EmployeeProfile::reconstitute(
             uuid: new EmployeeProfileId($model->id),
             userId: new UserId($model->user_id),
             birthDate: $model->birth_date ? new DateTimeImmutable($model->birth_date->toDateTimeString()) : null,
-            nationality: $model->nationality,
+            cityId: $model->city_id ? new CityId($model->city_id) : null,
+            nationalities: $nationalities,
             gender: $model->gender ? GenderEnum::from($model->gender) : null,
             height: $model->height !== null ? (float) $model->height : null,
             weight: $model->weight !== null ? (float) $model->weight : null,

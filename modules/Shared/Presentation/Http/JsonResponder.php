@@ -59,4 +59,22 @@ final readonly class JsonResponder
     {
         return new JsonResponse(status: 204);
     }
+
+    public function unauthorized(?string $messageKey = 'auth.unauthorized'): JsonResponse
+    {
+        return $this->error(
+            errorCode: ErrorCodeEnum::UNAUTHORIZED->value,
+            status: 401,
+            messageKey: $messageKey
+        );
+    }
+
+    public function forbidden(?string $messageKey = 'auth.forbidden'): JsonResponse
+    {
+        return $this->error(
+            errorCode: ErrorCodeEnum::FORBIDDEN->value,
+            status: 403,
+            messageKey: $messageKey
+        );
+    }
 }

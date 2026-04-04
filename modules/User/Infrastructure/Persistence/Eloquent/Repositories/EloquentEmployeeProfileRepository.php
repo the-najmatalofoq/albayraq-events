@@ -11,6 +11,7 @@ use Modules\User\Domain\ValueObject\UserId;
 use Modules\User\Infrastructure\Persistence\Eloquent\Models\EmployeeProfileModel;
 use Modules\User\Infrastructure\Persistence\EmployeeProfileReflector;
 
+// fix: inject the EmployeeProfileModel
 final class EloquentEmployeeProfileRepository implements EmployeeProfileRepositoryInterface
 {
     public function __construct(
@@ -25,14 +26,16 @@ final class EloquentEmployeeProfileRepository implements EmployeeProfileReposito
 
     public function findById(EmployeeProfileId $id): ?EmployeeProfile
     {
-        $model = EmployeeProfileModel::find($id->value);
+        $model = EmployeeProfileModel::with('nationalities')->find($id->value);
 
         return $model ? $this->reflector->toEntity($model) : null;
     }
 
     public function findByUserId(UserId $userId): ?EmployeeProfile
     {
-        $model = EmployeeProfileModel::where('user_id', $userId->value)->first();
+        $model = EmployeeProfileModel::with('nationalities')
+            ->where('user_id', $userId->value)
+            ->first();
 
         return $model ? $this->reflector->toEntity($model) : null;
     }
@@ -41,10 +44,20 @@ final class EloquentEmployeeProfileRepository implements EmployeeProfileReposito
     {
         $data = $this->reflector->fromEntity($profile);
 
-        EmployeeProfileModel::updateOrCreate(
+        $model = EmployeeProfileModel::updateOrCreate(
             ['id' => $profile->uuid->value],
             $data
         );
+
+        $syncData = [];
+        foreach ($profile->nationalities as $nationality) {
+            $syncData[$nationality->nationalityId->value] = [
+                'id' => \Illuminate\Support\Str::uuid()->toString(),
+                'is_primary' => $nationality->isPrimary,
+            ];
+        }
+
+        $model->nationalities()->sync($syncData);
     }
 
     public function delete(EmployeeProfileId $id): void

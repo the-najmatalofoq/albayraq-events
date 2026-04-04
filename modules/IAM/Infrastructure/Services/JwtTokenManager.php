@@ -6,7 +6,6 @@ namespace Modules\IAM\Infrastructure\Services;
 
 use Modules\IAM\Domain\Service\TokenManagerInterface;
 use Modules\User\Domain\ValueObject\UserId;
-use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
 use Modules\User\Infrastructure\Persistence\Eloquent\Models\UserModel;
 
 final class JwtTokenManager implements TokenManagerInterface

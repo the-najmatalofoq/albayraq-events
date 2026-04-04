@@ -138,6 +138,12 @@ final class User extends AggregateRoot
         $this->updatedAt = new DateTimeImmutable();
     }
 
+    public function updateNationalId(string $nationalId): void
+    {
+        $this->nationalId = $nationalId;
+        $this->updatedAt = new DateTimeImmutable();
+    }
+
     public function id(): Identity
     {
         return $this->uuid;
