@@ -13,4 +13,9 @@ enum JoinRequestStatusEnum: string
     {
         return $this === self::Active;
     }
+
+    public function toggle(): self
+    {
+        return $this === self::Active ? self::Pending : self::Active;
+    }
 }

@@ -46,7 +46,8 @@ final readonly class RegisterAuthHandler
             roleIds: [$role->uuid],
             createdAt: new DateTimeImmutable(),
             nationalId: $command->nationalId,
-            isActive: true
+            // fix: we intrude the join request instead of isActive right?
+            isActive: false
         );
 
         $this->userRepository->save($user);

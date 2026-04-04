@@ -1,22 +1,21 @@
-<?php
-// modules/User/Infrastructure/Providers/UserServiceProvider.php
-declare(strict_types=1);
-
-namespace Modules\User\Infrastructure\Providers;
-
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
+use Modules\IAM\Domain\Event\UserRegistered;
+use Modules\User\Infrastructure\Listener\CreateJoinRequestOnUserRegistered;
 use Modules\User\Domain\Repository\{
     UserRepositoryInterface,
     EmployeeProfileRepositoryInterface,
     ContactPhoneRepositoryInterface,
     BankDetailRepositoryInterface,
+    UserJoinRequestRepositoryInterface,
 };
 use Modules\User\Infrastructure\Persistence\Eloquent\Repositories\{
     EloquentUserRepository,
     EloquentEmployeeProfileRepository,
     EloquentContactPhoneRepository,
     EloquentBankDetailRepository,
+    EloquentUserJoinRequestRepository,
 };
 
 final class UserServiceProvider extends ServiceProvider
@@ -27,12 +26,22 @@ final class UserServiceProvider extends ServiceProvider
         $this->app->bind(EmployeeProfileRepositoryInterface::class, EloquentEmployeeProfileRepository::class);
         $this->app->bind(ContactPhoneRepositoryInterface::class, EloquentContactPhoneRepository::class);
         $this->app->bind(BankDetailRepositoryInterface::class, EloquentBankDetailRepository::class);
+        $this->app->bind(UserJoinRequestRepositoryInterface::class, EloquentUserJoinRequestRepository::class);
     }
 
     public function boot(): void
     {
         $this->loadMigrationsFrom(__DIR__ . '/../Persistence/Migrations');
+        $this->registerListeners();
         $this->registerRoutes();
+    }
+
+    private function registerListeners(): void
+    {
+        Event::listen(
+            UserRegistered::class,
+            CreateJoinRequestOnUserRegistered::class,
+        );
     }
 
     private function registerRoutes(): void
@@ -45,6 +54,7 @@ final class UserServiceProvider extends ServiceProvider
             'EmployeeProfile' => 'api/me',
             'BankDetail'      => 'api/me',
             'ContactPhone'    => 'api/me',
+            'UserJoinRequest' => 'api/join-requests',
         ];
 
         foreach ($entityRoutes as $entity => $prefix) {
