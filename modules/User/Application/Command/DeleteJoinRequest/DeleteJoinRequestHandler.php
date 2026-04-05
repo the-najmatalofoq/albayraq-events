@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Modules\User\Application\Command\DeleteJoinRequest;
 
-use Modules\Shared\Domain\Exception\NotFoundException;
+use Modules\User\Domain\Exception\JoinRequestNotFoundException;
 use Modules\User\Domain\Repository\UserJoinRequestRepositoryInterface;
 use Modules\User\Domain\ValueObject\UserJoinRequestId;
 
@@ -20,8 +20,7 @@ final readonly class DeleteJoinRequestHandler
         $id = new UserJoinRequestId($command->joinRequestId);
 
         if ($this->joinRequestRepository->findById($id) === null) {
-            // fix: make JoinRequestNotFoundException file like the UserNotFoundException
-            throw new NotFoundException('Join request not found.');
+            throw JoinRequestNotFoundException::forId($command->joinRequestId);
         }
 
         $this->joinRequestRepository->delete($id);

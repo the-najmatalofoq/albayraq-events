@@ -46,7 +46,6 @@ final readonly class RegisterAuthHandler
             roleIds: [$role->uuid],
             createdAt: new DateTimeImmutable(),
             nationalId: $command->nationalId,
-            // fix: we intrude the join request instead of isActive right?
             isActive: false
         );
 

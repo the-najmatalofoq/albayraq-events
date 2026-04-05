@@ -9,7 +9,6 @@ use Illuminate\Http\Request;
 use Modules\Shared\Presentation\Http\JsonResponder;
 use Modules\User\Domain\Repository\UserJoinRequestRepositoryInterface;
 use Modules\User\Domain\ValueObject\UserId;
-use Modules\User\Infrastructure\Persistence\Eloquent\Models\UserModel;
 use Symfony\Component\HttpFoundation\Response;
 
 final readonly class EnsureActiveJoinRequest
@@ -22,11 +21,10 @@ final readonly class EnsureActiveJoinRequest
 
     public function handle(Request $request, Closure $next): Response
     {
-        /** @var UserModel $user */
         $user = $request->user();
 
         if (!$user) {
-            return $this->responder->unauthorized();
+            return $this->responder->unauthorized('auth.unauthorized');
         }
 
         $userId = new UserId($user->id);

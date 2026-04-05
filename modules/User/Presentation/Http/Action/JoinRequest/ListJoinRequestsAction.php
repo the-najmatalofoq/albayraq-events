@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Modules\User\Presentation\Http\Action\JoinRequest;
 
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Modules\Shared\Presentation\Http\JsonResponder;
 use Modules\User\Application\Query\JoinRequest\JoinRequestDTO;
 use Modules\User\Domain\Repository\UserJoinRequestRepositoryInterface;
+use Modules\User\Presentation\Http\Request\ListJoinRequestsRequest;
 
 final class ListJoinRequestsAction
 {
@@ -18,15 +18,15 @@ final class ListJoinRequestsAction
     ) {
     }
 
-    public function __invoke(Request $request): JsonResponse
+    public function __invoke(ListJoinRequestsRequest $request): JsonResponse
     {
-        // fix: make ListJoinRequestsFormReqest file 
-        $page = (int) $request->query('page', 1);
-        $perPage = (int) $request->query('per_page', 15);
+        $validated = $request->validated();
+        $page = (int) ($validated['page'] ?? 1);
+        $perPage = (int) ($validated['per_page'] ?? 15);
 
         $paginator = $this->repository->paginate($page, $perPage);
 
-        // fix: we must use responder for all the proejct 
+        // fix: we must make a method for the pagination in the responder, 
         return $this->responder->success([
             'data' => $paginator->getCollection()->map(
                 fn($model) => JoinRequestDTO::fromModel($model)

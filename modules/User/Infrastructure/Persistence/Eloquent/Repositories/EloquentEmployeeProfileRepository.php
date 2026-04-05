@@ -10,11 +10,12 @@ use Modules\User\Domain\ValueObject\EmployeeProfileId;
 use Modules\User\Domain\ValueObject\UserId;
 use Modules\User\Infrastructure\Persistence\Eloquent\Models\EmployeeProfileModel;
 use Modules\User\Infrastructure\Persistence\EmployeeProfileReflector;
+use Str;
 
-// fix: inject the EmployeeProfileModel
 final class EloquentEmployeeProfileRepository implements EmployeeProfileRepositoryInterface
 {
     public function __construct(
+        private readonly EmployeeProfileModel $model,
         private readonly EmployeeProfileReflector $reflector,
     ) {
     }
@@ -26,14 +27,14 @@ final class EloquentEmployeeProfileRepository implements EmployeeProfileReposito
 
     public function findById(EmployeeProfileId $id): ?EmployeeProfile
     {
-        $model = EmployeeProfileModel::with('nationalities')->find($id->value);
+        $model = $this->model->with('nationalities')->find($id->value);
 
         return $model ? $this->reflector->toEntity($model) : null;
     }
 
     public function findByUserId(UserId $userId): ?EmployeeProfile
     {
-        $model = EmployeeProfileModel::with('nationalities')
+        $model = $this->model->with('nationalities')
             ->where('user_id', $userId->value)
             ->first();
 
@@ -44,7 +45,7 @@ final class EloquentEmployeeProfileRepository implements EmployeeProfileReposito
     {
         $data = $this->reflector->fromEntity($profile);
 
-        $model = EmployeeProfileModel::updateOrCreate(
+        $model = $this->model->updateOrCreate(
             ['id' => $profile->uuid->value],
             $data
         );
@@ -52,7 +53,7 @@ final class EloquentEmployeeProfileRepository implements EmployeeProfileReposito
         $syncData = [];
         foreach ($profile->nationalities as $nationality) {
             $syncData[$nationality->nationalityId->value] = [
-                'id' => \Illuminate\Support\Str::uuid()->toString(),
+                'id' => Str::uuid()->toString(),
                 'is_primary' => $nationality->isPrimary,
             ];
         }
@@ -62,6 +63,6 @@ final class EloquentEmployeeProfileRepository implements EmployeeProfileReposito
 
     public function delete(EmployeeProfileId $id): void
     {
-        EmployeeProfileModel::destroy($id->value);
+        $this->model->destroy($id->value);
     }
 }
