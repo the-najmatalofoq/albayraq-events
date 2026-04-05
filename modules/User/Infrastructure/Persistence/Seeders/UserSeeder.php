@@ -1,15 +1,18 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Modules\User\Infrastructure\Persistence\Seeders;
 
 use DateTimeImmutable;
 use Illuminate\Database\Seeder;
+use Modules\User\Domain\User;
 use Modules\User\Domain\Repository\UserRepositoryInterface;
 use Modules\Role\Domain\Repository\RoleRepository;
+use Modules\Role\Domain\Enum\RoleSlugEnum;
 use Modules\IAM\Domain\Service\PasswordHasher;
-use Modules\User\Domain\User;
-use Modules\Role\Domain\Enum\RoleNameEnum;
+use Modules\Shared\Domain\ValueObject\TranslatableText;
+use Modules\User\Domain\ValueObject\Phone;
 
 class UserSeeder extends Seeder
 {
@@ -17,47 +20,53 @@ class UserSeeder extends Seeder
         private readonly UserRepositoryInterface $repository,
         private readonly RoleRepository $roleRepository,
         private readonly PasswordHasher $hasher,
-    ) {
-    }
+    ) {}
 
     public function run(): void
     {
         $roles = [
-            'superadmin' => $this->roleRepository->findByName(RoleNameEnum::SYSTEM_CONTROLLER), // Map to available enum
-            'admin' => $this->roleRepository->findByName(RoleNameEnum::GENERAL_MANAGER),
-            'manager' => $this->roleRepository->findByName(RoleNameEnum::OPERATIONS_MANAGER),
-            'supervisor' => $this->roleRepository->findByName(RoleNameEnum::SUPERVISOR),
-            'employee' => $this->roleRepository->findByName(RoleNameEnum::INDIVIDUAL),
+            'superadmin' => $this->roleRepository->findBySlug(RoleSlugEnum::SYSTEM_CONTROLLER), // Map to available enum
+            'admin' => $this->roleRepository->findBySlug(RoleSlugEnum::GENERAL_MANAGER),
+            'manager' => $this->roleRepository->findBySlug(RoleSlugEnum::OPERATIONS_MANAGER),
+            'supervisor' => $this->roleRepository->findBySlug(RoleSlugEnum::SUPERVISOR),
+            'employee' => $this->roleRepository->findBySlug(RoleSlugEnum::INDIVIDUAL),
         ];
 
         $users = [
-            ['Super Admin', 'superadmin@events.com', [$roles['superadmin']->uuid]],
-            ['Admin User', 'admin@events.com', [$roles['admin']->uuid]],
-            ['Operations Manager', 'ops@events.com', [$roles['admin']->uuid]],
-            ['Project Manager', 'pm@events.com', [$roles['manager']->uuid]],
-            ['Event Manager', 'event.manager@events.com', [$roles['manager']->uuid]],
-            ['Area Supervisor', 'supervisor@events.com', [$roles['supervisor']->uuid]],
-            ['Site Supervisor', 'site.supervisor@events.com', [$roles['supervisor']->uuid]],
-            ['John Doe', 'john@example.com', [$roles['employee']->uuid]],
-            ['Jane Smith', 'jane@example.com', [$roles['employee']->uuid]],
-            ['Mike Johnson', 'mike@example.com', [$roles['employee']->uuid]],
+            ['Super Admin', 'superadmin@events.com', '0500000001', 'superadmin'],
+            ['Admin User', 'admin@events.com', '0500000002', 'admin'],
+            ['Operations Manager', 'ops@events.com', '0500000003', 'admin'],
+            ['Project Manager', 'pm@events.com', '0500000004', 'manager'],
+            ['Event Manager', 'event.manager@events.com', '0500000005', 'manager'],
+            ['Area Supervisor', 'supervisor@events.com', '0500000006', 'supervisor'],
+            ['Site Supervisor', 'site.supervisor@events.com', '0500000007', 'supervisor'],
+            ['John Doe', 'john@example.com', '0500000008', 'employee'],
+            ['Jane Smith', 'jane@example.com', '0500000009', 'employee'],
+            ['Mike Johnson', 'mike@example.com', '0500000010', 'employee'],
         ];
 
-        foreach ($users as [$name, $email, $roleIds]) {
-            if ($this->repository->findByEmail($email))
+        foreach ($users as [$name, $email, $phone, $roleKey]) {
+            if ($this->repository->findByEmail($email)) {
                 continue;
+            }
+
+            $role = $roles[$roleKey];
+            if (!$role) {
+                $this->command->error("Role not found for: {$roleKey}");
+                continue;
+            }
 
             $user = User::register(
                 uuid: $this->repository->nextIdentity(),
-                name: ['en' => $name, 'ar' => $name], // Use array for translatable name
+                name: TranslatableText::fromArray(['en' => $name, 'ar' => $name]),
                 email: $email,
-                phone: '123456789' . rand(10, 99), // Dummy phone
+                phone: new Phone($phone),
                 password: $this->hasher->hash('password111'),
-                roleIds: $roleIds,
-                createdAt: new DateTimeImmutable,
+                roleIds: [$role->uuid],
+                createdAt: new DateTimeImmutable(),
                 isActive: true
             );
             $this->repository->save($user);
+            }
         }
     }
-}

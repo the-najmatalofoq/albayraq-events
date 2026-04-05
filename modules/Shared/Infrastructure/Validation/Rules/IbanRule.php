@@ -19,7 +19,7 @@ final class IbanRule implements ValidationRule
         $iban = str_replace(' ', '', strtoupper($value));
 
         if (!preg_match('/^SA[0-9]{22}$/', $iban)) {
-            $fail('validation.iban.invalid_saudi')->translate();
+            $fail('validation.iban.invalid')->translate();
         }
     }
 }

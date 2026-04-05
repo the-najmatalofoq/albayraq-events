@@ -16,9 +16,7 @@ final class UserPresenter
             'email' => $user->email,
             'phone' => $user->phone->value,
             'avatar' => $user->avatar?->value,
-            'national_id' => $user->nationalId,
-            'is_active' => $user->isActive,
-            'created_at' => \Carbon\Carbon::instance($user->createdAt)->toIso8601String(),
+            'created_at' => $user->createdAt->format('Y-m-d H:i:s'),
         ];
     }
 }

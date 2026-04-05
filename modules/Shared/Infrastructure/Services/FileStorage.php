@@ -42,8 +42,21 @@ final class FileStorage implements FileStorageInterface
         Storage::disk($this->disk)->delete($path->value);
     }
 
-    public function getUrl(FilePath $path): string
+    public function exists(FilePath $path): bool
     {
-        return Storage::disk($this->disk)->url($path->value);
+        return Storage::disk($this->disk)->exists($path->value);
+    }
+
+    public function size(FilePath $path): int
+    {
+        return Storage::disk($this->disk)->size($path->value);
+    }
+
+    public function url(FilePath $path): string
+    {
+        /** @var \Illuminate\Filesystem\FilesystemAdapter $storage */
+        $storage = Storage::disk($this->disk);
+
+        return $storage->url($path->value);
     }
 }

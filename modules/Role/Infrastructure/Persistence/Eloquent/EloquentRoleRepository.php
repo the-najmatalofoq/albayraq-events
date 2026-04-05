@@ -34,7 +34,8 @@ final class EloquentRoleRepository implements RoleRepository
 
     public function findBySlug(RoleSlugEnum $slug): ?Role
     {
-        $record = RoleModel::where('slug', $slug->value)->first();
+       
+     $record = RoleModel::where('slug', $slug->value)->first();
 
         return $record ? $this->toDomain($record) : null;
     }

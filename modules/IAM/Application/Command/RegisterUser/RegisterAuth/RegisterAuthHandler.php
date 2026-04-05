@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace Modules\IAM\Application\Command\RegisterUser\RegisterAuth;
 
 use DateTimeImmutable;
+use Modules\IAM\Domain\Exception\UserAlreadyExistsException;
 use Modules\Role\Domain\Enum\RoleSlugEnum;
 use Modules\Role\Domain\Repository\RoleRepository;
-use Modules\Shared\Domain\ValueObject\TranslatableText;
 use Modules\User\Domain\Repository\UserRepositoryInterface;
 use Modules\User\Domain\User;
-use Modules\User\Domain\ValueObject\Phone;
-use Modules\User\Domain\ValueObject\UserId;
+
 use Modules\IAM\Domain\Service\PasswordHasher;
+use Modules\Shared\Domain\Service\FileStorageInterface;
 
 final readonly class RegisterAuthHandler
 {
@@ -20,35 +20,41 @@ final readonly class RegisterAuthHandler
         private UserRepositoryInterface $userRepository,
         private RoleRepository $roleRepository,
         private PasswordHasher $passwordHasher,
-    ) {
-    }
+        private FileStorageInterface $fileStorage,
+    ) {}
 
-    public function handle(RegisterAuthCommand $command): void
+    public function handle(RegisterAuthCommand $command)
     {
-        $userId = new UserId($command->userId);
-
         $role = $this->roleRepository->findBySlug(RoleSlugEnum::EMPLOYEE);
 
         if (!$role) {
             throw new \RuntimeException('Employee role not found.');
         }
+        if ($this->userRepository->findByPhone($command->phone)) {
+            throw UserAlreadyExistsException::withPhone($command->phone);
+        }
 
-        $name = is_array($command->name)
-            ? $command->name
-            : ['ar' => $command->name, 'en' => $command->name];
+        if ($command->email && $this->userRepository->findByEmail($command->email)) {
+            throw UserAlreadyExistsException::withEmail($command->email);
+        }
 
         $user = User::register(
-            uuid: $userId,
-            name: TranslatableText::fromArray($name),
+            uuid: $this->userRepository->nextIdentity(),
+            name: $command->name,
             email: $command->email,
-            phone: new Phone($command->phone),
+            phone: $command->phone,
             password: $this->passwordHasher->hash($command->password),
             roleIds: [$role->uuid],
             createdAt: new DateTimeImmutable(),
-            nationalId: $command->nationalId,
             isActive: false
         );
+        $filePath = $this->fileStorage->uploadForUser(
+            $command->avatar,
+            $user->uuid,
+            'avatar'
+        );
+        $this->userRepository->save($user, $filePath->value);
 
-        $this->userRepository->save($user);
+        return $user;
     }
 }

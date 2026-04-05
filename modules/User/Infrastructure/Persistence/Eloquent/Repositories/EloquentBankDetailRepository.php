@@ -14,8 +14,7 @@ final class EloquentBankDetailRepository implements BankDetailRepositoryInterfac
 {
     public function __construct(
         private readonly BankDetailModel $bankDetailModel
-    ) {
-    }
+    ) {}
 
     public function save(BankDetail $bankDetail): void
     {
@@ -26,7 +25,7 @@ final class EloquentBankDetailRepository implements BankDetailRepositoryInterfac
                 'account_owner' => $bankDetail->accountOwner,
                 'bank_name' => $bankDetail->bankName,
                 'iban' => $bankDetail->iban,
-                'account_contact' => $bankDetail->accountContact,
+
             ]
         );
     }
@@ -36,7 +35,6 @@ final class EloquentBankDetailRepository implements BankDetailRepositoryInterfac
         string $accountOwner,
         string $bankName,
         string $iban,
-        ?string $accountContact = null
     ): BankDetail {
         $model = $this->bankDetailModel->updateOrCreate(
             ['user_id' => $userId->value],
@@ -45,10 +43,9 @@ final class EloquentBankDetailRepository implements BankDetailRepositoryInterfac
                 'account_owner' => $accountOwner,
                 'bank_name' => $bankName,
                 'iban' => $iban,
-                'account_contact' => $accountContact,
             ]
         );
-        
+
         return $this->toDomain($model);
     }
 
@@ -66,6 +63,11 @@ final class EloquentBankDetailRepository implements BankDetailRepositoryInterfac
         return $model ? $this->toDomain($model) : null;
     }
 
+    public function existsWithIban(string $iban): bool
+    {
+        return $this->bankDetailModel->where('iban', $iban)->exists();
+    }
+
     public function nextIdentity(): BankDetailId
     {
         return BankDetailId::generate();
@@ -79,7 +81,7 @@ final class EloquentBankDetailRepository implements BankDetailRepositoryInterfac
             accountOwner: $model->account_owner,
             bankName: $model->bank_name,
             iban: $model->iban,
-            accountContact: $model->account_contact,
+
         );
     }
 }

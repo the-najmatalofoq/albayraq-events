@@ -5,8 +5,9 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Modules\IAM\Infrastructure\Persistence\Seeders\RoleSeeder;
-use Modules\IAM\Infrastructure\Persistence\Seeders\UserSeeder;
+use Modules\Role\Infrastructure\Persistence\Seeders\RoleSeeder;
+use Modules\User\Infrastructure\Persistence\Seeders\UserSeeder;
+use Modules\Geography\Infrastructure\Persistence\Seeders\NationalitySeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -16,6 +17,7 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             RoleSeeder::class,
+            NationalitySeeder::class,
             UserSeeder::class,
         ]);
     }
