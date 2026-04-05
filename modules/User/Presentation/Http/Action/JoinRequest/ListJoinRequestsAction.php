@@ -10,6 +10,8 @@ use Modules\User\Application\Query\JoinRequest\JoinRequestDTO;
 use Modules\User\Domain\Repository\UserJoinRequestRepositoryInterface;
 use Modules\User\Presentation\Http\Request\ListJoinRequestsRequest;
 
+use Modules\Shared\Domain\ValueObject\PaginationCriteria;
+
 final class ListJoinRequestsAction
 {
     public function __construct(
@@ -20,23 +22,26 @@ final class ListJoinRequestsAction
 
     public function __invoke(ListJoinRequestsRequest $request): JsonResponse
     {
-        $validated = $request->validated();
-        $page = (int) ($validated['page'] ?? 1);
-        $perPage = (int) ($validated['per_page'] ?? 15);
+        $pagination = PaginationCriteria::fromArray($request->validated());
 
-        $paginator = $this->repository->paginate($page, $perPage);
+        $paginator = $this->repository->paginate($pagination->page, $pagination->perPage);
 
-        // fix: we must make a method for the pagination in the responder, 
-        return $this->responder->success([
-            'data' => $paginator->getCollection()->map(
+        return $this->responder->paginated(
+            items: $paginator->getCollection()->map(
                 fn($model) => JoinRequestDTO::fromModel($model)
-            )->values(),
-            'meta' => [
-                'current_page' => $paginator->currentPage(),
-                'per_page' => $paginator->perPage(),
-                'total' => $paginator->total(),
-                'last_page' => $paginator->lastPage(),
-            ],
-        ]);
+            )->values()->all(),
+            total: $paginator->total(),
+            pagination: $pagination,
+            presenter: fn(JoinRequestDTO $dto) => [
+                'id' => $dto->id,
+                'user_id' => $dto->userId,
+                'status' => $dto->status,
+                'reviewed_by' => $dto->reviewedBy,
+                'reviewed_at' => $dto->reviewedAt,
+                'notes' => $dto->notes,
+                'created_at' => $dto->createdAt,
+                'updated_at' => $dto->updatedAt,
+            ]
+        );
     }
 }

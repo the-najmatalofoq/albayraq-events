@@ -12,6 +12,7 @@ use Modules\User\Domain\Repository\{
     ContactPhoneRepositoryInterface,
     BankDetailRepositoryInterface,
     UserJoinRequestRepositoryInterface,
+    EmployeeNationalityRepositoryInterface,
 };
 use Modules\User\Infrastructure\Persistence\Eloquent\Repositories\{
     EloquentUserRepository,
@@ -19,6 +20,7 @@ use Modules\User\Infrastructure\Persistence\Eloquent\Repositories\{
     EloquentContactPhoneRepository,
     EloquentBankDetailRepository,
     EloquentUserJoinRequestRepository,
+    EloquentEmployeeNationalityRepository,
 };
 
 final class UserServiceProvider extends ServiceProvider
@@ -30,6 +32,7 @@ final class UserServiceProvider extends ServiceProvider
         $this->app->bind(ContactPhoneRepositoryInterface::class, EloquentContactPhoneRepository::class);
         $this->app->bind(BankDetailRepositoryInterface::class, EloquentBankDetailRepository::class);
         $this->app->bind(UserJoinRequestRepositoryInterface::class, EloquentUserJoinRequestRepository::class);
+        $this->app->bind(EmployeeNationalityRepositoryInterface::class, EloquentEmployeeNationalityRepository::class);
     }
 
     public function boot(): void

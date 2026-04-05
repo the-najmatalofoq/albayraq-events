@@ -7,6 +7,8 @@ namespace Modules\Shared\Presentation\Http;
 use Illuminate\Http\JsonResponse;
 use Modules\Shared\Domain\Service\TranslatorInterface;
 use Modules\Shared\Domain\Enum\ErrorCodeEnum;
+use Modules\Shared\Presentation\Http\Presenter\PaginatedDataPresenter;
+use Modules\Shared\Domain\ValueObject\PaginationCriteria;
 use Carbon\Carbon;
 
 final readonly class JsonResponder
@@ -14,6 +16,24 @@ final readonly class JsonResponder
     public function __construct(
         private TranslatorInterface $translator
     ) {
+    }
+
+    public function paginated(
+        array $items,
+        int $total,
+        PaginationCriteria $pagination,
+        ?callable $presenter = null,
+        int $status = 200,
+        ?string $messageKey = null
+    ): JsonResponse {
+        $presented = PaginatedDataPresenter::present(
+            data: $items,
+            total: $total,
+            pagination: $pagination,
+            presenter: $presenter ?? fn($item) => $item
+        );
+
+        return $this->success($presented, $status, $messageKey);
     }
 
     public function success(mixed $data = null, int $status = 200, ?string $messageKey = null): JsonResponse

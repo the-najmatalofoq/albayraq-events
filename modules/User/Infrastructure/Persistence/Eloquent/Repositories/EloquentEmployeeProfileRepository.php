@@ -10,13 +10,14 @@ use Modules\User\Domain\ValueObject\EmployeeProfileId;
 use Modules\User\Domain\ValueObject\UserId;
 use Modules\User\Infrastructure\Persistence\Eloquent\Models\EmployeeProfileModel;
 use Modules\User\Infrastructure\Persistence\EmployeeProfileReflector;
-use Str;
+use Modules\User\Domain\Repository\EmployeeNationalityRepositoryInterface;
 
 final class EloquentEmployeeProfileRepository implements EmployeeProfileRepositoryInterface
 {
     public function __construct(
         private readonly EmployeeProfileModel $model,
         private readonly EmployeeProfileReflector $reflector,
+        private readonly EmployeeNationalityRepositoryInterface $nationalityPivotRepository,
     ) {
     }
 
@@ -53,7 +54,7 @@ final class EloquentEmployeeProfileRepository implements EmployeeProfileReposito
         $syncData = [];
         foreach ($profile->nationalities as $nationality) {
             $syncData[$nationality->nationalityId->value] = [
-                'id' => Str::uuid()->toString(),
+                'id' => $this->nationalityPivotRepository->nextIdentity()->value,
                 'is_primary' => $nationality->isPrimary,
             ];
         }
