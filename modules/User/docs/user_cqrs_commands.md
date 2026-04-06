@@ -30,7 +30,7 @@ The User module uses CQRS (Command Query Responsibility Segregation). Commands m
 - **Emits:** UserDeactivated event
 - **Authorization:** system_controller only
 
-### VerifyPhone
+### VerifyEmail
 
 - **Input:** user_id, verification_code (6-digit OTP)
 - **Behavior:** Sets email_verified_at = now()
@@ -122,7 +122,7 @@ Handlers follow this pattern:
 | RegisterUser         | RegisterUserHandler         | save()                   |
 | ActivateUser         | ActivateUserHandler         | findById(), save()       |
 | DeactivateUser       | DeactivateUserHandler       | findById(), save()       |
-| VerifyPhone          | VerifyPhoneHandler          | findById(), save()       |
+| VerifyEmail          | VerifyEmailHandler          | findById(), save()       |
 | UpdateUserProfile    | UpdateUserProfileHandler    | findById(), save()       |
 | AddContactPhone      | AddContactPhoneHandler      | findById(), save()       |
 | RemoveContactPhone   | RemoveContactPhoneHandler   | findById(), save()       |

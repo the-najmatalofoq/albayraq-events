@@ -81,9 +81,9 @@ modules/User/
 │ ├── SetPrimaryBankDetail/
 │ │ ├── SetPrimaryBankDetailCommand.php
 │ │ └── SetPrimaryBankDetailHandler.php
-│ └── VerifyPhone/
-│ ├── VerifyPhoneCommand.php
-│ └── VerifyPhoneHandler.php
+│ └── VerifyEmail/
+│ ├── VerifyEmailCommand.php
+│ └── VerifyEmailHandler.php
 ├── Domain/
 │ ├── User.php (aggregate root)
 │ ├── Enum/
@@ -124,7 +124,7 @@ modules/User/
 └── Http/
 ├── Action/
 │ ├── RegisterUserAction.php
-│ ├── VerifyPhoneAction.php
+│ ├── VerifyEmailAction.php
 │ ├── GetProfileAction.php
 │ ├── UpdateProfileAction.php
 │ ├── AddContactPhoneAction.php
@@ -142,7 +142,7 @@ modules/User/
 │ └── BankDetailPresenter.php
 └── Request/
 ├── RegisterUserRequest.php
-├── VerifyPhoneRequest.php
+├── VerifyEmailRequest.php
 ├── UpdateProfileRequest.php
 ├── AddContactPhoneRequest.php
 ├── AddBankDetailRequest.php
@@ -199,18 +199,18 @@ Recommended approach: Since User is the foundation module, the relationship shou
 // In DeviceTokenModel (Notification module)
 public function user(): BelongsTo
 {
-    return $this->belongsTo(UserModel::class, 'user_id');
+return $this->belongsTo(UserModel::class, 'user_id');
 }
 If a deviceTokens() relationship is genuinely needed on UserModel, consider using a dynamic relationship or repository pattern to avoid compile-time coupling to the Notification module.
 
 ### Events Emitted
 
-| Event | When | Payload |
-|-------|------|---------|
-| UserRegistered | Registration complete | user_id, phone, email |
-| UserActivated | Admin activates account | user_id, activated_by |
+| Event           | When                      | Payload                 |
+| --------------- | ------------------------- | ----------------------- |
+| UserRegistered  | Registration complete     | user_id, phone, email   |
+| UserActivated   | Admin activates account   | user_id, activated_by   |
 | UserDeactivated | Admin deactivates account | user_id, deactivated_by |
-| PhoneVerified | OTP verification success | user_id, verified_at |
+| PhoneVerified   | OTP verification success  | user_id, verified_at    |
 
 CodeRabbit
 Document event classes in the file structure.
@@ -228,4 +228,3 @@ Update the Module Size counts accordingly if event classes exist.
 ### Events Listened
 
 None. User module does not listen to external events.
-

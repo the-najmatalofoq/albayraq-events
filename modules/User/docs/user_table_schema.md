@@ -14,7 +14,7 @@ The core authentication and identity table. Every system user has one record her
 | `password`          | varchar(255) | NOT NULL         | -                 | Bcrypt-hashed password                            |
 | `avatar`            | varchar(255) | NULLABLE         | NULL              | Path to profile picture                           |
 | `is_active`         | boolean      | NOT NULL         | false             | Account active status                             |
-| `email_verified_at` | timestamp    | NULLABLE         | NULL              | When phone was OTP-verified                       |
+| `email_verified_at` | timestamp    | NULLABLE         | NULL              | When email was OTP-verified                       |
 | `remember_token`    | varchar(100) | NULLABLE         | NULL              | Laravel "remember me" token                       |
 | `created_at`        | timestamp    | NOT NULL         | CURRENT_TIMESTAMP | Record creation time                              |
 | `updated_at`        | timestamp    | NOT NULL         | CURRENT_TIMESTAMP | Last update time                                  |

@@ -57,7 +57,7 @@ Registration
 │  • Cannot log in                                             │
 └─────────────────────────────────────────────────────────────┘
      │                              │
-     │ activate()                   │ verifyPhone()
+     │ activate()                   │ verifyEmail()
      ▼                              ▼
 ┌─────────────────┐          ┌─────────────────────────────────┐
 │     ACTIVE      │          │      INACTIVE (VERIFIED)         │

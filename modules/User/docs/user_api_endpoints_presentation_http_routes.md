@@ -16,7 +16,7 @@
 | Method | URI                          | Controller Action          | Auth     | Roles Allowed                                          |
 | ------ | ---------------------------- | -------------------------- | -------- | ------------------------------------------------------ |
 | POST   | `/register`                  | RegisterUserAction         | None     | Public                                                 |
-| POST   | `/verify-phone`              | VerifyPhoneAction          | None     | Public                                                 |
+| POST   | `/verify-phone`              | VerifyEmailAction          | None     | Public                                                 |
 | GET    | `/profile`                   | GetProfileAction           | Required | Self                                                   |
 | PUT    | `/profile`                   | UpdateProfileAction        | Required | Self                                                   |
 | POST   | `/contact-phones`            | AddContactPhoneAction      | Required | Self                                                   |
