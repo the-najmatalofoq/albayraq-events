@@ -1,36 +1,3 @@
-## Verification & Missing Piece
-
-All your implemented changes are correct and follow the required patterns.  
-However, **one critical piece is missing**: the **broadcast channel authorization** in your `UserServiceProvider`.
-
-Without defining the private channel `users.{userId}` and its authorization logic, the Flutter/React client will not be able to subscribe to the channel (HTTP 403).
-
-Add this inside `boot()` of `Modules/User/Infrastructure/Providers/UserServiceProvider.php`:
-
-```php
-use Illuminate\Support\Facades\Broadcast;
-
-public function boot(): void
-{
-    // ... existing code
-
-    Broadcast::channel('users.{userId}', function ($user, string $userId) {
-        return (string) $user->getAuthIdentifier() === $userId;
-    });
-}
-```
-
-Also ensure that Reverb is installed and configured (project‑level: `.env`, `config/app.php`, `config/reverb.php`).  
-Run `php artisan reverb:start` to serve WebSocket connections.
-
----
-
-## Markdown File for Client‑Side Integration
-
-Create the following file inside your IAM module – e.g.  
-`modules/IAM/docs/client-realtime-integration.md`
-
-````markdown
 # Real‑time Join Request Approval – Client Integration
 
 When an admin approves a user's join request, the backend broadcasts a `UserJoinRequestApprovedEvent` on a **private channel**.  
@@ -38,17 +5,17 @@ The client (Flutter, React, or any frontend) must subscribe to this channel usin
 
 ## Channel & Event Names
 
-| Item         | Value                      |
-| ------------ | -------------------------- |
-| Channel name | `users.{userId}` (private) |
-| Event name   | `join-request.approved`    |
-| Payload      | `{ user_id, message }`     |
+| Item          | Value                          |
+|---------------|--------------------------------|
+| Channel name  | `users.{userId}` (private)     |
+| Event name    | `join-request.approved`        |
+| Payload       | `{ user_id, message }`         |
 
 > **Private channel** – the client must authenticate via the `/api/broadcasting/auth` endpoint.
 
 ## Prerequisites
 
-1. The user must be **registered** and have a valid **JWT token** (even if `is_active = false`).
+1. The user must be **registered** and have a valid **JWT token** (even if `is_active = false`).  
 2. The token must be sent in the `Authorization: Bearer <token>` header when connecting and subscribing.
 3. Laravel Reverb WebSocket server must be running (`php artisan reverb:start`).
 
@@ -74,38 +41,38 @@ reverb.private(`users.${userId}`).listen('join-request.approved', (data) {
   Navigator.pushReplacementNamed(context, '/home');
 });
 ```
-````
 
 ## React (JavaScript) Integration
 
 Use the `laravel-echo` package with `pusher-js` (configured for Reverb).
 
 ```javascript
-import Echo from "laravel-echo";
-import Pusher from "pusher-js";
+import Echo from 'laravel-echo';
+import Pusher from 'pusher-js';
 
 window.Pusher = Pusher;
 
 const echo = new Echo({
-    broadcaster: "reverb",
-    key: process.env.REVERB_APP_KEY,
-    wsHost: process.env.REVERB_HOST,
-    wsPort: process.env.REVERB_PORT,
-    forceTLS: false,
-    authEndpoint: "/api/broadcasting/auth",
-    auth: {
-        headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-    },
+  broadcaster: 'reverb',
+  key: process.env.REVERB_APP_KEY,
+  wsHost: process.env.REVERB_HOST,
+  wsPort: process.env.REVERB_PORT,
+  forceTLS: false,
+  authEndpoint: '/api/broadcasting/auth',
+  auth: {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem('token')}`
+    }
+  }
 });
 
-const userId = localStorage.getItem("userId");
-echo.private(`users.${userId}`).listen("join-request.approved", (data) => {
-    console.log("Approval received:", data);
+const userId = localStorage.getItem('userId');
+echo.private(`users.${userId}`)
+  .listen('join-request.approved', (data) => {
+    console.log('Approval received:', data);
     // Redirect to login/home
-    window.location.href = "/home";
-});
+    window.location.href = '/home';
+  });
 ```
 
 ## Backend Developer Notes
@@ -117,10 +84,10 @@ echo.private(`users.${userId}`).listen("join-request.approved", (data) => {
 
 ## Troubleshooting
 
-| Symptom             | Likely cause                                                                         |
-| ------------------- | ------------------------------------------------------------------------------------ |
-| 403 on subscription | Missing or invalid JWT token; or channel authorization callback returns false.       |
-| Event not received  | Reverb not running; wrong channel/event name; client not subscribed before approval. |
-| Connection refused  | Reverb host/port wrong; firewall blocking WebSocket.                                 |
+| Symptom | Likely cause |
+|---------|---------------|
+| 403 on subscription | Missing or invalid JWT token; or channel authorization callback returns false. |
+| Event not received | Reverb not running; wrong channel/event name; client not subscribed before approval. |
+| Connection refused | Reverb host/port wrong; firewall blocking WebSocket. |
 
 > **Tip:** Use browser DevTools (Network → WS) or Flutter logs to debug WebSocket frames.

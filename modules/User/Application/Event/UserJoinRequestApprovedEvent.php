@@ -20,12 +20,12 @@ final class UserJoinRequestApprovedEvent implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel('user.' . $this->userId->value),
+            new PrivateChannel('users.' . $this->userId->value),
         ];
     }
 
     public function broadcastAs(): string
     {
-        return 'user.join_request.approved';
+        return 'join-request.approved';
     }
 }
