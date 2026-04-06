@@ -49,6 +49,7 @@ final class UserModel extends Authenticatable implements JWTSubject
         'phone',
         'password',
         'avatar',
+        'email_verified_at',
     ];
 
     protected $hidden = [
@@ -61,6 +62,7 @@ final class UserModel extends Authenticatable implements JWTSubject
         return [
             'name' => TranslatableTextCast::class,
             'password' => 'hashed',
+            'email_verified_at' => 'datetime',
         ];
     }
 

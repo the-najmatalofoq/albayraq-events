@@ -15,6 +15,15 @@ return [
         'token_refreshed' => 'Token refreshed successfully',
         'invalid_credentials' => 'Invalid credentials',
         'token_mismatch' => 'Session expired. Please login again.',
+        'unauthorized' => 'You are not authorized to perform this action.',
+        'forbidden' => 'You do not have permission to access this resource.',
+        'email_not_verified' => 'Your email address is not verified.',
+    ],
+    'user' => [
+        'join_request' => [
+            'not_approved' => 'Your join request has not been approved yet.',
+            'approved' => 'Join request approved. User has been notified.',
+        ],
     ],
     'errors' => [
         'validation_failed' => 'The given data was invalid.',

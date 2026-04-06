@@ -13,6 +13,8 @@ use Modules\Shared\Infrastructure\Http\Middleware\{
     ResolveLocaleMiddleware
 };
 use Modules\User\Infrastructure\Http\Middleware\EnsureActiveJoinRequest;
+use Modules\User\Infrastructure\Http\Middleware\HasApprovedJoinRequestMiddleware;
+use Modules\User\Infrastructure\Http\Middleware\VerifiedUserMiddleware;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Illuminate\Validation\ValidationException;
 
@@ -31,6 +33,8 @@ return Application::configure(basePath: dirname(__DIR__))
             'locale' => ResolveLocaleMiddleware::class,
             'force-json' => ForceJsonResponseMiddleware::class,
             'join-request.active' => EnsureActiveJoinRequest::class,
+            'verified' => VerifiedUserMiddleware::class,
+            'join-request.approved' => HasApprovedJoinRequestMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

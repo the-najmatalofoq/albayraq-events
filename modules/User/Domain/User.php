@@ -28,6 +28,7 @@ final class User extends AggregateRoot
         public private(set) bool $isActive,
         public readonly DateTimeImmutable $createdAt,
         public private(set) ?FilePath $avatar = null,
+        public private(set) ?DateTimeImmutable $emailVerifiedAt = null,
         public private(set) ?DateTimeImmutable $updatedAt = null,
         public private(set) ?DateTimeImmutable $deletedAt = null,
     ) {}
@@ -54,6 +55,7 @@ final class User extends AggregateRoot
             isActive: $isActive,
             createdAt: $createdAt,
             avatar: $avatar,
+            emailVerifiedAt: null,
         );
 
         $user->recordEvent(new UserRegistered($uuid));
@@ -71,6 +73,7 @@ final class User extends AggregateRoot
         bool $isActive,
         DateTimeImmutable $createdAt,
         ?FilePath $avatar = null,
+        ?DateTimeImmutable $emailVerifiedAt = null,
         ?DateTimeImmutable $updatedAt = null,
         ?DateTimeImmutable $deletedAt = null,
     ): self {
@@ -84,9 +87,16 @@ final class User extends AggregateRoot
             isActive: $isActive,
             createdAt: $createdAt,
             avatar: $avatar,
+            emailVerifiedAt: $emailVerifiedAt,
             updatedAt: $updatedAt,
             deletedAt: $deletedAt,
         );
+    }
+
+    public function markEmailAsVerified(): void
+    {
+        $this->emailVerifiedAt = new DateTimeImmutable();
+        $this->updatedAt = new DateTimeImmutable();
     }
 
     public function hasRole(RoleId $roleId): bool
