@@ -24,7 +24,8 @@ final readonly class CheckHealthAction
             return $this->responder->error(
                 errorCode: 'SERVICE_UNHEALTHY',
                 status: 503,
-                messageKey: 'health.unhealthy'
+                messageKey: 'health.unhealthy',
+                errors: $result['checks']
             );
         }
 
