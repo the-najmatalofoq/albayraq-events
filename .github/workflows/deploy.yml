@@ -1,4 +1,3 @@
-# D:\events\.github\workflows\deploy.yml
 name: Deploy to Hostinger
 
 on:
@@ -49,7 +48,7 @@ jobs:
             ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }} \
             "mkdir -p ${{ secrets.HOSTINGER_DIR }}"
 
-      - name: 🔄 Sync project files
+      - name: 🔄 Sync project files to /public_html/project
         run: |
           rsync -az --delete \
             --exclude=".git" \
@@ -59,7 +58,6 @@ jobs:
             --exclude=".env" \
             --exclude="storage/logs/*" \
             --exclude="tests" \
-            --exclude="public_html" \
             --exclude="tmp_deploy" \
             -e "ssh -p ${{ secrets.HOSTINGER_PORT }}" \
             ./ ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }}:${{ secrets.HOSTINGER_DIR }}
