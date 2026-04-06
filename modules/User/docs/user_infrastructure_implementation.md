@@ -34,7 +34,7 @@ Implements the interfaces defined in Domain using Laravel's Eloquent ORM. Contai
 ### UserModel
 
 - **Hidden fields:** password, remember_token (never in JSON)
-- **Casts:** name → array, is_active → boolean, phone_verified_at → datetime, deleted_at → datetime
+- **Casts:** name → array, is_active → boolean, email_verified_at → datetime, deleted_at → datetime
 - **Relationships:** employeeProfile (HasOne), contactPhones (HasMany), bankDetails (HasMany)
 
 ### EmployeeProfileModel

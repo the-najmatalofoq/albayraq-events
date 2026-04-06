@@ -93,7 +93,7 @@ The User module serves as the **identity and profile management backbone** of th
 2. System creates user with is_active = false
 3. System assigns default INDIVIDUAL role (via Role module)
 4. Worker receives SMS with verification code
-5. Worker verifies phone → phone_verified_at set
+5. Worker verifies phone → email_verified_at set
 6. System controller activates account → is_active = true
 7. Worker can now log in
 

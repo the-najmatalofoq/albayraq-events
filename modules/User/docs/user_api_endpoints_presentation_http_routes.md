@@ -87,7 +87,7 @@
     "phone": "+966501234567",
     "email": "ahmed@example.com",
     "is_active": true,
-    "phone_verified_at": "2026-03-31T10:00:00Z",
+    "email_verified_at": "2026-03-31T10:00:00Z",
     "profile": {
         "full_name": { "ar": "أحمد محمد علي", "en": "Ahmed Mohamed Ali" },
         "birth_date": "1990-05-15",

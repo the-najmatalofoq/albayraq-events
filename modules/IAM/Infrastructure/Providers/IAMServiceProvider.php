@@ -23,7 +23,7 @@ final class IAMServiceProvider extends ServiceProvider
     {
         $this->loadMigrationsFrom(__DIR__ . '/../Persistence/Migrations');
 
-        Route::prefix('api/v1')
+        Route::prefix('api/v1/auth')
             ->middleware(['api'])
             ->group(__DIR__ . '/../Routes/api.php');
     }

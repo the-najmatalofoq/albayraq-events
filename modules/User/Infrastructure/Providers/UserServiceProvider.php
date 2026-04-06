@@ -58,11 +58,11 @@ final class UserServiceProvider extends ServiceProvider
         $basePath = __DIR__ . '/../Routes';
 
         $entityRoutes = [
-            'User' => 'api/me',
-            'EmployeeProfile' => 'api/me',
-            'BankDetail' => 'api/me',
-            'ContactPhone' => 'api/me',
-            'UserJoinRequest' => 'api/join-requests',
+            'User' => 'api/v1/me',
+            'EmployeeProfile' => 'api/v1/me',
+            'BankDetail' => 'api/v1/me',
+            'ContactPhone' => 'api/v1/me',
+            'UserJoinRequest' => 'api/v1/join-requests',
         ];
 
         foreach ($entityRoutes as $entity => $prefix) {

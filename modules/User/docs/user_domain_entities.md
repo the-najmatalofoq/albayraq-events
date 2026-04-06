@@ -52,7 +52,7 @@ Registration
 ┌─────────────────────────────────────────────────────────────┐
 │                      INACTIVE                                │
 │  • is_active = false                                         │
-│  • phone_verified_at = null                                  │
+│  • email_verified_at = null                                  │
 │  • Can receive role assignments                              │
 │  • Cannot log in                                             │
 └─────────────────────────────────────────────────────────────┘
@@ -62,7 +62,7 @@ Registration
 ┌─────────────────┐          ┌─────────────────────────────────┐
 │     ACTIVE      │          │      INACTIVE (VERIFIED)         │
 │  • is_active=true│          │  • is_active=false               │
-│  • Can log in   │          │  • phone_verified_at = timestamp  │
+│  • Can log in   │          │  • email_verified_at = timestamp  │
 └─────────────────┘          │  • Still cannot log in            │
      ▲                        └─────────────────────────────────┘
      │                                              │
@@ -71,7 +71,7 @@ Registration
      │                        ┌─────────────────────────────────┐
      └────────────────────────│       ACTIVE (VERIFIED)         │
                               │  • is_active = true              │
-                              │  • phone_verified_at = timestamp │
+                              │  • email_verified_at = timestamp │
                               │  • Full system access            │
                               └─────────────────────────────────┘
 ```

@@ -10,7 +10,7 @@ use Modules\IAM\Presentation\Http\Action\{
     RefreshTokenAction
 };
 
-Route::prefix('auth')->middleware(['throttle:auth'])->group(function () {
+Route::middleware(['throttle:auth'])->group(function () {
     Route::post('/register', RegisterAction::class);
     Route::post('/login', LoginAction::class);
 

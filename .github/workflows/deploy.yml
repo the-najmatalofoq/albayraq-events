@@ -1,3 +1,4 @@
+# D:\events\.github\workflows\deploy.yml
 name: Deploy to Hostinger
 
 on:
@@ -9,7 +10,6 @@ env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
-
   verify-connection:
     name: 🔌 Verify SSH Connection
     runs-on: ubuntu-latest
@@ -27,7 +27,7 @@ jobs:
         run: |
           ssh -p ${{ secrets.HOSTINGER_PORT }} \
             ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }} \
-            "echo '✅ SSH OK — connected to $(hostname) — PHP: $(php -r \"echo PHP_VERSION;\")'"
+            "echo '✅ SSH OK — host: $(hostname) — PHP: $(php -r \"echo PHP_VERSION;\")'"
 
   deploy:
     name: 🚀 Deploy Application
@@ -53,11 +53,14 @@ jobs:
         run: |
           rsync -az --delete \
             --exclude=".git" \
+            --exclude=".github" \
             --exclude="node_modules" \
+            --exclude="vendor" \
             --exclude=".env" \
             --exclude="storage/logs/*" \
-            --exclude=".github" \
             --exclude="tests" \
+            --exclude="public_html" \
+            --exclude="tmp_deploy" \
             -e "ssh -p ${{ secrets.HOSTINGER_PORT }}" \
             ./ ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }}:${{ secrets.HOSTINGER_DIR }}
 
@@ -93,7 +96,8 @@ jobs:
         run: |
           ssh -p ${{ secrets.HOSTINGER_PORT }} \
             ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }} \
-            "cd ${{ secrets.HOSTINGER_DIR }} && chmod -R 775 storage bootstrap/cache"
+            "cd ${{ secrets.HOSTINGER_DIR }} && \
+             chmod -R 775 storage bootstrap/cache"
 
       - name: ✅ Disable maintenance mode
         if: always()

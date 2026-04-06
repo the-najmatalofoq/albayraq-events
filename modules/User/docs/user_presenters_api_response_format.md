@@ -19,7 +19,7 @@ All User API responses follow this pattern:
     "phone": "string",
     "email": "string|null",
     "is_active": boolean,
-    "phone_verified_at": "ISO8601|null",
+    "email_verified_at": "ISO8601|null",
     "profile": { ... } | null,
     "contact_phones": [],
     "bank_details": []
@@ -71,7 +71,7 @@ All User API responses follow this pattern:
 | User.getPhone()           | phone             | As-is                            |
 | User.getEmail()           | email             | As-is or null                    |
 | User.isActive()           | is_active         | boolean                          |
-| User.getPhoneVerifiedAt() | phone_verified_at | toISOString() or null            |
+| User.getPhoneVerifiedAt() | email_verified_at | toISOString() or null            |
 | User.getEmployeeProfile() | profile           | Pass to EmployeeProfilePresenter |
 | User.getContactPhones()   | contact_phones    | Map to ContactPhonePresenter     |
 | User.getBankDetails()     | bank_details      | Map to BankDetailPresenter       |
@@ -98,7 +98,7 @@ These domain fields are **NEVER** included in API responses:
     "phone": "+966501234567",
     "email": "ahmed@example.com",
     "is_active": true,
-    "phone_verified_at": "2026-03-31T10:00:00+00:00",
+    "email_verified_at": "2026-03-31T10:00:00+00:00",
     "profile": {
         "full_name": { "ar": "أحمد محمد علي", "en": "Ahmed Mohamed Ali" },
         "birth_date": "1990-05-15",
@@ -151,7 +151,7 @@ All timestamps use UTC with Z suffix:
 
 - `created_at`: "2026-03-31T10:00:00+00:00"
 - `updated_at`: "2026-03-31T10:00:00+00:00"
-- `phone_verified_at`: Same format or null
+- `email_verified_at`: Same format or null
 - `birth_date`: Date only, "1990-05-15"
 
 ---

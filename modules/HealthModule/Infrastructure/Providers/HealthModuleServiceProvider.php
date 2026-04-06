@@ -24,7 +24,7 @@ final class HealthModuleServiceProvider extends ServiceProvider
             $this->loadMigrationsFrom(__DIR__ . '/../Persistence/Migrations');
         }
 
-        Route::prefix('api/health')
+        Route::prefix('api/v1/health')
             ->middleware(['api'])
             ->group(__DIR__ . '/../Routes/api.php');
     }

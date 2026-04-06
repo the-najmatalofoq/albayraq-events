@@ -27,7 +27,7 @@ use Modules\Shared\Infrastructure\Laravel\Casts\TranslatableTextCast;
  * @property string $password
  * @property string|null $avatar
  * @property bool $is_active
- * @property Carbon|null $phone_verified_at
+ * @property Carbon|null $email_verified_at
  * @property string|null $remember_token
  * @property Carbon $created_at
  * @property Carbon $updated_at

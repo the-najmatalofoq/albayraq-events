@@ -1,5 +1,5 @@
 <?php
-
+// modules\User\Infrastructure\Persistence\Migrations\2026_03_25_100001_create_user_join_requests_table.php
 declare(strict_types=1);
 
 use Illuminate\Database\Migrations\Migration;

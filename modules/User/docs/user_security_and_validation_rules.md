@@ -6,7 +6,7 @@
 | --------------------------------------------- | ----------------------------------------- |
 | Passwords hashed with bcrypt                  | Cost factor 12                            |
 | Passwords never returned in API               | Hidden from UserPresenter                 |
-| Phone verification required for sensitive ops | Check phone_verified_at before payroll    |
+| Phone verification required for sensitive ops | Check email_verified_at before payroll    |
 | Inactive users cannot log in                  | is_active=false blocks JWT issuance       |
 | Soft-deleted users cannot log in              | deleted_at not null blocks authentication |
 | Self-deactivation prohibited                  | Business rule in DeactivateUserHandler    |

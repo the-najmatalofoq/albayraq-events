@@ -10,7 +10,7 @@ The User module uses CQRS (Command Query Responsibility Segregation). Commands m
 
 - **Input:** name (ar/en), phone, email (optional), password
 - **Output:** UserId
-- **Behavior:** Creates user with is_active=false, phone_verified_at=null, assigns INDIVIDUAL role
+- **Behavior:** Creates user with is_active=false, email_verified_at=null, assigns INDIVIDUAL role
 - **Validates:** Unique phone, unique email, phone format E.164
 - **Emits:** UserRegistered event
 
@@ -33,7 +33,7 @@ The User module uses CQRS (Command Query Responsibility Segregation). Commands m
 ### VerifyPhone
 
 - **Input:** user_id, verification_code (6-digit OTP)
-- **Behavior:** Sets phone_verified_at = now()
+- **Behavior:** Sets email_verified_at = now()
 - **Validates:** User exists, code matches, phone not already verified
 - **Emits:** PhoneVerified event
 

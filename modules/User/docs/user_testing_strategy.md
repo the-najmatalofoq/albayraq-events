@@ -28,7 +28,7 @@
 
 | Test                           | Expected Behavior                           |
 | ------------------------------ | ------------------------------------------- |
-| User can be registered         | is_active = false, phone_verified_at = null |
+| User can be registered         | is_active = false, email_verified_at = null |
 | Activate inactive user         | is_active becomes true, emits UserActivated |
 | Activate active user           | Throws UserAlreadyActiveException           |
 | Deactivate active user         | is_active becomes false                     |
