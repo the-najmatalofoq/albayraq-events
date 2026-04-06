@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Modules\Geography\Infrastructure\Persistence\Eloquent\Models;
@@ -8,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Carbon\Carbon;
+use Modules\Shared\Infrastructure\Laravel\Casts\TranslatableTextCast;
 
 /**
  * @property string $id
@@ -25,18 +27,10 @@ final class NationalityModel extends Model
     protected $table = 'nationalities';
 
     protected $fillable = [
-        'country_id',
-        'name',
-        'is_active',
+        'name'
     ];
 
     protected $casts = [
-        'name' => 'array',
-        'is_active' => 'boolean',
+        'name' => TranslatableTextCast::class,
     ];
-
-    public function country(): BelongsTo
-    {
-        return $this->belongsTo(CountryModel::class, 'country_id');
-    }
 }

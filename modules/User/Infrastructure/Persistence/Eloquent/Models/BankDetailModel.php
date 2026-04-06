@@ -17,7 +17,6 @@ use Carbon\Carbon;
  * @property string $account_owner
  * @property string $bank_name
  * @property string $iban
- * @property string|null $account_contact
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property-read UserModel $user
@@ -33,13 +32,11 @@ final class BankDetailModel extends Model
         'account_owner',
         'bank_name',
         'iban',
-        'account_contact',
     ];
 
     protected function casts(): array
     {
         return [
-            'account_contact' => 'string',
         ];
     }
 

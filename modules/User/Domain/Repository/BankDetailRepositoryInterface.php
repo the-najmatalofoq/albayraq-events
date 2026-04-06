@@ -13,7 +13,7 @@ interface BankDetailRepositoryInterface
     public function save(BankDetail $bankDetail): void;
     public function findByUserId(UserId $userId): ?BankDetail;
     public function nextIdentity(): BankDetailId;
-    
+    public function existsWithIban(string $iban): bool;
     /**
      * Update or create bank details for a user
      */
@@ -22,6 +22,5 @@ interface BankDetailRepositoryInterface
         string $accountOwner,
         string $bankName,
         string $iban,
-        ?string $accountContact = null
     ): BankDetail;
 }

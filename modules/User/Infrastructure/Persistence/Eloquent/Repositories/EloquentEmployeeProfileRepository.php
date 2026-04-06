@@ -17,9 +17,7 @@ final class EloquentEmployeeProfileRepository implements EmployeeProfileReposito
     public function __construct(
         private readonly EmployeeProfileModel $model,
         private readonly EmployeeProfileReflector $reflector,
-        private readonly EmployeeNationalityRepositoryInterface $nationalityPivotRepository,
-    ) {
-    }
+    ) {}
 
     public function nextIdentity(): EmployeeProfileId
     {
@@ -28,14 +26,14 @@ final class EloquentEmployeeProfileRepository implements EmployeeProfileReposito
 
     public function findById(EmployeeProfileId $id): ?EmployeeProfile
     {
-        $model = $this->model->with('nationalities')->find($id->value);
+        $model = $this->model->with('nationality')->find($id->value);
 
         return $model ? $this->reflector->toEntity($model) : null;
     }
 
     public function findByUserId(UserId $userId): ?EmployeeProfile
     {
-        $model = $this->model->with('nationalities')
+        $model = $this->model->with('nationality')
             ->where('user_id', $userId->value)
             ->first();
 
@@ -46,20 +44,12 @@ final class EloquentEmployeeProfileRepository implements EmployeeProfileReposito
     {
         $data = $this->reflector->fromEntity($profile);
 
-        $model = $this->model->updateOrCreate(
-            ['id' => $profile->uuid->value],
-            $data
-        );
+        /** @var EmployeeProfileModel $model */
+        $model = $this->model->withTrashed()->find($profile->uuid->value) ?? new EmployeeProfileModel();
 
-        $syncData = [];
-        foreach ($profile->nationalities as $nationality) {
-            $syncData[$nationality->nationalityId->value] = [
-                'id' => $this->nationalityPivotRepository->nextIdentity()->value,
-                'is_primary' => $nationality->isPrimary,
-            ];
-        }
-
-        $model->nationalities()->sync($syncData);
+        $model->id = $profile->uuid->value;
+        $model->fill($data);
+        $model->save();
     }
 
     public function delete(EmployeeProfileId $id): void

@@ -6,6 +6,6 @@ namespace Modules\User\Domain\ValueObject;
 
 use Modules\Shared\Domain\Identity;
 
-final class UserJoinRequestId extends Identity
+final readonly class UserJoinRequestId extends Identity
 {
 }

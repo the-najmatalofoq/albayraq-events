@@ -14,7 +14,7 @@ final readonly class AddContactPhoneHandler
         private ContactPhoneRepositoryInterface $contactPhoneRepository
     ) {}
 
-    public function handle(AddContactPhoneCommand $command): void
+    public function handle(AddContactPhoneCommand $command): ContactPhone
     {
         $contactPhone = ContactPhone::create(
             uuid: $this->contactPhoneRepository->nextIdentity(),
@@ -25,5 +25,7 @@ final readonly class AddContactPhoneHandler
         );
 
         $this->contactPhoneRepository->save($contactPhone);
+
+        return $contactPhone;
     }
 }

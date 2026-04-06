@@ -15,6 +15,7 @@ use Modules\Role\Infrastructure\Persistence\Eloquent\RoleModel;
 use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Database\Eloquent\Collection;
 use Carbon\Carbon;
+use Modules\Shared\Infrastructure\Laravel\Casts\TranslatableTextCast;
 
 /**
  * User model - Primary authentication and authorization model
@@ -24,7 +25,6 @@ use Carbon\Carbon;
  * @property string|null $email
  * @property string $phone
  * @property string $password
- * @property string|null $national_id
  * @property string|null $avatar
  * @property bool $is_active
  * @property Carbon|null $phone_verified_at
@@ -48,9 +48,7 @@ final class UserModel extends Authenticatable implements JWTSubject
         'email',
         'phone',
         'password',
-        'national_id',
         'avatar',
-        'phone_verified_at',
     ];
 
     protected $hidden = [
@@ -61,8 +59,7 @@ final class UserModel extends Authenticatable implements JWTSubject
     protected function casts(): array
     {
         return [
-            'name' => 'array',
-            'phone_verified_at' => 'datetime',
+            'name' => TranslatableTextCast::class,
             'password' => 'hashed',
         ];
     }
@@ -100,7 +97,7 @@ final class UserModel extends Authenticatable implements JWTSubject
     public function latestJoinRequest(): HasOne
     {
         return $this->hasOne(UserJoinRequestModel::class, 'user_id')
-                    ->latestOfMany();
+            ->latestOfMany();
     }
 
     public function getJWTIdentifier(): mixed

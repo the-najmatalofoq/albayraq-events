@@ -9,8 +9,6 @@ use Modules\User\Domain\Repository\UserRepositoryInterface;
 use Modules\User\Domain\Repository\EmployeeProfileRepositoryInterface;
 use Modules\FileAttachment\Domain\Repository\FileAttachmentRepositoryInterface;
 use Modules\FileAttachment\Domain\FileAttachment;
-use Modules\User\Domain\ValueObject\UserId;
-use Modules\User\Infrastructure\Persistence\Eloquent\Models\EmployeeProfileModel;
 
 final readonly class RegisterAttachmentHandler
 {
@@ -19,27 +17,20 @@ final readonly class RegisterAttachmentHandler
         private UserRepositoryInterface $userRepository,
         private EmployeeProfileRepositoryInterface $profileRepository,
         private FileAttachmentRepositoryInterface $attachmentRepository,
-    ) {
-    }
+    ) {}
 
     public function handle(RegisterAttachmentCommand $command): void
     {
-        $userId = new UserId($command->userId);
+        $userId = $command->userId;
 
-        if ($command->collection === 'avatar') {
-            $filePath = $this->fileStorage->uploadForUser(
-                $command->file,
-                $userId,
-                'avatar'
-            );
 
-            $user = $this->userRepository->findById($userId);
-            if ($user) {
-                $user->updateAvatar($filePath);
-                $this->userRepository->save($user);
-            }
-            return;
-        }
+        //     $user = $this->userRepository->findById($userId);
+        //     if ($user) {
+        //         $user->updateAvatar($filePath);
+        //         $this->userRepository->save($user);
+        //     }
+        //     return;
+        // }
 
         $profile = $this->profileRepository->findByUserId($userId);
         if (!$profile) {

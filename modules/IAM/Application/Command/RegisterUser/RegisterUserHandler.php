@@ -15,6 +15,8 @@ use Modules\IAM\Application\Command\RegisterUser\RegisterContactPhone\RegisterCo
 use Modules\IAM\Application\Command\RegisterUser\RegisterContactPhone\RegisterContactPhoneHandler;
 use Modules\IAM\Application\Command\RegisterUser\RegisterAttachment\RegisterAttachmentCommand;
 use Modules\IAM\Application\Command\RegisterUser\RegisterAttachment\RegisterAttachmentHandler;
+use Modules\User\Domain\User;
+use Modules\User\Domain\ValueObject\Phone;
 
 final readonly class RegisterUserHandler
 {
@@ -24,61 +26,70 @@ final readonly class RegisterUserHandler
         private RegisterBankDetailsHandler $bankHandler,
         private RegisterContactPhoneHandler $contactPhoneHandler,
         private RegisterAttachmentHandler $attachmentHandler,
-    ) {
-    }
+    ) {}
 
-    public function handle(RegisterUserCommand $command): void
+    public function handle(RegisterUserCommand $command): User
     {
-        DB::transaction(function () use ($command) {
-            $this->authHandler->handle(new RegisterAuthCommand(
-                userId: $command->userId,
+        return DB::transaction(function () use ($command) {
+
+            $user =  $this->authHandler->handle(new RegisterAuthCommand(
                 name: $command->name,
                 email: $command->email,
                 phone: $command->phone,
                 password: $command->password,
-                nationalId: $command->nationalId,
+                avatar: $command->avatar,
             ));
-
             $this->profileHandler->handle(new RegisterProfileCommand(
-                userId: $command->userId,
+                userId: $user->uuid,
+                fullName: $command->fullName,
+                identityNumber: $command->identityNumber,
+                nationalityId: $command->nationalityId,
                 birthDate: $command->birthDate,
-                cityId: $command->cityId,
-                nationalities: $command->nationalities,
                 gender: $command->gender,
                 height: $command->height,
                 weight: $command->weight
             ));
 
             $this->bankHandler->handle(new RegisterBankDetailsCommand(
-                userId: $command->userId,
+                userId: $user->uuid,
                 accountOwner: $command->accountOwner,
                 bankName: $command->bankName,
                 iban: $command->iban
             ));
 
-            foreach ($command->contactPhones as $cp) {
+            if ($command->contactPhone) {
                 $this->contactPhoneHandler->handle(new RegisterContactPhoneCommand(
-                    userId: $command->userId,
-                    label: $cp['label'] ?? $cp['name'] ?? 'emergency',
-                    phone: $cp['phone']
+                    userId: $user->uuid,
+                    contactName: $command->contactName,
+                    phone: new Phone($command->contactPhone),
+                    relation: $command->contactRelation,
                 ));
             }
 
-            if ($command->avatar) {
+            if ($command->cv) {
                 $this->attachmentHandler->handle(new RegisterAttachmentCommand(
-                    userId: $command->userId,
-                    file: $command->avatar,
-                    collection: 'avatar'
+                    userId: $user->uuid,
+                    file: $command->cv,
+                    collection: 'cv'
                 ));
             }
 
-            if ($command->idCopy) {
+            if ($command->personalIdentity) {
                 $this->attachmentHandler->handle(new RegisterAttachmentCommand(
-                    userId: $command->userId,
-                    file: $command->idCopy,
-                    collection: 'id_copy'
+                    userId: $user->uuid,
+                    file: $command->personalIdentity,
+                    collection: 'personal_identity'
                 ));
             }
+
+            if ($command->medicalReport) {
+                $this->attachmentHandler->handle(new RegisterAttachmentCommand(
+                    userId: $user->uuid,
+                    file: $command->medicalReport,
+                    collection: 'medical_report'
+                ));
+            }
+            return $user;
         });
     }
 }

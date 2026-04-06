@@ -4,13 +4,18 @@ declare(strict_types=1);
 
 namespace Modules\IAM\Application\Command\RegisterUser\RegisterProfile;
 
+use Modules\Geography\Domain\ValueObject\NationalityId;
+use Modules\Shared\Domain\ValueObject\TranslatableText;
+use Modules\User\Domain\ValueObject\UserId;
+
 final readonly class RegisterProfileCommand
 {
     public function __construct(
-        public string $userId,
+        public UserId $userId,
+        public TranslatableText $fullName,
+        public string $identityNumber,
+        public NationalityId $nationalityId,
         public ?string $birthDate = null,
-        public ?string $cityId = null,
-        public array $nationalities = [],
         public ?string $gender = null,
         public ?float $height = null,
         public ?float $weight = null,

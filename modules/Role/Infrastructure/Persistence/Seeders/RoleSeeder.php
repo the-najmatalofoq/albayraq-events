@@ -49,11 +49,15 @@ final class RoleSeeder extends Seeder
                 'slug' => RoleSlugEnum::ADMISSIONS_ADMIN->value,
                 'name' => ['en' => 'Admissions Admin', 'ar' => 'مسؤول قبول'],
             ],
+            [
+                'slug' => RoleSlugEnum::EMPLOYEE->value,
+                'name' => ['en' => 'Employee', 'ar' => 'موظف'],
+            ],
         ];
 
         foreach ($roles as $roleData) {
             $slug = RoleSlugEnum::from($roleData['slug']);
-            
+
             RoleModel::updateOrCreate(
                 ['slug' => $slug->value],
                 [
