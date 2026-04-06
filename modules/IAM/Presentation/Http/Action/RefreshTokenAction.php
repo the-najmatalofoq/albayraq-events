@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace Modules\IAM\Presentation\Http\Action;
 
 use Illuminate\Http\JsonResponse;
-use Modules\IAM\Domain\Service\TokenManagerInterface;
+use Modules\IAM\Domain\Service\TokenManager;
 use Modules\Shared\Presentation\Http\JsonResponder;
 
 final class RefreshTokenAction
 {
     public function __construct(
-        private readonly TokenManagerInterface $tokenManager,
+        private readonly TokenManager $tokenManager,
         private readonly JsonResponder $responder,
     ) {
     }

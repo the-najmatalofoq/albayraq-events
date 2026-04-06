@@ -12,9 +12,9 @@ return new class extends Migration {
         Schema::create('user_join_requests', function (Blueprint $table): void {
             $table->uuid('id')->primary();
             $table->foreignUuid('user_id')
-                  ->constrained('users')
-                  ->cascadeOnDelete();
-            $table->enum('status', ['pending', 'active'])->default('pending');
+                ->constrained('users')
+                ->cascadeOnDelete();
+            $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
             $table->uuid('reviewed_by')->nullable();
             $table->timestamp('reviewed_at')->nullable();
             $table->text('notes')->nullable();

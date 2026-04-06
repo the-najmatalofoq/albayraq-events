@@ -7,7 +7,6 @@ namespace Modules\IAM\Application\Command\AuthenticateUser;
 use Modules\User\Domain\Repository\UserRepositoryInterface;
 use Modules\IAM\Domain\Service\PasswordHasher;
 use Modules\IAM\Domain\Service\TokenManager;
-use Modules\User\Domain\Exception\UserNotActiveException;
 use Modules\IAM\Domain\Exception\CredentialsInvalidException;
 
 final readonly class AuthenticateUserHandler
@@ -20,16 +19,16 @@ final readonly class AuthenticateUserHandler
 
     public function handle(AuthenticateUserCommand $command): array
     {
-        $user = $this->userRepository->findByPhone($command->phone);
+        $user = $this->userRepository->findByEmail($command->email);
 
         if (!$user || !$this->passwordHasher->check($command->password, $user->password)) {
             throw new CredentialsInvalidException("Invalid credentials.");
         }
 
-        if (!$user->isActive) {
-            throw UserNotActiveException::forUser($user->uuid->value);
-        }
-        // 
-        return $this->tokenManager->createToken($user->uuid->value);
+
+        return [
+            'tokens' => $this->tokenManager->createToken($user->uuid->value),
+            'user' => $user,
+        ];
     }
 }

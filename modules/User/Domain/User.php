@@ -25,7 +25,6 @@ final class User extends AggregateRoot
         public private(set) HashedPassword $password,
         /** @var list<RoleId> */
         public private(set) array $roleIds,
-        public private(set) bool $isActive,
         public readonly DateTimeImmutable $createdAt,
         public private(set) ?FilePath $avatar = null,
         public private(set) ?DateTimeImmutable $emailVerifiedAt = null,
@@ -52,7 +51,6 @@ final class User extends AggregateRoot
             phone: $phone,
             password: $password,
             roleIds: $roleIds,
-            isActive: $isActive,
             createdAt: $createdAt,
             avatar: $avatar,
             emailVerifiedAt: null,
@@ -70,7 +68,6 @@ final class User extends AggregateRoot
         Phone $phone,
         HashedPassword $password,
         array $roleIds,
-        bool $isActive,
         DateTimeImmutable $createdAt,
         ?FilePath $avatar = null,
         ?DateTimeImmutable $emailVerifiedAt = null,
@@ -84,7 +81,6 @@ final class User extends AggregateRoot
             phone: $phone,
             password: $password,
             roleIds: $roleIds,
-            isActive: $isActive,
             createdAt: $createdAt,
             avatar: $avatar,
             emailVerifiedAt: $emailVerifiedAt,
@@ -117,17 +113,6 @@ final class User extends AggregateRoot
         }
     }
 
-    public function activate(): void
-    {
-        $this->isActive = true;
-        $this->updatedAt = new DateTimeImmutable();
-    }
-
-    public function deactivate(): void
-    {
-        $this->isActive = false;
-        $this->updatedAt = new DateTimeImmutable();
-    }
 
     public function changePassword(HashedPassword $password): void
     {

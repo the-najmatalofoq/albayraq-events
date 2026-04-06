@@ -39,7 +39,7 @@ final class RegisterRequest extends FormRequest
             'contact_name' => ['required_with:contact_phone', 'string', 'max:255'],
             'contact_phone' => ['required_with:contact_name', new SaudiPhoneRule()],
 
-            'avatar' => ['nullable', 'image', 'max:1024'],
+            'avatar' => ['required', 'image', 'max:1024'],
             'cv' => ['required', 'file', 'mimes:pdf', 'max:5120'],
             'personal_identity' => ['required', 'file', 'mimes:pdf', 'max:5120'],
             'medical_report' => ['nullable', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:5120'],

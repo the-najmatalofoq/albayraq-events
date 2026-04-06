@@ -7,7 +7,7 @@ namespace Modules\IAM\Application\Command\AuthenticateUser;
 final readonly class AuthenticateUserCommand
 {
     public function __construct(
-        public string $phone,
+        public string $email,
         public string $password,
     ) {
     }

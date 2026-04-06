@@ -12,8 +12,7 @@ final readonly class ToggleJoinRequestStatusHandler
 {
     public function __construct(
         private UserJoinRequestRepositoryInterface $joinRequestRepository,
-    ) {
-    }
+    ) {}
 
     public function handle(ToggleJoinRequestStatusCommand $command): void
     {

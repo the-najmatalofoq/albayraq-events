@@ -25,10 +25,8 @@ final readonly class JwtTokenManager implements TokenManager
 
     private function generateAccessToken(UserModel $user, int $ttl): string
     {
-        // نضبط الـ TTL في الـ Factory أولاً بسطر منفصل
         JWTAuth::factory()->setTTL($ttl);
 
-        // نولد التوكن في سطر منفصل لضمان الحصول على string
         return JWTAuth::fromUser($user);
     }
 
@@ -36,10 +34,8 @@ final readonly class JwtTokenManager implements TokenManager
     {
         $ttl = (int) config('jwt.refresh_ttl');
 
-        // نضبط الـ TTL لتوكن التجديد
         JWTAuth::factory()->setTTL($ttl);
 
-        // نستخدم الـ claims ثم نولد التوكن
         return JWTAuth::claims(['type' => 'refresh'])->fromUser($user);
     }
 
@@ -50,7 +46,34 @@ final readonly class JwtTokenManager implements TokenManager
                 JWTAuth::invalidate($token);
             }
         } catch (\Exception $e) {
-            // صامت
+           
+        }
+    }
+
+    public function refresh(): array
+    {
+        $newToken = JWTAuth::refresh();
+        $accessTtl = (int) config('jwt.ttl');
+        
+        /** @var UserModel|null $user */
+        $user = JWTAuth::user();
+
+        return [
+            'access_token'  => $newToken,
+            'refresh_token' => $user ? $this->generateRefreshToken($user) : '',
+            'expires_in'    => $accessTtl * 60,
+            'token_type'    => 'Bearer',
+        ];
+    }
+
+    public function invalidate(): void
+    {
+        try {
+            if ($token = JWTAuth::getToken()) {
+                JWTAuth::invalidate($token);
+            }
+        } catch (\Exception $e) {
+          
         }
     }
 }

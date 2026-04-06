@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace Modules\IAM\Presentation\Http\Action;
 
 use Illuminate\Http\JsonResponse;
-use Modules\IAM\Domain\Service\TokenManagerInterface;
+use Modules\IAM\Domain\Service\TokenManager;
 use Modules\Shared\Presentation\Http\JsonResponder;
 
 final readonly class LogoutAction
 {
     public function __construct(
-        private TokenManagerInterface $tokenManager,
+        private TokenManager $tokenManager,
         private JsonResponder $responder,
     ) {
     }
