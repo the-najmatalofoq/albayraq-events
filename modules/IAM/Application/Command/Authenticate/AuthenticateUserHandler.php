@@ -8,7 +8,7 @@ use Modules\IAM\Domain\Exception\InvalidCredentialsException;
 use Modules\IAM\Domain\Exception\UserNotFoundException;
 use Modules\User\Domain\Repository\UserRepositoryInterface;
 use Modules\IAM\Domain\Service\PasswordHasher;
-use Modules\IAM\Domain\Service\TokenManager;
+use Modules\IAM\Domain\Service\TokenManager   ;
 
 final readonly class AuthenticateUserHandler
 {
@@ -25,7 +25,7 @@ final readonly class AuthenticateUserHandler
             throw UserNotFoundException::withEmail($command->email);
         }
 
-        if (!$this->hasher->verify($command->password, $user->password)) {
+        if (!$this->hasher->check($command->password, $user->password)) {
             throw new InvalidCredentialsException();
         }
 

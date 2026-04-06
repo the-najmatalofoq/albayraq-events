@@ -7,6 +7,7 @@ namespace Modules\User\Domain;
 use Modules\Shared\Domain\AggregateRoot;
 use Modules\Shared\Domain\Identity;
 use Modules\User\Domain\ValueObject\ContactPhoneId;
+use Modules\User\Domain\ValueObject\Phone;
 use Modules\User\Domain\ValueObject\UserId;
 
 final class ContactPhone extends AggregateRoot
@@ -15,7 +16,7 @@ final class ContactPhone extends AggregateRoot
         public readonly ContactPhoneId $uuid,
         public readonly UserId $userId,
         public private(set) string $name,
-        public private(set) string $phone,
+        public private(set) Phone $phone,
         public private(set) ?string $relation = null,
     ) {}
 
@@ -23,7 +24,7 @@ final class ContactPhone extends AggregateRoot
         ContactPhoneId $uuid,
         UserId $userId,
         string $name,
-        string $phone,
+        Phone $phone,
         ?string $relation = null,
     ): self {
         return new self($uuid, $userId, $name, $phone, $relation);

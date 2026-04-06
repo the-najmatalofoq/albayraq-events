@@ -20,15 +20,13 @@ final class UserReflector
     {
         return [
             'id' => $user->uuid->value,
-            'name' => $user->name->toArray(),
+            'name' => $user->name,
             'email' => $user->email,
             'phone' => $user->phone->value,
             'password' => $user->password->value,
-            'national_id' => $user->nationalId,
             'avatar' => $user->avatar?->value,
             'created_at' => $user->createdAt->format('Y-m-d H:i:s'),
             'updated_at' => $user->updatedAt?->format('Y-m-d H:i:s'),
-            'phone_verified_at' => $user->phoneVerifiedAt?->format('Y-m-d H:i:s'),
             'deleted_at' => $user->deletedAt?->format('Y-m-d H:i:s'),
         ];
     }
@@ -44,20 +42,21 @@ final class UserReflector
         if ($model->relationLoaded('latestJoinRequest') && $model->latestJoinRequest) {
             $isActive = $model->latestJoinRequest->status->isActive();
         }
+        
+        /** @var TranslatableText $name */
+        $name = $model->name;
 
         return User::reconstitute(
             uuid: new UserId($model->id),
-            name: TranslatableText::fromArray($model->name),
+            name: $name,
             email: $model->email,
             phone: new Phone($model->phone),
             password: new HashedPassword($model->password),
             roleIds: $roleIds,
             isActive: $isActive,
             createdAt: new DateTimeImmutable($model->created_at->toDateTimeString()),
-            nationalId: $model->national_id,
             avatar: $model->avatar ? new FilePath($model->avatar) : null,
             updatedAt: $model->updated_at ? new DateTimeImmutable($model->updated_at->toDateTimeString()) : null,
-            phoneVerifiedAt: $model->phone_verified_at ? new DateTimeImmutable($model->phone_verified_at->toDateTimeString()) : null,
             deletedAt: $model->deleted_at ? new DateTimeImmutable($model->deleted_at->toDateTimeString()) : null,
         );
     }

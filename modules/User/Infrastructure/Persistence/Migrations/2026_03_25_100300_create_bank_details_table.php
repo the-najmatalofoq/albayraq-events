@@ -15,7 +15,6 @@ return new class extends Migration {
             $table->string('account_owner');
             $table->string('bank_name');
             $table->string('iban')->unique();
-            $table->string('account_contact')->nullable();
             $table->timestamps();
         });
     }

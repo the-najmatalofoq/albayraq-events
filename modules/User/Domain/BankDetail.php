@@ -17,7 +17,6 @@ final class BankDetail extends AggregateRoot
         public private(set) string $accountOwner,
         public private(set) string $bankName,
         public private(set) string $iban,
-        public private(set) ?string $accountContact = null,
     ) {}
 
     public static function create(
@@ -26,7 +25,6 @@ final class BankDetail extends AggregateRoot
         string $accountOwner,
         string $bankName,
         string $iban,
-        ?string $accountContact = null,
     ): self {
         return new self(
             uuid: $uuid,
@@ -34,7 +32,6 @@ final class BankDetail extends AggregateRoot
             accountOwner: $accountOwner,
             bankName: $bankName,
             iban: $iban,
-            accountContact: $accountContact,
         );
     }
 
@@ -44,7 +41,6 @@ final class BankDetail extends AggregateRoot
         string $accountOwner,
         string $bankName,
         string $iban,
-        ?string $accountContact = null,
     ): self {
         return new self(
             uuid: $uuid,
@@ -52,7 +48,6 @@ final class BankDetail extends AggregateRoot
             accountOwner: $accountOwner,
             bankName: $bankName,
             iban: $iban,
-            accountContact: $accountContact,
         );
     }
 
@@ -60,12 +55,10 @@ final class BankDetail extends AggregateRoot
         string $accountOwner,
         string $bankName,
         string $iban,
-        ?string $accountContact,
     ): void {
         $this->accountOwner = $accountOwner;
         $this->bankName = $bankName;
         $this->iban = $iban;
-        $this->accountContact = $accountContact;
     }
 
     public function id(): Identity

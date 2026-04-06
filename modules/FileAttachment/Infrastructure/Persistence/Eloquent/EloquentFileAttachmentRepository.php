@@ -18,23 +18,25 @@ final class EloquentFileAttachmentRepository implements FileAttachmentRepository
 
     public function save(FileAttachment $attachment): void
     {
+
         AttachmentModel::updateOrCreate(
             ['id' => $attachment->uuid->value],
-              [  
-                'path' => $attachment->filePath,
+            [
+                'file_path' => $attachment->filePath,
                 'file_name' => $attachment->fileName,
                 'file_type' => $attachment->fileType,
                 'attachable_id' => $attachment->attachableId,
                 'attachable_type' => $attachment->attachableType,
                 'file_size' => $attachment->fileSize,
-                'collection' => $attachment->collection,]
-            
+                'collection' => $attachment->collection,
+            ]
+
         );
     }
 
     public function findById(AttachmentId $id): ?FileAttachment
     {
         $model = AttachmentModel::find($id->value);
-        return $model ? FileAttachmentReflector::fromModel($model) : null;
+        return $model ? (new FileAttachmentReflector())->toEntity($model) : null;
     }
 }

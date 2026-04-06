@@ -12,13 +12,8 @@ return new class extends Migration
     {
         Schema::create('nationalities', function (Blueprint $table): void {
             $table->uuid('id')->primary();
-            $table->foreignUuid('country_id')->constrained('countries')->cascadeOnDelete();
             $table->json('name')->nullable();
-            $table->boolean('is_active')->default(true);
             $table->timestamps();
-
-            $table->unique(['country_id']);
-            $table->index(['country_id']);
         });
     }
 

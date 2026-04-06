@@ -5,39 +5,39 @@ declare(strict_types=1);
 namespace Modules\User\Domain;
 
 use DateTimeImmutable;
+use Modules\Geography\Domain\ValueObject\NationalityId;
 use Modules\User\Domain\ValueObject\EmployeeProfileId;
 use Modules\User\Domain\ValueObject\UserId;
 use Modules\Shared\Domain\AggregateRoot;
 use Modules\Shared\Domain\Identity;
+use Modules\Shared\Domain\ValueObject\TranslatableText;
 use Modules\User\Domain\Enum\GenderEnum;
-use Modules\User\Domain\ValueObject\EmployeeNationality;
-use Modules\Geography\Domain\ValueObject\CityId;
+
 
 final class EmployeeProfile extends AggregateRoot
 {
-    /** @param EmployeeNationality[] $nationalities */
     private function __construct(
         public readonly EmployeeProfileId $uuid,
         public readonly UserId $userId,
+        public readonly TranslatableText $fullName,
+        public readonly ?string $identityNumber,
+        public readonly NationalityId $nationalityId,
         public readonly ?DateTimeImmutable $birthDate,
-        public readonly ?CityId $cityId,
-        public readonly array $nationalities,
         public readonly ?GenderEnum $gender,
         public readonly ?float $height,
         public readonly ?float $weight,
         public readonly DateTimeImmutable $createdAt,
         public private(set) ?DateTimeImmutable $updatedAt = null,
         public private(set) ?DateTimeImmutable $deletedAt = null,
-    ) {
-    }
+    ) {}
 
-    /** @param EmployeeNationality[] $nationalities */
     public static function create(
         EmployeeProfileId $uuid,
         UserId $userId,
+        TranslatableText $fullName,
+        ?string $identityNumber,
+        ?NationalityId $nationalityId,
         ?DateTimeImmutable $birthDate,
-        ?CityId $cityId,
-        array $nationalities,
         ?GenderEnum $gender,
         ?float $height,
         ?float $weight,
@@ -46,9 +46,10 @@ final class EmployeeProfile extends AggregateRoot
         return new self(
             uuid: $uuid,
             userId: $userId,
+            fullName: $fullName,
+            identityNumber: $identityNumber,
+            nationalityId: $nationalityId,
             birthDate: $birthDate,
-            cityId: $cityId,
-            nationalities: $nationalities,
             gender: $gender,
             height: $height,
             weight: $weight,
@@ -56,13 +57,13 @@ final class EmployeeProfile extends AggregateRoot
         );
     }
 
-    /** @param EmployeeNationality[] $nationalities */
     public static function reconstitute(
         EmployeeProfileId $uuid,
         UserId $userId,
+        TranslatableText $fullName,
+        ?string $identityNumber,
+        NationalityId $nationalityId,
         ?DateTimeImmutable $birthDate,
-        ?CityId $cityId,
-        array $nationalities,
         ?GenderEnum $gender,
         ?float $height,
         ?float $weight,
@@ -73,9 +74,10 @@ final class EmployeeProfile extends AggregateRoot
         return new self(
             uuid: $uuid,
             userId: $userId,
+            fullName: $fullName,
+            identityNumber: $identityNumber,
+            nationalityId: $nationalityId,
             birthDate: $birthDate,
-            cityId: $cityId,
-            nationalities: $nationalities,
             gender: $gender,
             height: $height,
             weight: $weight,
@@ -86,17 +88,17 @@ final class EmployeeProfile extends AggregateRoot
     }
 
     public function update(
+        ?string $identityNumber,
+        ?NationalityId $nationalityId,
         ?DateTimeImmutable $birthDate,
-        ?CityId $cityId,
-        array $nationalities,
         ?GenderEnum $gender,
         ?float $height,
         ?float $weight,
     ): void {
         $this->instance_variable_copy([
+            'identityNumber' => $identityNumber,
+            'nationalityId' => $nationalityId,
             'birthDate' => $birthDate,
-            'cityId' => $cityId,
-            'nationalities' => $nationalities,
             'gender' => $gender,
             'height' => $height,
             'weight' => $weight,

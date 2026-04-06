@@ -6,7 +6,6 @@ namespace Modules\IAM\Application\Command\RegisterUser\RegisterContactPhone;
 
 use Modules\User\Domain\ContactPhone;
 use Modules\User\Domain\Repository\ContactPhoneRepositoryInterface;
-use Modules\User\Domain\ValueObject\UserId;
 
 final readonly class RegisterContactPhoneHandler
 {
@@ -18,10 +17,10 @@ final readonly class RegisterContactPhoneHandler
     {
         $contactPhone = ContactPhone::create(
             uuid: $this->contactPhoneRepository->nextIdentity(),
-            userId: UserId::fromString($command->userId),
-            name: $command->label, 
+            userId: $command->userId,
             phone: $command->phone,
-            relation: (string) $command->label
+            name: $command->contactName,
+            relation: $command->relation
         );
 
         $this->contactPhoneRepository->save($contactPhone);

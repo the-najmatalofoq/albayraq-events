@@ -1,46 +1,56 @@
 <?php
-// modules/IAM/Infrastructure/Services/JwtTokenManager.php
+
 declare(strict_types=1);
 
 namespace Modules\IAM\Infrastructure\Services;
 
-use Modules\IAM\Domain\Service\TokenManagerInterface;
-use Modules\User\Domain\ValueObject\UserId;
+use Modules\IAM\Domain\Service\TokenManager;
 use Modules\User\Infrastructure\Persistence\Eloquent\Models\UserModel;
+use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
 
-final class JwtTokenManager implements TokenManagerInterface
+final readonly class JwtTokenManager implements TokenManager
 {
-    public function issueFromUserId(UserId $userId): array
+    public function createToken(string $userId): array
     {
-        $user = UserModel::findOrFail($userId->value);
-        $token = auth('api')->login($user);
+        $user = UserModel::findOrFail($userId);
+        $accessTtl = (int) config('jwt.ttl');
 
-        return $this->respondWithToken($token);
-    }
-
-    public function refresh(): array
-    {
-        $token = auth('api')->refresh();
-        return $this->respondWithToken($token);
-    }
-
-    public function invalidate(): void
-    {
-        auth('api')->logout();
-    }
-
-    public function getUserIdFromToken(): ?UserId
-    {
-        $user = auth('api')->user();
-        return $user ? new UserId($user->id) : null;
-    }
-
-    private function respondWithToken(string $token): array
-    {
         return [
-            'access_token' => $token,
-            'token_type' => 'bearer',
-            'expires_in' => auth('api')->factory()->getTTL() * 60,
+            'access_token'  => $this->generateAccessToken($user, $accessTtl),
+            'refresh_token' => $this->generateRefreshToken($user, $accessTtl),
+            'expires_in'    => $accessTtl * 60,
+            'token_type'    => 'Bearer',
         ];
+    }
+
+    private function generateAccessToken(UserModel $user, int $ttl): string
+    {
+        // نضبط الـ TTL في الـ Factory أولاً بسطر منفصل
+        JWTAuth::factory()->setTTL($ttl);
+
+        // نولد التوكن في سطر منفصل لضمان الحصول على string
+        return JWTAuth::fromUser($user);
+    }
+
+    private function generateRefreshToken(UserModel $user): string
+    {
+        $ttl = (int) config('jwt.refresh_ttl');
+
+        // نضبط الـ TTL لتوكن التجديد
+        JWTAuth::factory()->setTTL($ttl);
+
+        // نستخدم الـ claims ثم نولد التوكن
+        return JWTAuth::claims(['type' => 'refresh'])->fromUser($user);
+    }
+
+    public function revokeAllTokens(string $userId): void
+    {
+        try {
+            if ($token = JWTAuth::getToken()) {
+                JWTAuth::invalidate($token);
+            }
+        } catch (\Exception $e) {
+            // صامت
+        }
     }
 }

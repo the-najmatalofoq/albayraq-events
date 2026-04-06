@@ -40,6 +40,11 @@ final readonly class TranslatableText extends ValueObject
         return $this->values[$locale] ?? $this->values['en'];
     }
 
+    public function __toString(): string
+    {
+        return json_encode($this->values, JSON_UNESCAPED_UNICODE) ?: '';
+    }
+
     public function equals(ValueObject $other): bool
     {
         return $other instanceof self && $this->values === $other->values;

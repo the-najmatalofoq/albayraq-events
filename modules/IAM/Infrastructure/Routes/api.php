@@ -13,7 +13,7 @@ use Modules\IAM\Presentation\Http\Action\{
 Route::prefix('auth')->middleware(['throttle:auth'])->group(function () {
     Route::post('/register', RegisterAction::class);
     Route::post('/login', LoginAction::class);
-    
+
     Route::middleware('auth:api')->group(function () {
         Route::post('/logout', LogoutAction::class);
         Route::post('/refresh', RefreshTokenAction::class);

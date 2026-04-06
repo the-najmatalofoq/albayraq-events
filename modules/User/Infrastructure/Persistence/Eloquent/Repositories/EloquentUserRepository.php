@@ -6,6 +6,7 @@ namespace Modules\User\Infrastructure\Persistence\Eloquent\Repositories;
 
 use Modules\User\Domain\Repository\UserRepositoryInterface;
 use Modules\User\Domain\User;
+use Modules\User\Domain\ValueObject\Phone;
 use Modules\User\Domain\ValueObject\UserId;
 use Modules\User\Infrastructure\Persistence\Eloquent\Models\UserModel;
 use Modules\User\Infrastructure\Persistence\UserReflector;
@@ -15,8 +16,7 @@ final class EloquentUserRepository implements UserRepositoryInterface
     public function __construct(
         private readonly UserReflector $reflector,
         private readonly UserModel $model,
-    ) {
-    }
+    ) {}
 
     public function nextIdentity(): UserId
     {
@@ -30,9 +30,9 @@ final class EloquentUserRepository implements UserRepositoryInterface
         return $model ? $this->reflector->toEntity($model) : null;
     }
 
-    public function findByPhone(string $phone): ?User
+    public function findByPhone(Phone $phone): ?User
     {
-        $model = $this->model->with('roles')->where('phone', $phone)->first();
+        $model = $this->model->with('roles')->where('phone', $phone->value)->first();
 
         return $model ? $this->reflector->toEntity($model) : null;
     }
@@ -49,19 +49,14 @@ final class EloquentUserRepository implements UserRepositoryInterface
         $data = $this->reflector->fromEntity($user);
         $roleIds = array_map(fn($roleId) => $roleId->value, $user->roleIds);
 
-        $modelInstance = clone $this->model;
-        $model = $modelInstance->updateOrCreate(['id' => $user->uuid->value], $data);
+        /** @var UserModel $model */
+        $model = $this->model->withTrashed()->find($user->uuid->value) ?? new UserModel();
+
+        $model->id = $user->uuid->value;
+        $model->fill($data);
+        $model->save();
+
         $model->roles()->sync($roleIds);
-    }
-
-    public function existsWithPhone(string $phone): bool
-    {
-        return $this->model->where('phone', $phone)->exists();
-    }
-
-    public function existsWithEmail(string $email): bool
-    {
-        return $this->model->where('email', $email)->exists();
     }
 
     public function delete(UserId $id): void

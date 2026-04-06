@@ -14,10 +14,8 @@ return new class extends Migration {
             $table->json('name');
             $table->string('email')->unique()->nullable();
             $table->string('phone')->unique();
-            $table->string('national_id')->nullable();
             $table->string('password');
             $table->string('avatar')->nullable();
-            $table->timestamp('phone_verified_at')->nullable();
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();

@@ -18,8 +18,7 @@ use Modules\Geography\Infrastructure\Persistence\Eloquent\Models\{
     CountryModel,
     NationalityModel
 };
-
-
+use Modules\Shared\Infrastructure\Laravel\Casts\TranslatableTextCast;
 
 /**
  * Employee profile model - Extended user profile with personal details
@@ -49,8 +48,10 @@ final class EmployeeProfileModel extends Model
 
     protected $fillable = [
         'user_id',
+        'full_name',
+        'identity_number',
+        'nationality_id',
         'birth_date',
-        'city_id',
         'gender',
         'height',
         'weight',
@@ -59,6 +60,7 @@ final class EmployeeProfileModel extends Model
     protected function casts(): array
     {
         return [
+            'full_name' => TranslatableTextCast::class,
             'birth_date' => 'date',
             'height' => 'float',
             'weight' => 'float',
@@ -75,43 +77,12 @@ final class EmployeeProfileModel extends Model
         return $this->morphMany(AttachmentModel::class, 'attachable');
     }
 
-    public function cv()
+    public function nationality()
     {
-        return $this->attachments()->where('collection', 'cv');
-    }
-
-    public function identityPersonal()
-    {
-        return $this->attachments()->where('collection', 'identity_personal');
-    }
-
-    public function medicalRecord()
-    {
-        return $this->attachments()->where('collection', 'medical_record');
-    }
-
-    public function city(): BelongsTo
-    {
-        return $this->belongsTo(CityModel::class, 'city_id');
-    }
-
-    public function nationalities()
-    {
-        return $this->belongsToMany(
+        return $this->belongsTo(
             NationalityModel::class,
-            'employee_nationalities',
-            'employee_profile_id',
-            'nationality_id'
-        )->withPivot('is_primary')->withTimestamps();
-    }
-
-    public function getPrimaryNationalityAttribute()
-    {
-        return $this->nationalities->firstWhere('pivot.is_primary', true);
-    }
-
-    public function getResidenceCountryAttribute()
-    {
-        return $this->city ? $this->city->country : null;
+            'nationality_id',
+            'id'
+        );
     }
 }
