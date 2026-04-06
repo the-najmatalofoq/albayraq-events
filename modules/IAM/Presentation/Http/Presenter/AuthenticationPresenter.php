@@ -17,7 +17,7 @@ final class AuthenticationPresenter
             'access_token'  => $result['tokens']['access_token'] ?? null,
             'refresh_token' => $result['tokens']['refresh_token'] ?? null,
             'expires_in'    => $result['tokens']['expires_in'] ?? null,
-            'user'          => UserPresenter::fromDomain($result['user']),
+            'user_id'       => $result['user']->uuid->value,
         ];
     }
 }

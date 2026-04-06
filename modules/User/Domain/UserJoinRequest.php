@@ -22,8 +22,7 @@ final class UserJoinRequest extends AggregateRoot
         public private(set) ?string $notes,
         public readonly DateTimeImmutable $createdAt,
         public private(set) ?DateTimeImmutable $updatedAt = null,
-    ) {
-    }
+    ) {}
 
     public static function create(
         UserJoinRequestId $uuid,

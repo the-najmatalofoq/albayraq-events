@@ -40,9 +40,9 @@ final class UserReflector
 
         $isActive = false;
         if ($model->relationLoaded('latestJoinRequest') && $model->latestJoinRequest) {
-            $isActive = $model->latestJoinRequest->status->isActive();
+            // $isActive = $model->latestJoinRequest->status->isActive();
         }
-        
+
         /** @var TranslatableText $name */
         $name = $model->name;
 
@@ -53,7 +53,6 @@ final class UserReflector
             phone: new Phone($model->phone),
             password: new HashedPassword($model->password),
             roleIds: $roleIds,
-            isActive: $isActive,
             createdAt: new DateTimeImmutable($model->created_at->toDateTimeString()),
             avatar: $model->avatar ? new FilePath($model->avatar) : null,
             updatedAt: $model->updated_at ? new DateTimeImmutable($model->updated_at->toDateTimeString()) : null,

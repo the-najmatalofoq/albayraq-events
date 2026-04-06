@@ -8,8 +8,6 @@ on:
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
-jobs:
-
   verify-connection:
     name: 🔌 Verify SSH Connection
     runs-on: ubuntu-latest

@@ -46,7 +46,6 @@ final readonly class RegisterAuthHandler
             password: $this->passwordHasher->hash($command->password),
             roleIds: [$role->uuid],
             createdAt: new DateTimeImmutable(),
-            isActive: false
         );
         $filePath = $this->fileStorage->uploadForUser(
             $command->avatar,

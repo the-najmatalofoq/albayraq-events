@@ -17,7 +17,7 @@ final class LoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'phone' => ['required', 'string', new SaudiPhoneRule()],
+            'email' => ['required', 'string', 'email','exists:users,email'],
             'password' => ['required', 'string'],
         ];
     }
