@@ -19,12 +19,15 @@ use Modules\Geography\Infrastructure\Persistence\Eloquent\Models\{
     NationalityModel
 };
 use Modules\Shared\Infrastructure\Laravel\Casts\TranslatableTextCast;
+use Modules\Shared\Domain\ValueObject\TranslatableText;
 
 /**
  * Employee profile model - Extended user profile with personal details
  *
  * @property string $id
  * @property string $user_id
+ * @property TranslatableText|null $full_name
+ * @property string|null $identity_number
  * @property Carbon|null $birth_date
  * @property string|null $city_id
  * @property string|null $gender

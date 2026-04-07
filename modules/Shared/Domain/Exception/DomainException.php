@@ -8,11 +8,27 @@ use Modules\Shared\Domain\Enum\ErrorCodeEnum;
 
 abstract class DomainException extends \Exception
 {
+    protected string $messageKey = '';
+    protected array $errors = [];
+
     abstract public function getErrorCode(): ErrorCodeEnum;
 
     public function getStatusCode(): int
     {
         return $this->getErrorCode()->getHttpStatus();
     }
-}
 
+    public function getErrors(): array
+    {
+        return $this->errors;
+    }
+
+    public function getMessageKey(): string
+    {
+        if ($this->messageKey !== '') {
+            return $this->messageKey;
+        }
+
+        return 'messages.errors.' . strtolower($this->getErrorCode()->value);
+    }
+}

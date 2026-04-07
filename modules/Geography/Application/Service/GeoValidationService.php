@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Modules\Geography\Application\Service;
@@ -16,8 +17,7 @@ final class GeoValidationService
     public function __construct(
         private readonly CityRepositoryInterface $cityRepository,
         private readonly NationalityRepositoryInterface $nationalityRepository
-    ) {
-    }
+    ) {}
 
     public function validateProfileGeo(?CityId $cityId, array $nationalityIds): void
     {

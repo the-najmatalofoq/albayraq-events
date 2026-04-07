@@ -7,6 +7,7 @@ return [
     'forbidden' => 'Forbidden',
     'unauthorized' => 'Unauthorized',
     'validation_failed' => 'Validation failed',
+
     'error' => 'An error occurred',
     'auth' => [
         'registered' => 'Registration successful',
@@ -18,11 +19,13 @@ return [
         'unauthorized' => 'You are not authorized to perform this action.',
         'forbidden' => 'You do not have permission to access this resource.',
         'email_not_verified' => 'Your email address is not verified.',
+
     ],
     'user' => [
+        'account_not_active' => 'Your account is not active.',
         'join_request' => [
-            'not_approved' => 'Your join request has not been approved yet.',
             'approved' => 'Join request approved. User has been notified.',
+
         ],
     ],
     'errors' => [
@@ -36,5 +39,11 @@ return [
         'service_unavailable' => 'The service is temporarily unavailable.',
         'user_already_exists' => 'A user with this email already exists.',
         'invalid_credentials' => 'Invalid email or password.',
+        'email_not_verified' => 'Your email address is not verified.',
+        'user_not_approved' => 'Your join request has not been approved yet.',
+        'user_pending' => 'Your join request is still pending approval.',
+        'bank_already_exists' => 'A bank account with this IBAN or Owner Account already exists.',
+        'user_not_found' => 'The requested user was not found.',
+        'user_not_verified' => 'Your email address is not verified.'
     ],
 ];

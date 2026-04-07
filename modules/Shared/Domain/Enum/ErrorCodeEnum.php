@@ -18,6 +18,9 @@ enum ErrorCodeEnum: string
     case FILE_UPLOAD_FAILED = 'FILE_UPLOAD_FAILED';
     case TOKEN_EXPIRED = 'TOKEN_EXPIRED';
     case TOKEN_INVALID = 'TOKEN_INVALID';
+    case USER_NOT_VERIFIED = 'USER_NOT_VERIFIED';
+    case USER_NOT_APPROVED = 'USER_NOT_APPROVED';
+    case USER_PENDING = 'USER_PENDING';
 
     public function getHttpStatus(): int
     {
@@ -25,7 +28,7 @@ enum ErrorCodeEnum: string
             self::NOT_FOUND => 404,
             self::VALIDATION_FAILED => 422,
             self::UNAUTHORIZED, self::TOKEN_EXPIRED, self::TOKEN_INVALID, self::INVALID_CREDENTIALS => 401,
-            self::FORBIDDEN, self::USER_NOT_ACTIVE => 403,
+            self::FORBIDDEN, self::USER_NOT_ACTIVE, self::USER_NOT_VERIFIED, self::USER_NOT_APPROVED, self::USER_PENDING => 403,
             self::INTERNAL_ERROR, self::FILE_UPLOAD_FAILED => 500,
             self::USER_ALREADY_EXISTS, self::BANK_ALREADY_EXISTS => 409,
         };

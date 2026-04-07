@@ -16,7 +16,7 @@ final readonly class RegisterBankDetailsHandler
     public function handle(RegisterBankDetailsCommand $command): void
     {
         if ($this->bankDetailRepository->existsWithIban($command->iban)) {
-            throw BankAlreadyExistsException::withIban($command->iban);
+            throw BankAlreadyExistsException::withIban();
         }
 
         $this->bankDetailRepository->updateOrCreate(

@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Modules\IAM\Application\Command\RegisterUser\RegisterProfile;
 
 use DateTimeImmutable;
-use Modules\Shared\Domain\ValueObject\TranslatableText;
 use Modules\User\Domain\EmployeeProfile;
 use Modules\User\Domain\Enum\GenderEnum;
 use Modules\User\Domain\Repository\EmployeeProfileRepositoryInterface;
+use Modules\Shared\Domain\ValueObject\TranslatableText;
 
 final readonly class RegisterProfileHandler
 {

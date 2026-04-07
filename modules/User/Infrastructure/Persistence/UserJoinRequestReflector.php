@@ -8,7 +8,6 @@ use Modules\User\Domain\UserJoinRequest;
 use Modules\User\Domain\ValueObject\UserJoinRequestId;
 use Modules\User\Domain\ValueObject\UserId;
 use Modules\User\Infrastructure\Persistence\Eloquent\Models\UserJoinRequestModel;
-use DateTimeImmutable;
 
 final class UserJoinRequestReflector
 {

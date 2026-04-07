@@ -15,8 +15,7 @@ final readonly class JsonResponder
 {
     public function __construct(
         private TranslatorInterface $translator
-    ) {
-    }
+    ) {}
 
     public function paginated(
         array $items,
@@ -70,7 +69,7 @@ final readonly class JsonResponder
         return $this->error(
             errorCode: ErrorCodeEnum::VALIDATION_FAILED->value,
             status: 422,
-            messageKey: 'validation.failed',
+            messageKey: __('messages.errors.validation_failed'),
             errors: $errors
         );
     }

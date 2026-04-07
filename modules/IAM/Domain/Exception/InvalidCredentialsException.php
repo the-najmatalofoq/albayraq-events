@@ -9,9 +9,11 @@ use Modules\Shared\Domain\Enum\ErrorCodeEnum;
 
 final class InvalidCredentialsException extends DomainException
 {
-    public function __construct()
+    public function __construct(array $errors = [])
     {
-        parent::__construct('Invalid credentials.');
+        $mainMessage = __('messages.errors.invalid_credentials');
+        parent::__construct($mainMessage);
+        $this->errors = empty($errors) ? ['credentials' => [$mainMessage]] : $errors;
     }
 
     public function getErrorCode(): ErrorCodeEnum

@@ -7,8 +7,8 @@ namespace Modules\User\Domain\Enum;
 enum JoinRequestStatusEnum: string
 {
     case Pending = 'pending';
-    case Approved='approved';
-    case Rejected='rejected';
+    case Approved = 'approved';
+    case Rejected = 'rejected';
 
     public function isApproved(): bool
     {

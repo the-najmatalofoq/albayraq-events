@@ -56,7 +56,7 @@ final class RegisterAction
 
         return $this->responder->created(
             data: ['id' => $user->uuid->value],
-            messageKey: 'auth.registered'
+            messageKey: __('messages.auth.registered')
         );
     }
 }

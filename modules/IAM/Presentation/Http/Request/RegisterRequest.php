@@ -19,11 +19,11 @@ final class RegisterRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'json'],
+            'name' => ['required', 'string'],
             'email' => ['nullable', 'email', 'max:255', 'unique:users,email'],
             'phone' => ['required', 'string', new SaudiPhoneRule(), 'unique:users,phone'],
             'password' => ['required', 'confirmed', new PasswordRule()],
-            'full_name' => ['required', 'json'],
+            'full_name' => ['required', 'string'],
             'identity_number' => ['required', 'string', 'max:10', 'unique:employee_profiles,identity_number'],
             'nationality_id' => ['required', 'uuid', 'exists:nationalities,id'],
 
