@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Modules\User\Presentation\Http\Action;
 
 use Illuminate\Http\JsonResponse;
-use Modules\IAM\Domain\Service\TokenManagerInterface;
+use Modules\IAM\Domain\Service\TokenManager;
 use Modules\User\Application\Command\UpdateBankDetails\UpdateBankDetailsCommand;
 use Modules\User\Application\Command\UpdateBankDetails\UpdateBankDetailsHandler;
 use Illuminate\Http\Request;
@@ -15,7 +15,7 @@ use Modules\Shared\Infrastructure\Validation\Rules\IbanRule;
 final readonly class UpdateBankDetailsAction
 {
     public function __construct(
-        private TokenManagerInterface $tokenManager,
+        private TokenManager $tokenManager,
         private UpdateBankDetailsHandler $handler,
         private JsonResponder $responder,
     ) {
@@ -23,12 +23,14 @@ final readonly class UpdateBankDetailsAction
 
     public function __invoke(Request $request): JsonResponse
     {
+        // the getUserIdFromToken not found, we must make it
         $userId = $this->tokenManager->getUserIdFromToken();
 
         if (!$userId) {
             return $this->responder->unauthorized();
         }
 
+        // we must make the formRequest of the UpdateBankDetailsRequest
         $request->validate([
             'account_owner' => ['required', 'string', 'max:255'],
             'bank_name' => ['required', 'string', 'max:255'],
