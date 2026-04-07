@@ -14,4 +14,7 @@ interface EmployeeProfileRepositoryInterface
     public function findByUserId(UserId $userId): ?EmployeeProfile;
     public function findById(EmployeeProfileId $uuid): ?EmployeeProfile;
     public function nextIdentity(): EmployeeProfileId;
+    public function paginate(int $perPage = 15, array $filters = []): \Illuminate\Pagination\LengthAwarePaginator;
+    public function all(array $filters = []): \Illuminate\Support\Collection;
+    public function delete(EmployeeProfileId $id): void;
 }

@@ -60,7 +60,6 @@ final class EmployeeProfileModel extends Model
     protected function casts(): array
     {
         return [
-            'full_name' => TranslatableTextCast::class,
             'birth_date' => 'date',
             'height' => 'float',
             'weight' => 'float',

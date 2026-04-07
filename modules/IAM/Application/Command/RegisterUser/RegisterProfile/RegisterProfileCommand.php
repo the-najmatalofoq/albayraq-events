@@ -5,14 +5,13 @@ declare(strict_types=1);
 namespace Modules\IAM\Application\Command\RegisterUser\RegisterProfile;
 
 use Modules\Geography\Domain\ValueObject\NationalityId;
-use Modules\Shared\Domain\ValueObject\TranslatableText;
 use Modules\User\Domain\ValueObject\UserId;
 
 final readonly class RegisterProfileCommand
 {
     public function __construct(
         public UserId $userId,
-        public TranslatableText $fullName,
+        public string $fullName,
         public string $identityNumber,
         public NationalityId $nationalityId,
         public ?string $birthDate = null,

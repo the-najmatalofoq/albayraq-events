@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace Modules\IAM\Application\Command\RegisterUser\RegisterAuth;
 
-use Modules\Shared\Domain\ValueObject\TranslatableText;
 use Modules\User\Domain\ValueObject\Phone;
 use Illuminate\Http\UploadedFile;
 
 final readonly class RegisterAuthCommand
 {
     public function __construct(
-        public TranslatableText $name,
+        public string $name,
         public ?string $email,
         public Phone $phone,
         public string $password,

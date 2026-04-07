@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Modules\IAM\Application\Command\RegisterUser\RegisterProfile;
 
 use DateTimeImmutable;
-use Modules\Shared\Domain\ValueObject\TranslatableText;
 use Modules\User\Domain\EmployeeProfile;
 use Modules\User\Domain\Enum\GenderEnum;
 use Modules\User\Domain\Repository\EmployeeProfileRepositoryInterface;
@@ -14,7 +13,8 @@ final readonly class RegisterProfileHandler
 {
     public function __construct(
         private EmployeeProfileRepositoryInterface $profileRepository,
-    ) {}
+    ) {
+    }
 
     public function handle(RegisterProfileCommand $command): void
     {
@@ -27,8 +27,7 @@ final readonly class RegisterProfileHandler
             birthDate: $command->birthDate ? new DateTimeImmutable($command->birthDate) : null,
             gender: $command->gender ? GenderEnum::from($command->gender) : null,
             height: $command->height,
-            weight: $command->weight,
-            createdAt: new DateTimeImmutable()
+            weight: $command->weight
         );
 
         $this->profileRepository->save($profile);

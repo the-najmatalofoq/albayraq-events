@@ -24,6 +24,7 @@ use Modules\User\Infrastructure\Persistence\Eloquent\Repositories\{
     EloquentUserJoinRequestRepository,
     EloquentEmployeeNationalityRepository,
 };
+use Modules\User\Presentation\Http\Middleware\EnsureRoleLevelMiddleware;
 
 final class UserServiceProvider extends ServiceProvider
 {
@@ -39,7 +40,7 @@ final class UserServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-        $this->app['router']->aliasMiddleware('role.level', \Modules\User\Presentation\Http\Middleware\EnsureRoleLevelMiddleware::class);
+        $this->app['router']->aliasMiddleware('role.level', EnsureRoleLevelMiddleware::class);
         $this->loadMigrationsFrom(__DIR__ . '/../Persistence/Migrations');
         $this->registerListeners();
         $this->registerRoutes();
@@ -77,6 +78,13 @@ final class UserServiceProvider extends ServiceProvider
             Route::prefix($prefix)
                 ->middleware($sharedMiddleware)
                 ->group($routeFile);
+        }
+
+        $dashboardRouteFile = "{$basePath}/Dashboard/api.php";
+        if (file_exists($dashboardRouteFile)) {
+            Route::prefix('api/v1/dashboard/users')
+                ->middleware(['api', 'auth:api', 'role.level:admin,super-admin'])
+                ->group($dashboardRouteFile);
         }
     }
 }

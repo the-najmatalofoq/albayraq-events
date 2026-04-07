@@ -4,19 +4,21 @@ declare(strict_types=1);
 
 namespace Modules\User\Infrastructure\Persistence\Eloquent\Repositories;
 
+use Illuminate\Pagination\LengthAwarePaginator;
 use Modules\User\Domain\Repository\UserRepositoryInterface;
 use Modules\User\Domain\User;
 use Modules\User\Domain\ValueObject\Phone;
 use Modules\User\Domain\ValueObject\UserId;
 use Modules\User\Infrastructure\Persistence\Eloquent\Models\UserModel;
 use Modules\User\Infrastructure\Persistence\UserReflector;
-
+use Illuminate\Support\Collection;
 final class EloquentUserRepository implements UserRepositoryInterface
 {
     public function __construct(
         private readonly UserReflector $reflector,
         private readonly UserModel $model,
-    ) {}
+    ) {
+    }
 
     public function nextIdentity(): UserId
     {
@@ -57,6 +59,39 @@ final class EloquentUserRepository implements UserRepositoryInterface
         $model->save();
 
         $model->roles()->sync($roleIds);
+    }
+
+    // fix: build a filter valueObject
+    public function paginate(int $perPage = 15, array $filters = []): LengthAwarePaginator
+    {
+        $query = $this->model->with('roles');
+
+        if (isset($filters['search'])) {
+            $query->where(function ($q) use ($filters) {
+                $q->where('name', 'like', "%{$filters['search']}%")
+                    ->orWhere('email', 'like', "%{$filters['search']}%");
+            });
+        }
+
+        $paginator = $query->paginate($perPage);
+
+        $paginator->getCollection()->transform(fn($model) => $this->reflector->toEntity($model));
+
+        return $paginator;
+    }
+
+    public function all(array $filters = []): Collection
+    {
+        $query = $this->model->with('roles');
+
+        if (isset($filters['search'])) {
+            $query->where(function ($q) use ($filters) {
+                $q->where('name', 'like', "%{$filters['search']}%")
+                    ->orWhere('email', 'like', "%{$filters['search']}%");
+            });
+        }
+
+        return $query->get()->map(fn($model) => $this->reflector->toEntity($model));
     }
 
     public function delete(UserId $id): void

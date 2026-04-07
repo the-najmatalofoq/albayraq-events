@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Modules\User\Infrastructure\Persistence\Eloquent\Repositories;
 
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 use Modules\User\Domain\ContactPhone;
 use Modules\User\Domain\Repository\ContactPhoneRepositoryInterface;
 use Modules\User\Domain\ValueObject\UserId;
@@ -58,6 +60,40 @@ final class EloquentContactPhoneRepository implements ContactPhoneRepositoryInte
         $this->model->where('user_id', $userId->value)
             ->whereIn('id', array_map(fn($id) => $id->value, $ids))
             ->delete();
+    }
+
+    public function paginate(int $perPage = 15, array $filters = []): LengthAwarePaginator
+    {
+        $query = $this->model->query();
+
+        if (isset($filters['search'])) {
+            $query->where(function ($q) use ($filters) {
+                $q->where('name', 'like', "%{$filters['search']}%")
+                  ->orWhere('phone', 'like', "%{$filters['search']}%")
+                  ->orWhere('relation', 'like', "%{$filters['search']}%");
+            });
+        }
+
+        $paginator = $query->paginate($perPage);
+
+        $paginator->getCollection()->transform(fn($model) => $this->toDomain($model));
+
+        return $paginator;
+    }
+
+    public function all(array $filters = []): Collection
+    {
+        $query = $this->model->query();
+
+        if (isset($filters['search'])) {
+            $query->where(function ($q) use ($filters) {
+                $q->where('name', 'like', "%{$filters['search']}%")
+                  ->orWhere('phone', 'like', "%{$filters['search']}%")
+                  ->orWhere('relation', 'like', "%{$filters['search']}%");
+            });
+        }
+
+        return $query->get()->map(fn($model) => $this->toDomain($model));
     }
 
     private function toDomain(ContactPhoneModel $model): ContactPhone

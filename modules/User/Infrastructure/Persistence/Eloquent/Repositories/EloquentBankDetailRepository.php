@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Modules\User\Infrastructure\Persistence\Eloquent\Repositories;
 
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 use Modules\User\Domain\BankDetail;
 use Modules\User\Domain\Repository\BankDetailRepositoryInterface;
 use Modules\User\Domain\ValueObject\UserId;
@@ -14,7 +16,8 @@ final class EloquentBankDetailRepository implements BankDetailRepositoryInterfac
 {
     public function __construct(
         private readonly BankDetailModel $bankDetailModel
-    ) {}
+    ) {
+    }
 
     public function save(BankDetail $bankDetail): void
     {
@@ -71,6 +74,40 @@ final class EloquentBankDetailRepository implements BankDetailRepositoryInterfac
     public function nextIdentity(): BankDetailId
     {
         return BankDetailId::generate();
+    }
+
+    public function paginate(int $perPage = 15, array $filters = []): LengthAwarePaginator
+    {
+        $query = $this->bankDetailModel->query();
+
+        if (isset($filters['search'])) {
+            $query->where(function ($q) use ($filters) {
+                $q->where('account_owner', 'like', "%{$filters['search']}%")
+                    ->orWhere('iban', 'like', "%{$filters['search']}%")
+                    ->orWhere('bank_name', 'like', "%{$filters['search']}%");
+            });
+        }
+
+        $paginator = $query->paginate($perPage);
+
+        $paginator->getCollection()->transform(fn($model) => $this->toDomain($model));
+
+        return $paginator;
+    }
+
+    public function all(array $filters = []): Collection
+    {
+        $query = $this->bankDetailModel->query();
+
+        if (isset($filters['search'])) {
+            $query->where(function ($q) use ($filters) {
+                $q->where('account_owner', 'like', "%{$filters['search']}%")
+                    ->orWhere('iban', 'like', "%{$filters['search']}%")
+                    ->orWhere('bank_name', 'like', "%{$filters['search']}%");
+            });
+        }
+
+        return $query->get()->map(fn($model) => $this->toDomain($model));
     }
 
     private function toDomain(BankDetailModel $model): BankDetail

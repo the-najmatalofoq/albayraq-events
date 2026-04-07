@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Modules\User\Infrastructure\Persistence\Eloquent\Repositories;
 
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 use Modules\User\Domain\EmployeeProfile;
 use Modules\User\Domain\Repository\EmployeeProfileRepositoryInterface;
 use Modules\User\Domain\ValueObject\EmployeeProfileId;
@@ -17,7 +19,8 @@ final class EloquentEmployeeProfileRepository implements EmployeeProfileReposito
     public function __construct(
         private readonly EmployeeProfileModel $model,
         private readonly EmployeeProfileReflector $reflector,
-    ) {}
+    ) {
+    }
 
     public function nextIdentity(): EmployeeProfileId
     {
@@ -50,6 +53,38 @@ final class EloquentEmployeeProfileRepository implements EmployeeProfileReposito
         $model->id = $profile->uuid->value;
         $model->fill($data);
         $model->save();
+    }
+
+    public function paginate(int $perPage = 15, array $filters = []): LengthAwarePaginator
+    {
+        $query = $this->model->with('nationality');
+
+        if (isset($filters['search'])) {
+            $query->where(function ($q) use ($filters) {
+                $q->where('full_name', 'like', "%{$filters['search']}%")
+                    ->orWhere('identity_number', 'like', "%{$filters['search']}%");
+            });
+        }
+
+        $paginator = $query->paginate($perPage);
+
+        $paginator->getCollection()->transform(fn($model) => $this->reflector->toEntity($model));
+
+        return $paginator;
+    }
+
+    public function all(array $filters = []): Collection
+    {
+        $query = $this->model->with('nationality');
+
+        if (isset($filters['search'])) {
+            $query->where(function ($q) use ($filters) {
+                $q->where('full_name', 'like', "%{$filters['search']}%")
+                    ->orWhere('identity_number', 'like', "%{$filters['search']}%");
+            });
+        }
+
+        return $query->get()->map(fn($model) => $this->reflector->toEntity($model));
     }
 
     public function delete(EmployeeProfileId $id): void
