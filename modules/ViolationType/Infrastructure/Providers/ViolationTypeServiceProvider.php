@@ -19,7 +19,7 @@ final class ViolationTypeServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->loadMigrationsFrom(__DIR__ . '/../Persistence/Migrations');
-        
+
         Route::prefix('api/v1/violation-types')
             ->middleware(['api', 'auth:api'])
             ->group(__DIR__ . '/../Routes/api.php');

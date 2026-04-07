@@ -11,6 +11,7 @@ use Modules\User\Domain\Repository\BankDetailRepositoryInterface;
 use Modules\User\Domain\ValueObject\UserId;
 use Modules\User\Domain\ValueObject\BankDetailId;
 use Modules\User\Infrastructure\Persistence\Eloquent\Models\BankDetailModel;
+use Modules\Shared\Domain\ValueObject\FilterCriteria;
 
 final class EloquentBankDetailRepository implements BankDetailRepositoryInterface
 {
@@ -76,38 +77,45 @@ final class EloquentBankDetailRepository implements BankDetailRepositoryInterfac
         return BankDetailId::generate();
     }
 
-    public function paginate(int $perPage = 15, array $filters = []): LengthAwarePaginator
+    public function paginate(FilterCriteria $criteria, int $perPage = 15): LengthAwarePaginator
     {
         $query = $this->bankDetailModel->query();
 
-        if (isset($filters['search'])) {
-            $query->where(function ($q) use ($filters) {
-                $q->where('account_owner', 'like', "%{$filters['search']}%")
-                    ->orWhere('iban', 'like', "%{$filters['search']}%")
-                    ->orWhere('bank_name', 'like', "%{$filters['search']}%");
-            });
-        }
+        $this->applyCriteria($query, $criteria);
 
         $paginator = $query->paginate($perPage);
 
-        $paginator->getCollection()->transform(fn($model) => $this->toDomain($model));
+        $paginator->getCollection()->transform(fn(BankDetailModel $model) => $this->toDomain($model));
 
         return $paginator;
     }
 
-    public function all(array $filters = []): Collection
+    public function all(FilterCriteria $criteria): Collection
     {
         $query = $this->bankDetailModel->query();
 
-        if (isset($filters['search'])) {
-            $query->where(function ($q) use ($filters) {
-                $q->where('account_owner', 'like', "%{$filters['search']}%")
-                    ->orWhere('iban', 'like', "%{$filters['search']}%")
-                    ->orWhere('bank_name', 'like', "%{$filters['search']}%");
+        $this->applyCriteria($query, $criteria);
+
+        return $query->get()->map(fn(BankDetailModel $model) => $this->toDomain($model));
+    }
+
+    private function applyCriteria($query, FilterCriteria $criteria): void
+    {
+        if ($criteria->search) {
+            $query->where(function ($q) use ($criteria) {
+                $q->where('account_owner', 'like', "%{$criteria->search}%")
+                    ->orWhere('iban', 'like', "%{$criteria->search}%")
+                    ->orWhere('bank_name', 'like', "%{$criteria->search}%");
             });
         }
 
-        return $query->get()->map(fn($model) => $this->toDomain($model));
+        if ($criteria->has('user_id')) {
+            $query->where('user_id', $criteria->get('user_id'));
+        }
+
+        if ($criteria->sortBy) {
+            $query->orderBy($criteria->sortBy, $criteria->sortDirection ?? 'asc');
+        }
     }
 
     private function toDomain(BankDetailModel $model): BankDetail

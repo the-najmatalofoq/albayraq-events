@@ -5,6 +5,7 @@ namespace Modules\Shared\Presentation\Http\Request;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Modules\Shared\Domain\ValueObject\FilterCriteria;
+use Modules\Shared\Domain\ValueObject\PaginationCriteria;
 
 abstract class BaseFilterRequest extends FormRequest
 {
@@ -27,6 +28,11 @@ abstract class BaseFilterRequest extends FormRequest
     public function toFilterCriteria(): FilterCriteria
     {
         return FilterCriteria::fromArray($this->validated());
+    }
+
+    public function toPaginationCriteria(): PaginationCriteria
+    {
+        return PaginationCriteria::fromArray($this->validated());
     }
 
     public function getPerPage(): int

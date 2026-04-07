@@ -7,8 +7,9 @@ namespace Modules\Role\Domain\Repository;
 use Modules\Role\Domain\Role;
 use Modules\Role\Domain\Enum\RoleSlugEnum;
 use Modules\Role\Domain\ValueObject\RoleId;
+use Modules\Shared\Domain\Repository\FilterableRepositoryInterface;
 
-interface RoleRepository
+interface RoleRepository extends FilterableRepositoryInterface
 {
     public function save(Role $role): void;
 
@@ -17,4 +18,6 @@ interface RoleRepository
     public function findBySlug(RoleSlugEnum $slug): ?Role;
 
     public function nextIdentity(): RoleId;
+
+    public function delete(RoleId $id): void;
 }

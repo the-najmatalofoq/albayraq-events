@@ -10,9 +10,9 @@ use Modules\User\Domain\EmployeeProfile;
 use Modules\User\Domain\Repository\EmployeeProfileRepositoryInterface;
 use Modules\User\Domain\ValueObject\EmployeeProfileId;
 use Modules\User\Domain\ValueObject\UserId;
-use Modules\User\Infrastructure\Persistence\Eloquent\Models\EmployeeProfileModel;
 use Modules\User\Infrastructure\Persistence\EmployeeProfileReflector;
-use Modules\User\Domain\Repository\EmployeeNationalityRepositoryInterface;
+use Modules\Shared\Domain\ValueObject\FilterCriteria;
+use Modules\User\Infrastructure\Persistence\Eloquent\Models\EmployeeProfileModel;
 
 final class EloquentEmployeeProfileRepository implements EmployeeProfileRepositoryInterface
 {
@@ -55,36 +55,40 @@ final class EloquentEmployeeProfileRepository implements EmployeeProfileReposito
         $model->save();
     }
 
-    public function paginate(int $perPage = 15, array $filters = []): LengthAwarePaginator
+    public function paginate(FilterCriteria $criteria, int $perPage = 15): LengthAwarePaginator
     {
         $query = $this->model->with('nationality');
 
-        if (isset($filters['search'])) {
-            $query->where(function ($q) use ($filters) {
-                $q->where('full_name', 'like', "%{$filters['search']}%")
-                    ->orWhere('identity_number', 'like', "%{$filters['search']}%");
-            });
-        }
+        $this->applyCriteria($query, $criteria);
 
         $paginator = $query->paginate($perPage);
 
-        $paginator->getCollection()->transform(fn($model) => $this->reflector->toEntity($model));
+        $paginator->getCollection()->transform(fn(EmployeeProfileModel $model) => $this->reflector->toEntity($model));
 
         return $paginator;
     }
 
-    public function all(array $filters = []): Collection
+    public function all(FilterCriteria $criteria): Collection
     {
         $query = $this->model->with('nationality');
 
-        if (isset($filters['search'])) {
-            $query->where(function ($q) use ($filters) {
-                $q->where('full_name', 'like', "%{$filters['search']}%")
-                    ->orWhere('identity_number', 'like', "%{$filters['search']}%");
+        $this->applyCriteria($query, $criteria);
+
+        return $query->get()->map(fn(EmployeeProfileModel $model) => $this->reflector->toEntity($model));
+    }
+
+    private function applyCriteria($query, FilterCriteria $criteria): void
+    {
+        if ($criteria->search) {
+            $query->where(function ($q) use ($criteria) {
+                $q->where('full_name', 'like', "%{$criteria->search}%")
+                    ->orWhere('identity_number', 'like', "%{$criteria->search}%");
             });
         }
 
-        return $query->get()->map(fn($model) => $this->reflector->toEntity($model));
+        if ($criteria->sortBy) {
+            $query->orderBy($criteria->sortBy, $criteria->sortDirection ?? 'asc');
+        }
     }
 
     public function delete(EmployeeProfileId $id): void

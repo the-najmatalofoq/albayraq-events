@@ -12,6 +12,8 @@ use Modules\User\Domain\ValueObject\UserId;
 use Modules\User\Infrastructure\Persistence\Eloquent\Models\UserModel;
 use Modules\User\Infrastructure\Persistence\UserReflector;
 use Illuminate\Support\Collection;
+use Modules\Shared\Domain\ValueObject\FilterCriteria;
+
 final class EloquentUserRepository implements UserRepositoryInterface
 {
     public function __construct(
@@ -46,7 +48,7 @@ final class EloquentUserRepository implements UserRepositoryInterface
         return $model ? $this->reflector->toEntity($model) : null;
     }
 
-    public function save(User $user): void
+    public function save(User $user, ?string $avatarPath = null): void
     {
         $data = $this->reflector->fromEntity($user);
         $roleIds = array_map(fn($roleId) => $roleId->value, $user->roleIds);
@@ -61,37 +63,41 @@ final class EloquentUserRepository implements UserRepositoryInterface
         $model->roles()->sync($roleIds);
     }
 
-    // fix: build a filter valueObject
-    public function paginate(int $perPage = 15, array $filters = []): LengthAwarePaginator
+    public function paginate(FilterCriteria $criteria, int $perPage = 15): LengthAwarePaginator
     {
         $query = $this->model->with('roles');
 
-        if (isset($filters['search'])) {
-            $query->where(function ($q) use ($filters) {
-                $q->where('name', 'like', "%{$filters['search']}%")
-                    ->orWhere('email', 'like', "%{$filters['search']}%");
-            });
-        }
+        $this->applyCriteria($query, $criteria);
 
         $paginator = $query->paginate($perPage);
 
-        $paginator->getCollection()->transform(fn($model) => $this->reflector->toEntity($model));
+        $paginator->getCollection()->transform(fn(UserModel $model) => $this->reflector->toEntity($model));
 
         return $paginator;
     }
 
-    public function all(array $filters = []): Collection
+    public function all(FilterCriteria $criteria): Collection
     {
         $query = $this->model->with('roles');
 
-        if (isset($filters['search'])) {
-            $query->where(function ($q) use ($filters) {
-                $q->where('name', 'like', "%{$filters['search']}%")
-                    ->orWhere('email', 'like', "%{$filters['search']}%");
+        $this->applyCriteria($query, $criteria);
+
+        return $query->get()->map(fn(UserModel $model) => $this->reflector->toEntity($model));
+    }
+
+    private function applyCriteria($query, FilterCriteria $criteria): void
+    {
+        if ($criteria->search) {
+            $query->where(function ($q) use ($criteria) {
+                $q->where('name', 'like', "%{$criteria->search}%")
+                    ->orWhere('email', 'like', "%{$criteria->search}%")
+                    ->orWhere('phone', 'like', "%{$criteria->search}%");
             });
         }
 
-        return $query->get()->map(fn($model) => $this->reflector->toEntity($model));
+        if ($criteria->sortBy) {
+            $query->orderBy($criteria->sortBy, $criteria->sortDirection ?? 'asc');
+        }
     }
 
     public function delete(UserId $id): void

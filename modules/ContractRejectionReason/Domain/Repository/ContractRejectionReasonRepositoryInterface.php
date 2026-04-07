@@ -6,14 +6,22 @@ namespace Modules\ContractRejectionReason\Domain\Repository;
 
 use Modules\ContractRejectionReason\Domain\ContractRejectionReason;
 use Modules\ContractRejectionReason\Domain\ValueObject\ContractRejectionReasonId;
+use Modules\Shared\Domain\Repository\FilterableRepositoryInterface;
+use Modules\Shared\Domain\ValueObject\FilterCriteria;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 
-interface ContractRejectionReasonRepositoryInterface
+interface ContractRejectionReasonRepositoryInterface extends FilterableRepositoryInterface
 {
     public function nextIdentity(): ContractRejectionReasonId;
 
-    public function save(ContractRejectionReason $reason): void;
+    public function save(ContractRejectionReason $record): void;
 
     public function findById(ContractRejectionReasonId $id): ?ContractRejectionReason;
 
-    public function listAll(): array;
+    public function paginate(FilterCriteria $criteria, int $perPage = 15): LengthAwarePaginator;
+
+    public function all(FilterCriteria $criteria): Collection;
+
+    public function delete(ContractRejectionReasonId $id): void;
 }

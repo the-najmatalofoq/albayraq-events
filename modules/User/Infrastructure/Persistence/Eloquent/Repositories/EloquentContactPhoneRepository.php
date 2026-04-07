@@ -11,6 +11,7 @@ use Modules\User\Domain\Repository\ContactPhoneRepositoryInterface;
 use Modules\User\Domain\ValueObject\UserId;
 use Modules\User\Domain\ValueObject\ContactPhoneId;
 use Modules\User\Infrastructure\Persistence\Eloquent\Models\ContactPhoneModel;
+use Modules\Shared\Domain\ValueObject\FilterCriteria;
 
 final class EloquentContactPhoneRepository implements ContactPhoneRepositoryInterface
 {
@@ -62,38 +63,45 @@ final class EloquentContactPhoneRepository implements ContactPhoneRepositoryInte
             ->delete();
     }
 
-    public function paginate(int $perPage = 15, array $filters = []): LengthAwarePaginator
+    public function paginate(FilterCriteria $criteria, int $perPage = 15): LengthAwarePaginator
     {
         $query = $this->model->query();
 
-        if (isset($filters['search'])) {
-            $query->where(function ($q) use ($filters) {
-                $q->where('name', 'like', "%{$filters['search']}%")
-                  ->orWhere('phone', 'like', "%{$filters['search']}%")
-                  ->orWhere('relation', 'like', "%{$filters['search']}%");
-            });
-        }
+        $this->applyCriteria($query, $criteria);
 
         $paginator = $query->paginate($perPage);
 
-        $paginator->getCollection()->transform(fn($model) => $this->toDomain($model));
+        $paginator->getCollection()->transform(fn(ContactPhoneModel $model) => $this->toDomain($model));
 
         return $paginator;
     }
 
-    public function all(array $filters = []): Collection
+    public function all(FilterCriteria $criteria): Collection
     {
         $query = $this->model->query();
 
-        if (isset($filters['search'])) {
-            $query->where(function ($q) use ($filters) {
-                $q->where('name', 'like', "%{$filters['search']}%")
-                  ->orWhere('phone', 'like', "%{$filters['search']}%")
-                  ->orWhere('relation', 'like', "%{$filters['search']}%");
+        $this->applyCriteria($query, $criteria);
+
+        return $query->get()->map(fn(ContactPhoneModel $model) => $this->toDomain($model));
+    }
+
+    private function applyCriteria($query, FilterCriteria $criteria): void
+    {
+        if ($criteria->search) {
+            $query->where(function ($q) use ($criteria) {
+                $q->where('name', 'like', "%{$criteria->search}%")
+                  ->orWhere('phone', 'like', "%{$criteria->search}%")
+                  ->orWhere('relation', 'like', "%{$criteria->search}%");
             });
         }
 
-        return $query->get()->map(fn($model) => $this->toDomain($model));
+        if ($criteria->has('user_id')) {
+            $query->where('user_id', $criteria->get('user_id'));
+        }
+
+        if ($criteria->sortBy) {
+            $query->orderBy($criteria->sortBy, $criteria->sortDirection ?? 'asc');
+        }
     }
 
     private function toDomain(ContactPhoneModel $model): ContactPhone
