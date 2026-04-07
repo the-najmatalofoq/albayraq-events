@@ -97,4 +97,13 @@ final readonly class JsonResponder
             messageKey: $messageKey
         );
     }
+
+    public function notFound(?string $messageKey = 'messages.not_found'): JsonResponse
+    {
+        return $this->error(
+            errorCode: ErrorCodeEnum::NOT_FOUND->value,
+            status: 404,
+            messageKey: $messageKey
+        );
+    }
 }

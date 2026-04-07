@@ -12,7 +12,7 @@ final class UserPresenter
     {
         return [
             'id' => $user->uuid->value,
-            'name' => $user->name->getFor(app()->getLocale()),
+            'name' => $user->name,
             'email' => $user->email,
             'phone' => $user->phone->value,
             'avatar' => $user->avatar?->value,

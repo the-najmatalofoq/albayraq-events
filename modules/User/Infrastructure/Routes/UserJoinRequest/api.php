@@ -3,18 +3,20 @@
 declare(strict_types=1);
 
 use Illuminate\Support\Facades\Route;
+use Modules\User\Presentation\Http\Action\RejectJoinRequestAction;
 use Modules\User\Presentation\Http\Action\JoinRequest\{
     ListJoinRequestsAction,
     GetAllJoinRequestsAction,
     GetJoinRequestAction,
     ApproveJoinRequestAction,
-    ToggleJoinRequestStatusAction,
-    DeleteJoinRequestAction,
+//  ToggleJoinRequestStatusAction,
+//  DeleteJoinRequestAction,
 };
 
-Route::get('/all', GetAllJoinRequestsAction::class);
-Route::get('/', ListJoinRequestsAction::class);
-Route::get('/{id}', GetJoinRequestAction::class);
-Route::patch('/{id}/approve', ApproveJoinRequestAction::class);
-Route::patch('/{id}/toggle-status', ToggleJoinRequestStatusAction::class);
-Route::delete('/{id}', DeleteJoinRequestAction::class);
+Route::middleware(['role.level:admin,super-admin'])->group(function (): void {
+    Route::get('/all', GetAllJoinRequestsAction::class);
+    Route::get('/', ListJoinRequestsAction::class);
+    Route::get('/{id}', GetJoinRequestAction::class);
+    Route::post('/{id}/approve', ApproveJoinRequestAction::class);
+    Route::post('/{id}/reject', RejectJoinRequestAction::class);
+});

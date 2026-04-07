@@ -12,37 +12,34 @@ use Modules\Shared\Domain\AggregateRoot;
 use Modules\Shared\Domain\Identity;
 use Modules\IAM\Domain\Event\UserRegistered;
 use Modules\Shared\Domain\ValueObject\FilePath;
-use Modules\Shared\Domain\ValueObject\TranslatableText;
 use Modules\User\Domain\ValueObject\Phone;
 
 final class User extends AggregateRoot
 {
     private function __construct(
-        public readonly UserId $uuid,
-        public readonly TranslatableText $name,
-        public readonly ?string $email,
-        public readonly Phone $phone,
+        public readonly UserId             $uuid,
+        public private(set) string         $name,
+        public private(set) ?string        $email,
+        public private(set) Phone          $phone,
         public private(set) HashedPassword $password,
         /** @var list<RoleId> */
-        public private(set) array $roleIds,
-        public readonly DateTimeImmutable $createdAt,
-        public private(set) ?FilePath $avatar = null,
+        public private(set) array          $roleIds,
+        public readonly DateTimeImmutable  $createdAt,
+        public private(set) ?FilePath      $avatar = null,
         public private(set) ?DateTimeImmutable $emailVerifiedAt = null,
         public private(set) ?DateTimeImmutable $updatedAt = null,
         public private(set) ?DateTimeImmutable $deletedAt = null,
     ) {}
 
     public static function register(
-        UserId $uuid,
-        TranslatableText $name,
-        ?string $email,
-        Phone $phone,
-        HashedPassword $password,
-        array $roleIds,
+        UserId          $uuid,
+        string          $name,
+        ?string         $email,
+        Phone           $phone,
+        HashedPassword  $password,
+        array           $roleIds,
         DateTimeImmutable $createdAt,
-        ?string $nationalId = null,
-        ?FilePath $avatar = null,
-        bool $isActive = false,
+        ?FilePath       $avatar = null,
     ): self {
         $user = new self(
             uuid: $uuid,
@@ -53,7 +50,6 @@ final class User extends AggregateRoot
             roleIds: $roleIds,
             createdAt: $createdAt,
             avatar: $avatar,
-            emailVerifiedAt: null,
         );
 
         $user->recordEvent(new UserRegistered($uuid));
@@ -62,17 +58,17 @@ final class User extends AggregateRoot
     }
 
     public static function reconstitute(
-        UserId $uuid,
-        TranslatableText $name,
-        ?string $email,
-        Phone $phone,
-        HashedPassword $password,
-        array $roleIds,
-        DateTimeImmutable $createdAt,
-        ?FilePath $avatar = null,
-        ?DateTimeImmutable $emailVerifiedAt = null,
-        ?DateTimeImmutable $updatedAt = null,
-        ?DateTimeImmutable $deletedAt = null,
+        UserId              $uuid,
+        string              $name,
+        ?string             $email,
+        Phone               $phone,
+        HashedPassword      $password,
+        array               $roleIds,
+        DateTimeImmutable   $createdAt,
+        ?FilePath           $avatar = null,
+        ?DateTimeImmutable  $emailVerifiedAt = null,
+        ?DateTimeImmutable  $updatedAt = null,
+        ?DateTimeImmutable  $deletedAt = null,
     ): self {
         return new self(
             uuid: $uuid,
@@ -87,6 +83,20 @@ final class User extends AggregateRoot
             updatedAt: $updatedAt,
             deletedAt: $deletedAt,
         );
+    }
+
+    public function updateInfo(string $name, Phone $phone): void
+    {
+        $this->name = $name;
+        $this->phone = $phone;
+        $this->updatedAt = new DateTimeImmutable();
+    }
+
+    public function updateEmail(string $email): void
+    {
+        $this->email = $email;
+        $this->emailVerifiedAt = null;
+        $this->updatedAt = new DateTimeImmutable();
     }
 
     public function markEmailAsVerified(): void
@@ -113,7 +123,6 @@ final class User extends AggregateRoot
         }
     }
 
-
     public function changePassword(HashedPassword $password): void
     {
         $this->password = $password;
@@ -123,6 +132,12 @@ final class User extends AggregateRoot
     public function updateAvatar(FilePath $avatar): void
     {
         $this->avatar = $avatar;
+        $this->updatedAt = new DateTimeImmutable();
+    }
+
+    public function softDelete(): void
+    {
+        $this->deletedAt = new DateTimeImmutable();
         $this->updatedAt = new DateTimeImmutable();
     }
 

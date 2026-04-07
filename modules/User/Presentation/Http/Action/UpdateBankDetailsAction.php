@@ -1,5 +1,4 @@
 <?php
-// modules/User/Presentation/Http/Action/UpdateBankDetailsAction.php
 declare(strict_types=1);
 
 namespace Modules\User\Presentation\Http\Action;
@@ -8,9 +7,8 @@ use Illuminate\Http\JsonResponse;
 use Modules\IAM\Domain\Service\TokenManager;
 use Modules\User\Application\Command\UpdateBankDetails\UpdateBankDetailsCommand;
 use Modules\User\Application\Command\UpdateBankDetails\UpdateBankDetailsHandler;
-use Illuminate\Http\Request;
+use Modules\User\Presentation\Http\Request\UpdateBankDetailsRequest;
 use Modules\Shared\Presentation\Http\JsonResponder;
-use Modules\Shared\Infrastructure\Validation\Rules\IbanRule;
 
 final readonly class UpdateBankDetailsAction
 {
@@ -21,33 +19,23 @@ final readonly class UpdateBankDetailsAction
     ) {
     }
 
-    public function __invoke(Request $request): JsonResponse
+    public function __invoke(UpdateBankDetailsRequest $request): JsonResponse
     {
-        // the getUserIdFromToken not found, we must make it
         $userId = $this->tokenManager->getUserIdFromToken();
 
-        if (!$userId) {
+        if ($userId === null) {
             return $this->responder->unauthorized();
         }
 
-        // we must make the formRequest of the UpdateBankDetailsRequest
-        $request->validate([
-            'account_owner' => ['required', 'string', 'max:255'],
-            'bank_name' => ['required', 'string', 'max:255'],
-            'iban' => ['required', 'string', new IbanRule()],
-        ]);
-
-        $command = new UpdateBankDetailsCommand(
+        $this->handler->handle(new UpdateBankDetailsCommand(
             userId: $userId->value,
-            accountOwner: (string) $request->input('account_owner'),
-            bankName: (string) $request->input('bank_name'),
-            iban: (string) $request->input('iban'),
-        );
-
-        $this->handler->handle($command);
+            accountOwner: (string) $request->validated('account_owner'),
+            bankName: (string) $request->validated('bank_name'),
+            iban: (string) $request->validated('iban')
+        ));
 
         return $this->responder->success(
-            messageKey: 'profile.bank_updated'
+            messageKey: 'user.bank_details_updated'
         );
     }
 }

@@ -8,7 +8,7 @@ final readonly class DeleteContactPhoneCommand
 {
     public function __construct(
         public string $userId,
-        public string $phoneId,
+        public string $contactPhoneId,
     ) {
     }
 }

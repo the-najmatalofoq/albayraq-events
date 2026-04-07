@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Illuminate\Support\Facades\Route;
-use Modules\User\Presentation\Http\Action\UpdateBankDetailsAction;
+use Modules\User\Presentation\Http\Action\{GetBankDetailsAction, UpdateBankDetailsAction};
 
-Route::patch('/bank', UpdateBankDetailsAction::class);
+Route::get('/bank', GetBankDetailsAction::class);
+Route::put('/bank', UpdateBankDetailsAction::class);

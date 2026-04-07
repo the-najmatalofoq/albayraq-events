@@ -15,13 +15,12 @@ use Modules\Role\Infrastructure\Persistence\Eloquent\RoleModel;
 use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Database\Eloquent\Collection;
 use Carbon\Carbon;
-use Modules\Shared\Infrastructure\Laravel\Casts\TranslatableTextCast;
 
 /**
  * User model - Primary authentication and authorization model
  *
  * @property string $id
- * @property array $name
+ * @property string $name
  * @property string|null $email
  * @property string $phone
  * @property string $password
@@ -60,7 +59,6 @@ final class UserModel extends Authenticatable implements JWTSubject
     protected function casts(): array
     {
         return [
-            'name' => TranslatableTextCast::class,
             'password' => 'hashed',
             'email_verified_at' => 'datetime',
         ];

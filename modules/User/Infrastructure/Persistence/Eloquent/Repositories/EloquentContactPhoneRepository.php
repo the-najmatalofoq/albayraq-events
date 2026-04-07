@@ -50,27 +50,26 @@ final class EloquentContactPhoneRepository implements ContactPhoneRepositoryInte
 
     public function delete(ContactPhoneId $uuid): void
     {
-        $this->model->destroy($uuid->value);
+        $this->model->where('id', $uuid->value)->delete();
+    }
+
+    public function deleteBulk(UserId $userId, array $ids): void
+    {
+        $this->model->where('user_id', $userId->value)
+            ->whereIn('id', array_map(fn($id) => $id->value, $ids))
+            ->delete();
     }
 
     private function toDomain(ContactPhoneModel $model): ContactPhone
     {
-        $reflection = new \ReflectionClass(ContactPhone::class);
-        $contactPhone = $reflection->newInstanceWithoutConstructor();
-
-        $properties = [
-            'uuid' => ContactPhoneId::fromString($model->id),
-            'userId' => UserId::fromString($model->user_id),
-            'name' => $model->name,
-            'phone' => $model->phone,
-            'relation' => $model->relation,
-        ];
-
-        foreach ($properties as $field => $value) {
-            $prop = $reflection->getProperty($field);
-            $prop->setValue($contactPhone, $value);
-        }
-
-        return $contactPhone;
+        return ContactPhone::fromPersistence(
+            uuid: ContactPhoneId::fromString($model->id),
+            userId: UserId::fromString($model->user_id),
+            name: $model->name,
+            phone: $model->phone,
+            relation: $model->relation,
+            createdAt: $model->created_at ? new \DateTimeImmutable($model->created_at->toDateTimeString()) : null,
+            updatedAt: $model->updated_at ? new \DateTimeImmutable($model->updated_at->toDateTimeString()) : null,
+        );
     }
 }

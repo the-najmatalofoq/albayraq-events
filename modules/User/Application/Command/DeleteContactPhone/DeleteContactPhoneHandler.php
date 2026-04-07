@@ -7,6 +7,8 @@ namespace Modules\User\Application\Command\DeleteContactPhone;
 use Modules\User\Domain\Repository\ContactPhoneRepositoryInterface;
 use Modules\User\Domain\ValueObject\ContactPhoneId;
 
+use Modules\User\Domain\Exception\ContactPhoneNotFoundException;
+
 final readonly class DeleteContactPhoneHandler
 {
     public function __construct(
@@ -15,11 +17,14 @@ final readonly class DeleteContactPhoneHandler
 
     public function handle(DeleteContactPhoneCommand $command): void
     {
-        $contactPhone = $this->contactPhoneRepository->findById(ContactPhoneId::fromString($command->phoneId));
+        $contactPhoneId = ContactPhoneId::fromString($command->contactPhoneId);
+        $contactPhone = $this->contactPhoneRepository->findById($contactPhoneId);
         
-        if ($contactPhone && $contactPhone->userId->value === $command->userId) {
-            $this->contactPhoneRepository->delete(ContactPhoneId::fromString($command->phoneId));
+        if ($contactPhone === null || $contactPhone->userId->value !== $command->userId) {
+            throw ContactPhoneNotFoundException::withId($contactPhoneId);
         }
+
+        $this->contactPhoneRepository->delete($contactPhoneId);
     }
 }
 

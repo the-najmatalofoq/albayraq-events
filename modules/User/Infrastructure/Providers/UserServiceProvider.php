@@ -39,6 +39,7 @@ final class UserServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        $this->app['router']->aliasMiddleware('role.level', \Modules\User\Presentation\Http\Middleware\EnsureRoleLevelMiddleware::class);
         $this->loadMigrationsFrom(__DIR__ . '/../Persistence/Migrations');
         $this->registerListeners();
         $this->registerRoutes();

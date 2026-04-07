@@ -1,47 +1,44 @@
 <?php
-// modules/User/Domain/EmployeeProfile.php
+
 declare(strict_types=1);
 
 namespace Modules\User\Domain;
 
 use DateTimeImmutable;
 use Modules\Geography\Domain\ValueObject\NationalityId;
+use Modules\Shared\Domain\Entity;
+use Modules\Shared\Domain\Identity;
 use Modules\User\Domain\ValueObject\EmployeeProfileId;
 use Modules\User\Domain\ValueObject\UserId;
-use Modules\Shared\Domain\AggregateRoot;
-use Modules\Shared\Domain\Identity;
-use Modules\Shared\Domain\ValueObject\TranslatableText;
-use Modules\User\Domain\Enum\GenderEnum;
 
-
-final class EmployeeProfile extends AggregateRoot
+final class EmployeeProfile extends Entity
 {
     private function __construct(
         public readonly EmployeeProfileId $uuid,
         public readonly UserId $userId,
-        public readonly TranslatableText $fullName,
-        public readonly ?string $identityNumber,
-        public readonly NationalityId $nationalityId,
-        public readonly ?DateTimeImmutable $birthDate,
-        public readonly ?GenderEnum $gender,
-        public readonly ?float $height,
-        public readonly ?float $weight,
-        public readonly DateTimeImmutable $createdAt,
+        public private(set) string $fullName,
+        public private(set) string $identityNumber,
+        public private(set) ?NationalityId $nationalityId,
+        public private(set) ?string $birthDate,
+        public private(set) ?string $gender,
+        public private(set) ?float $height,
+        public private(set) ?float $weight,
+        public readonly ?DateTimeImmutable $createdAt = null,
         public private(set) ?DateTimeImmutable $updatedAt = null,
         public private(set) ?DateTimeImmutable $deletedAt = null,
-    ) {}
+    ) {
+    }
 
     public static function create(
         EmployeeProfileId $uuid,
         UserId $userId,
-        TranslatableText $fullName,
-        ?string $identityNumber,
-        ?NationalityId $nationalityId,
-        ?DateTimeImmutable $birthDate,
-        ?GenderEnum $gender,
-        ?float $height,
-        ?float $weight,
-        DateTimeImmutable $createdAt,
+        string $fullName,
+        string $identityNumber,
+        ?NationalityId $nationalityId = null,
+        ?string $birthDate = null,
+        ?string $gender = null,
+        ?float $height = null,
+        ?float $weight = null,
     ): self {
         return new self(
             uuid: $uuid,
@@ -53,21 +50,21 @@ final class EmployeeProfile extends AggregateRoot
             gender: $gender,
             height: $height,
             weight: $weight,
-            createdAt: $createdAt,
+            createdAt: new DateTimeImmutable(),
         );
     }
 
-    public static function reconstitute(
+    public static function fromPersistence(
         EmployeeProfileId $uuid,
         UserId $userId,
-        TranslatableText $fullName,
-        ?string $identityNumber,
-        NationalityId $nationalityId,
-        ?DateTimeImmutable $birthDate,
-        ?GenderEnum $gender,
+        string $fullName,
+        string $identityNumber,
+        ?NationalityId $nationalityId,
+        ?string $birthDate,
+        ?string $gender,
         ?float $height,
         ?float $weight,
-        DateTimeImmutable $createdAt,
+        ?DateTimeImmutable $createdAt = null,
         ?DateTimeImmutable $updatedAt = null,
         ?DateTimeImmutable $deletedAt = null,
     ): self {
@@ -88,31 +85,28 @@ final class EmployeeProfile extends AggregateRoot
     }
 
     public function update(
-        ?string $identityNumber,
+        string $fullName,
+        string $identityNumber,
         ?NationalityId $nationalityId,
-        ?DateTimeImmutable $birthDate,
-        ?GenderEnum $gender,
+        ?string $birthDate,
+        ?string $gender,
         ?float $height,
         ?float $weight,
     ): void {
-        $this->instance_variable_copy([
-            'identityNumber' => $identityNumber,
-            'nationalityId' => $nationalityId,
-            'birthDate' => $birthDate,
-            'gender' => $gender,
-            'height' => $height,
-            'weight' => $weight,
-            'updatedAt' => new DateTimeImmutable(),
-        ]);
+        $this->fullName = $fullName;
+        $this->identityNumber = $identityNumber;
+        $this->nationalityId = $nationalityId;
+        $this->birthDate = $birthDate;
+        $this->gender = $gender;
+        $this->height = $height;
+        $this->weight = $weight;
+        $this->updatedAt = new DateTimeImmutable();
     }
 
-    private function instance_variable_copy(array $data): void
+    public function softDelete(): void
     {
-        foreach ($data as $key => $value) {
-            if (property_exists($this, $key)) {
-                $this->$key = $value;
-            }
-        }
+        $this->deletedAt = new DateTimeImmutable();
+        $this->updatedAt = new DateTimeImmutable();
     }
 
     public function id(): Identity

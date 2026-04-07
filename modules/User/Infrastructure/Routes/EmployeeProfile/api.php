@@ -3,6 +3,8 @@
 declare(strict_types=1);
 
 use Illuminate\Support\Facades\Route;
-use Modules\User\Presentation\Http\Action\UpdateProfileAction;
+use Modules\User\Presentation\Http\Action\{GetProfileAction, UpdateProfileAction, DeleteProfileAction};
 
-Route::patch('/profile', UpdateProfileAction::class);
+Route::get('/profile', GetProfileAction::class);
+Route::put('/profile', UpdateProfileAction::class);
+Route::delete('/profile', DeleteProfileAction::class);

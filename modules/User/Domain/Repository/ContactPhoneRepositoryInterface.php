@@ -15,4 +15,6 @@ interface ContactPhoneRepositoryInterface
     public function findById(ContactPhoneId $uuid): ?ContactPhone;
     public function nextIdentity(): ContactPhoneId;
     public function delete(ContactPhoneId $uuid): void;
+    /** @param list<ContactPhoneId> $ids */
+    public function deleteBulk(UserId $userId, array $ids): void;
 }

@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace Modules\User\Domain;
 
 use DateTimeImmutable;
-use Modules\Shared\Domain\AggregateRoot;
+use Modules\Shared\Domain\Entity;
 use Modules\Shared\Domain\Identity;
 use Modules\User\Domain\Enum\JoinRequestStatusEnum;
 use Modules\User\Domain\ValueObject\UserJoinRequestId;
 use Modules\User\Domain\ValueObject\UserId;
 
-final class UserJoinRequest extends AggregateRoot
+final class UserJoinRequest extends Entity
 {
     private function __construct(
         public readonly UserJoinRequestId $uuid,
@@ -64,22 +64,30 @@ final class UserJoinRequest extends AggregateRoot
 
     public function approve(string $reviewedBy, ?string $notes = null): void
     {
-        $this->status = JoinRequestStatusEnum::Active;
+        $this->status = JoinRequestStatusEnum::Approved;
         $this->reviewedBy = $reviewedBy;
         $this->reviewedAt = new DateTimeImmutable();
         $this->notes = $notes;
         $this->updatedAt = new DateTimeImmutable();
     }
 
-    public function toggleStatus(): void
+    public function reject(string $reviewedBy, ?string $notes = null): void
     {
-        $this->status = $this->status->toggle();
+        $this->status = JoinRequestStatusEnum::Rejected;
+        $this->reviewedBy = $reviewedBy;
+        $this->reviewedAt = new DateTimeImmutable();
+        $this->notes = $notes;
         $this->updatedAt = new DateTimeImmutable();
     }
 
-    public function isActive(): bool
+    public function isPending(): bool
     {
-        return $this->status->isActive();
+        return $this->status->isPending();
+    }
+
+    public function isApproved(): bool
+    {
+        return $this->status->isApproved();
     }
 
     public function id(): Identity

@@ -1,5 +1,4 @@
 <?php
-// modules/IAM/Domain/Service/PasswordHasher.php
 declare(strict_types=1);
 
 namespace Modules\IAM\Domain\Service;
@@ -10,5 +9,5 @@ interface PasswordHasher
 {
     public function hash(string $plainPassword): HashedPassword;
 
-    public function check(string $plainPassword, HashedPassword $hashedPassword): bool;
+    public function verify(string $plainPassword, HashedPassword $hashedPassword): bool;
 }
