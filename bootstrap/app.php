@@ -54,7 +54,8 @@ return Application::configure(basePath: dirname(__DIR__))
                 return $responder->error(
                     errorCode: $e->getErrorCode()->value,
                     status: $e->getErrorCode()->getHttpStatus(),
-                    messageKey: 'errors.' . $e->getErrorCode()->value
+                    messageKey: $e->getMessageKey(),
+                    errors: $e->getErrors()
                 );
             }
 
@@ -71,7 +72,7 @@ return Application::configure(basePath: dirname(__DIR__))
                 return $responder->error(
                     errorCode: $errorCode,
                     status: $status,
-                    messageKey: "errors.{$errorCode}"
+                    messageKey: "messages.errors.{$errorCode}"
                 );
             }
 

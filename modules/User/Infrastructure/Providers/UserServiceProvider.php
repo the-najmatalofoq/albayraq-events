@@ -15,6 +15,7 @@ use Modules\User\Domain\Repository\{
     BankDetailRepositoryInterface,
     UserJoinRequestRepositoryInterface,
     EmployeeNationalityRepositoryInterface,
+    UserSettingsRepositoryInterface,
 };
 use Modules\User\Infrastructure\Persistence\Eloquent\Repositories\{
     EloquentUserRepository,
@@ -23,6 +24,7 @@ use Modules\User\Infrastructure\Persistence\Eloquent\Repositories\{
     EloquentBankDetailRepository,
     EloquentUserJoinRequestRepository,
     EloquentEmployeeNationalityRepository,
+    EloquentUserSettingsRepository,
 };
 
 final class UserServiceProvider extends ServiceProvider
@@ -35,6 +37,7 @@ final class UserServiceProvider extends ServiceProvider
         $this->app->bind(BankDetailRepositoryInterface::class, EloquentBankDetailRepository::class);
         $this->app->bind(UserJoinRequestRepositoryInterface::class, EloquentUserJoinRequestRepository::class);
         $this->app->bind(EmployeeNationalityRepositoryInterface::class, EloquentEmployeeNationalityRepository::class);
+        $this->app->bind(UserSettingsRepositoryInterface::class, EloquentUserSettingsRepository::class);
     }
 
     public function boot(): void
