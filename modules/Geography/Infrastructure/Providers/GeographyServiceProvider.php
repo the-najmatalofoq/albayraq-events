@@ -34,9 +34,31 @@ final class GeographyServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->loadMigrationsFrom(__DIR__ . '/../Persistence/Migrations');
+        $this->registerRoutes();
+    }
 
-        Route::prefix('api')
-            ->middleware('api')
-            ->group(__DIR__ . '/../Routes/api.php');
+    private function registerRoutes(): void
+    {
+        $sharedMiddleware = ['api', 'auth:api'];
+        $basePath = __DIR__ . '/../Routes';
+
+        $entityRoutes = [
+            'Country' => 'api/v1/geographies',
+            'State' => 'api/v1/geographies',
+            'City' => 'api/v1/geographies',
+            'Nationality' => 'api/v1/geographies',
+        ];
+
+        foreach ($entityRoutes as $entity => $prefix) {
+            $routeFile = "{$basePath}/{$entity}/api.php";
+
+            if (!file_exists($routeFile)) {
+                continue;
+            }
+
+            Route::prefix($prefix)
+                ->middleware($sharedMiddleware)
+                ->group($routeFile);
+        }
     }
 }

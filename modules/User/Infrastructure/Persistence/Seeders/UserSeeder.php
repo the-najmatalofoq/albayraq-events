@@ -25,7 +25,7 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         $roles = [
-            'superadmin' => $this->roleRepository->findBySlug(RoleSlugEnum::SYSTEM_CONTROLLER), // Map to available enum
+            'superadmin' => $this->roleRepository->findBySlug(RoleSlugEnum::SYSTEM_CONTROLLER),
             'admin' => $this->roleRepository->findBySlug(RoleSlugEnum::GENERAL_MANAGER),
             'manager' => $this->roleRepository->findBySlug(RoleSlugEnum::OPERATIONS_MANAGER),
             'supervisor' => $this->roleRepository->findBySlug(RoleSlugEnum::SUPERVISOR),
@@ -61,7 +61,7 @@ class UserSeeder extends Seeder
                 name: TranslatableText::fromArray(['en' => $name, 'ar' => $name]),
                 email: $email,
                 phone: new Phone($phone),
-                password: $this->hasher->hash('password111'),
+                password: $this->hasher->hash('password'),
                 roleIds: [$role->uuid],
                 createdAt: new DateTimeImmutable(),
                 isActive: true

@@ -6,7 +6,6 @@ namespace Modules\User\Infrastructure\Providers;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Broadcast;
 use Modules\IAM\Domain\Event\UserRegistered;
 use Modules\User\Infrastructure\Listener\CreateJoinRequestOnUserRegistered;
 use Modules\User\Domain\Repository\{
@@ -43,10 +42,7 @@ final class UserServiceProvider extends ServiceProvider
         $this->loadMigrationsFrom(__DIR__ . '/../Persistence/Migrations');
         $this->registerListeners();
         $this->registerRoutes();
-
-        Broadcast::channel('users.{userId}', function ($user, string $userId) {
-            return (string) $user->getAuthIdentifier() === $userId;
-        });
+        require __DIR__ . '/../Broadcasting/channels.php';
     }
 
     private function registerListeners(): void

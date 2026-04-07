@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Modules\IAM\Presentation\Http\Action;
 
 use Illuminate\Http\JsonResponse;
+use Modules\Geography\Domain\ValueObject\NationalityId;
 use Modules\IAM\Application\Command\RegisterUser\RegisterUserCommand;
 use Modules\IAM\Application\Command\RegisterUser\RegisterUserHandler;
 use Modules\IAM\Domain\Event\UserRegistered;
@@ -12,7 +13,7 @@ use Modules\IAM\Presentation\Http\Request\RegisterRequest;
 use Modules\Shared\Application\EventDispatcher;
 use Modules\Shared\Domain\ValueObject\TranslatableText;
 use Modules\Shared\Presentation\Http\JsonResponder;
-use Modules\User\Domain\Repository\UserRepositoryInterface;
+use Modules\User\Domain\ValueObject\Phone;
 
 final class RegisterAction
 {
@@ -20,19 +21,20 @@ final class RegisterAction
         private readonly RegisterUserHandler $handler,
         private readonly JsonResponder $responder,
         private readonly EventDispatcher $eventDispatcher,
-        private readonly UserRepositoryInterface $userRepository,
     ) {}
 
     public function __invoke(RegisterRequest $request): JsonResponse
     {
+        // fix: name and full_name must send only as string, and our application must handle the header of x-locale to get the locale
+        // fix: we must intruduce the (locale or Language) module, what have the fully CURD operaiotns, and then we must make a middleware to resolve the locale language, and ensure the sended from the client-side as header is exists and active in our project
         $command = new RegisterUserCommand(
             name: TranslatableText::fromMixed($request->validated('name')),
             email: $request->validated('email'),
-            phone: new \Modules\User\Domain\ValueObject\Phone($request->validated('phone')),
+            phone: new Phone($request->validated('phone')),
             password: $request->validated('password'),
             fullName: TranslatableText::fromMixed($request->validated('full_name')),
             identityNumber: $request->validated('identity_number'),
-            nationalityId: new \Modules\Geography\Domain\ValueObject\NationalityId($request->validated('nationality_id')),
+            nationalityId: new NationalityId($request->validated('nationality_id')),
             birthDate: $request->validated('birth_date'),
             gender: $request->validated('gender'),
             height: $request->validated('height') ? (float) $request->validated('height') : null,

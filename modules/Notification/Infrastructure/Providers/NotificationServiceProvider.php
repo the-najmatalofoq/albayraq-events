@@ -26,6 +26,7 @@ final class NotificationServiceProvider extends ServiceProvider
         $this->loadMigrationsFrom(__DIR__ . '/../Persistence/Migrations');
         $this->loadRoutesFrom(__DIR__ . '/../Routes/api.php');
 
+        // fix: what is the usage of the Broadcast::routes();
         Broadcast::routes();
         require __DIR__ . '/../Broadcasting/channels.php';
 
