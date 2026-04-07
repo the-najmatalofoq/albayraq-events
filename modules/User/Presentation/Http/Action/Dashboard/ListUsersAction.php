@@ -5,25 +5,26 @@ namespace Modules\User\Presentation\Http\Action\Dashboard;
 
 use Illuminate\Http\JsonResponse;
 use Modules\Shared\Presentation\Http\JsonResponder;
+use Modules\Shared\Presentation\Http\Request\BaseFilterRequest;
 use Modules\User\Domain\Repository\UserRepositoryInterface;
-use Modules\User\Domain\ValueObject\UserId;
 use Modules\User\Presentation\Http\Presenter\UserPresenter;
 
-final readonly class GetUserByIdCommand
+final readonly class ListUsersAction
 {
     public function __construct(
         private UserRepositoryInterface $userRepository,
         private JsonResponder $responder,
-    ) {}
+    ) {
+    }
 
-    public function __invoke(string $id): JsonResponse
+    public function __invoke(BaseFilterRequest $request): JsonResponse
     {
-        $user = $this->userRepository->findById(new UserId($id));
+        $filters = $request->toFilterCriteria()->toArray();
 
-        if (!$user) {
-            return $this->responder->notFound('User not found');
-        }
+        $users = $this->userRepository->all($filters);
 
-        return $this->responder->success(UserPresenter::fromDomain($user));
+        return $this->responder->success(
+            data: $users->map(fn($user) => UserPresenter::fromDomain($user))->toArray()
+        );
     }
 }

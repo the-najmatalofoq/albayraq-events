@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Modules\User\Presentation\Http\Request;
+namespace Modules\User\Presentation\Http\Request\Dashboard;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Modules\Shared\Infrastructure\Validation\Rules\SaudiPhoneRule;

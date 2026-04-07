@@ -7,8 +7,8 @@ use Illuminate\Http\JsonResponse;
 use Modules\Shared\Presentation\Http\JsonResponder;
 use Modules\User\Domain\Repository\UserRepositoryInterface;
 use Modules\User\Domain\ValueObject\UserId;
-// fix: rename to "Acion" not "Command"
-final readonly class DeleteUserCommand
+
+final readonly class DeleteUserAction
 {
     public function __construct(
         private UserRepositoryInterface $userRepository,
@@ -26,8 +26,6 @@ final readonly class DeleteUserCommand
 
         $this->userRepository->delete($userId);
 
-        return $this->responder->success(
-            messageKey: 'user.deleted'
-        );
+        return $this->responder->success(messageKey: 'user.deleted');
     }
 }

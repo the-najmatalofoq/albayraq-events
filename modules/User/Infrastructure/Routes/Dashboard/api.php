@@ -3,38 +3,38 @@ declare(strict_types=1);
 
 use Illuminate\Support\Facades\Route;
 use Modules\User\Presentation\Http\Action\Dashboard\{
-    ListUsersPaginatedCommand,
-    ListUsersCommand,
-    GetUserByIdCommand,
-    CreateUserCommand,
-    UpdateUserCommand,
-    DeleteUserCommand,
-    ListProfilesPaginatedCommand,
-    GetProfileByIdCommand,
-    ListBankDetailsCommand,
-    UpdateBankDetailCommand,
-    ListContactPhonesCommand,
+    ListUsersPaginatedAction,
+    ListUsersAction,
+    GetUserByIdAction,
+    CreateUserAction,
+    UpdateUserAction,
+    DeleteUserAction,
+    ListProfilesPaginatedAction,
+    GetProfileByIdAction,
+    ListBankDetailsAction,
+    UpdateBankDetailAction,
+    ListContactPhonesAction,
 };
 
 Route::prefix('/users')->group(function () {
-    Route::get('/', ListUsersPaginatedCommand::class);
-    Route::get('/all', ListUsersCommand::class);
-    Route::get('/{id}', GetUserByIdCommand::class);
-    Route::post('/', CreateUserCommand::class);
-    Route::put('/{id}', UpdateUserCommand::class);
-    Route::delete('/{id}', DeleteUserCommand::class);
+    Route::get('/', ListUsersPaginatedAction::class);
+    Route::get('/all', ListUsersAction::class);
+    Route::get('/{id}', GetUserByIdAction::class);
+    Route::post('/', CreateUserAction::class);
+    Route::put('/{id}', UpdateUserAction::class);
+    Route::delete('/{id}', DeleteUserAction::class);
 });
 
 Route::prefix('/profiles')->group(function () {
-    Route::get('/', ListProfilesPaginatedCommand::class);
-    Route::get('/{id}', GetProfileByIdCommand::class);
+    Route::get('/', ListProfilesPaginatedAction::class);
+    Route::get('/{id}', GetProfileByIdAction::class);
 });
 
 Route::prefix('/bank-details')->group(function () {
-    Route::get('/', ListBankDetailsCommand::class);
-    Route::put('/{id}', UpdateBankDetailCommand::class);
+    Route::get('/', ListBankDetailsAction::class);
+    Route::put('/{id}', UpdateBankDetailAction::class);
 });
 
 Route::prefix('/contact-phones')->group(function () {
-    Route::get('/', ListContactPhonesCommand::class);
+    Route::get('/', ListContactPhonesAction::class);
 });

@@ -8,14 +8,13 @@ use Modules\Shared\Presentation\Http\JsonResponder;
 use Modules\User\Domain\Repository\EmployeeProfileRepositoryInterface;
 use Modules\User\Domain\ValueObject\EmployeeProfileId;
 use Modules\User\Presentation\Http\Presenter\EmployeeProfilePresenter;
-// fix: it must be named GetProfileByIdAction, GetProfileByIdCommand 
-final readonly class GetProfileByIdCommand
+
+final readonly class GetProfileByIdAction
 {
     public function __construct(
         private EmployeeProfileRepositoryInterface $profileRepository,
         private JsonResponder $responder,
-    ) {
-    }
+    ) {}
 
     public function __invoke(string $id): JsonResponse
     {
@@ -25,6 +24,8 @@ final readonly class GetProfileByIdCommand
             return $this->responder->notFound('Profile not found');
         }
 
-        return $this->responder->success(EmployeeProfilePresenter::fromDomain($profile));
+        return $this->responder->success(
+            data: EmployeeProfilePresenter::fromDomain($profile)
+        );
     }
 }
