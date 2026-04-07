@@ -10,6 +10,7 @@ use Modules\Geography\Domain\ValueObject\CountryId;
 use Modules\Geography\Presentation\Http\Request\ListNationalitiesRequest;
 use Modules\Shared\Infrastructure\Services\CacheService;
 use Modules\Shared\Presentation\Http\JsonResponder;
+
 final class ListNationalitiesAction
 {
     public function __construct(

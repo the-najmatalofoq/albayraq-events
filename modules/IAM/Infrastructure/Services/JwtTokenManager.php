@@ -1,5 +1,5 @@
 <?php
-
+// modules\IAM\Infrastructure\Services\JwtTokenManager.php
 declare(strict_types=1);
 
 namespace Modules\IAM\Infrastructure\Services;
@@ -46,7 +46,7 @@ final readonly class JwtTokenManager implements TokenManager
                 JWTAuth::invalidate($token);
             }
         } catch (\Exception $e) {
-           
+
         }
     }
 
@@ -54,7 +54,7 @@ final readonly class JwtTokenManager implements TokenManager
     {
         $newToken = JWTAuth::refresh();
         $accessTtl = (int) config('jwt.ttl');
-        
+
         /** @var UserModel|null $user */
         $user = JWTAuth::user();
 
@@ -73,7 +73,7 @@ final readonly class JwtTokenManager implements TokenManager
                 JWTAuth::invalidate($token);
             }
         } catch (\Exception $e) {
-          
+
         }
     }
 }
