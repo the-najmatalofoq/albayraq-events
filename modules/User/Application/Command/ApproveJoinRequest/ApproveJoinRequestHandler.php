@@ -15,8 +15,7 @@ final readonly class ApproveJoinRequestHandler
     public function __construct(
         private UserJoinRequestRepositoryInterface $joinRequestRepository,
         private UserRepositoryInterface $userRepository,
-    ) {
-    }
+    ) {}
 
     public function handle(ApproveJoinRequestCommand $command): void
     {
@@ -29,10 +28,10 @@ final readonly class ApproveJoinRequestHandler
         }
 
         $user = $this->userRepository->findById($joinRequest->userId);
-        if ($user) {
-            $user->activate();
-            $this->userRepository->save($user);
-        }
+        // if ($user) {
+        //     $user->activate();
+        //     $this->userRepository->save($user);
+        // }
 
         $joinRequest->approve($command->reviewedBy, $command->notes);
         $this->joinRequestRepository->save($joinRequest);

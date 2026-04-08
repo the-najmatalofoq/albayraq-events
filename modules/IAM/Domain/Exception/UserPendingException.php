@@ -7,18 +7,19 @@ namespace Modules\IAM\Domain\Exception;
 use Modules\Shared\Domain\Exception\DomainException;
 use Modules\Shared\Domain\Enum\ErrorCodeEnum;
 
-final class UserNotFoundException extends DomainException
+final class UserPendingException extends DomainException
 {
-    public static function withEmail(): self
+    public static function create(): self
     {
-        $mainMessage = __('messages.errors.user_not_found');
+        $mainMessage = __('messages.errors.user_pending');
         $e = new self($mainMessage);
-        $e->errors = empty($errors) ? ['email' => [$mainMessage]] : $errors;
+        $e->messageKey = __('messages.user.account_not_active');
+        $e->errors = [$mainMessage];
         return $e;
     }
 
     public function getErrorCode(): ErrorCodeEnum
     {
-        return ErrorCodeEnum::NOT_FOUND;
+        return ErrorCodeEnum::USER_PENDING;
     }
 }

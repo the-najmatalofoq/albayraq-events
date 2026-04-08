@@ -35,6 +35,7 @@ use Carbon\Carbon;
  * @property-read EmployeeProfileModel|null $profile
  * @property-read BankDetailModel|null $bankDetails
  * @property-read Collection|ContactPhoneModel[] $contactPhones
+ * @property-read UserSettingsModel|null $settings
  */
 final class UserModel extends Authenticatable implements JWTSubject
 {
@@ -98,6 +99,11 @@ final class UserModel extends Authenticatable implements JWTSubject
     {
         return $this->hasOne(UserJoinRequestModel::class, 'user_id')
             ->latestOfMany();
+    }
+
+    public function settings(): HasOne
+    {
+        return $this->hasOne(UserSettingsModel::class, 'user_id');
     }
 
     public function getJWTIdentifier(): mixed

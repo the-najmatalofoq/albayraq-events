@@ -11,18 +11,31 @@ final readonly class TranslatableText extends ValueObject
     private function __construct(
         public array $values
     ) {
-        if (!isset($this->values['ar']) || !isset($this->values['en'])) {
-            throw new \InvalidArgumentException('Translatable text must contain "ar" and "en" keys.');
+        if (empty($this->values)) {
+            throw new \InvalidArgumentException('Translatable text must not be empty.');
         }
     }
-
     public static function fromMixed(mixed $data): self
     {
-        if (is_string($data)) {
-            $data = json_decode($data, true);
+        if (is_array($data)) {
+            return new self($data);
         }
 
-        return new self($data);
+        if (is_string($data)) {
+
+            $decoded = json_decode($data, true);
+            if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
+                return new self($decoded);
+            }
+
+            $currentLocale = app()->getLocale();
+
+            return new self([
+                $currentLocale => $data,
+            ]);
+        }
+
+        throw new \InvalidArgumentException('Invalid translatable text data.');
     }
 
     public static function fromArray(array $data): self
@@ -35,9 +48,13 @@ final readonly class TranslatableText extends ValueObject
         return $this->values;
     }
 
-    public function getFor(string $locale): string
+    public function getFor(?string $locale = null): string
     {
-        return $this->values[$locale] ?? $this->values['en'];
+        $locale = $locale ?? app()->getLocale();
+        return $this->values[$locale]
+            ?? $this->values['en']
+            ?? reset($this->values)
+            ?? '';
     }
 
     public function __toString(): string

@@ -17,8 +17,7 @@ final class EloquentUserJoinRequestRepository implements UserJoinRequestReposito
 {
     public function __construct(
         private readonly UserJoinRequestReflector $reflector,
-    ) {
-    }
+    ) {}
 
     public function nextIdentity(): UserJoinRequestId
     {

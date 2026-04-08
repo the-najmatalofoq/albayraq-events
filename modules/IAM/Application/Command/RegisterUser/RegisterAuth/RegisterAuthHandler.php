@@ -13,6 +13,7 @@ use Modules\User\Domain\User;
 
 use Modules\IAM\Domain\Service\PasswordHasher;
 use Modules\Shared\Domain\Service\FileStorageInterface;
+use Modules\Shared\Domain\ValueObject\TranslatableText;
 
 final readonly class RegisterAuthHandler
 {
@@ -31,11 +32,11 @@ final readonly class RegisterAuthHandler
             throw new \RuntimeException('Employee role not found.');
         }
         if ($this->userRepository->findByPhone($command->phone)) {
-            throw UserAlreadyExistsException::withPhone($command->phone);
+            throw UserAlreadyExistsException::withPhone();
         }
 
         if ($command->email && $this->userRepository->findByEmail($command->email)) {
-            throw UserAlreadyExistsException::withEmail($command->email);
+            throw UserAlreadyExistsException::withEmail();
         }
 
         $user = User::register(

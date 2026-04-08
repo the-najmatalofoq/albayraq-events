@@ -6,16 +6,23 @@ namespace Modules\IAM\Domain\Exception;
 
 use Modules\Shared\Domain\Exception\DomainException;
 use Modules\Shared\Domain\Enum\ErrorCodeEnum;
+
 final class BankAlreadyExistsException extends DomainException
 {
-    public static function withIban(string $iban): self
+    public static function withIban(array $errors = []): self
     {
-        return new self("A bank account with IBAN '{$iban}' already exists.");
+        $mainMessage = __('messages.errors.bank_already_exists');
+        $e = new self($mainMessage);
+        $e->errors = empty($errors) ? ['iban' => [$mainMessage]] : $errors;
+        return $e;
     }
 
-    public static function withOwnerAccount(string $ownerAccount): self
+    public static function withOwnerAccount(array $errors = []): self
     {
-        return new self("A bank account with owner account '{$ownerAccount}' already exists.");
+        $mainMessage = __('messages.errors.bank_already_exists');
+        $e = new self($mainMessage);
+        $e->errors = empty($errors) ? ['owner_account' => [$mainMessage]] : $errors;
+        return $e;
     }
 
     public function getErrorCode(): ErrorCodeEnum

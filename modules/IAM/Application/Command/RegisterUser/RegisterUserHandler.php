@@ -15,6 +15,8 @@ use Modules\IAM\Application\Command\RegisterUser\RegisterContactPhone\RegisterCo
 use Modules\IAM\Application\Command\RegisterUser\RegisterContactPhone\RegisterContactPhoneHandler;
 use Modules\IAM\Application\Command\RegisterUser\RegisterAttachment\RegisterAttachmentCommand;
 use Modules\IAM\Application\Command\RegisterUser\RegisterAttachment\RegisterAttachmentHandler;
+use Modules\IAM\Application\Command\RegisterUser\RegisterUserSettings\RegisterUserSettingsCommand;
+use Modules\IAM\Application\Command\RegisterUser\RegisterUserSettings\RegisterUserSettingsHandler;
 use Modules\User\Domain\User;
 use Modules\User\Domain\ValueObject\Phone;
 
@@ -26,6 +28,7 @@ final readonly class RegisterUserHandler
         private RegisterBankDetailsHandler $bankHandler,
         private RegisterContactPhoneHandler $contactPhoneHandler,
         private RegisterAttachmentHandler $attachmentHandler,
+        private RegisterUserSettingsHandler $settingsHandler,
     ) {}
 
     public function handle(RegisterUserCommand $command): User
@@ -48,6 +51,11 @@ final readonly class RegisterUserHandler
                 gender: $command->gender,
                 height: $command->height,
                 weight: $command->weight
+            ));
+
+            $this->settingsHandler->handle(new RegisterUserSettingsCommand(
+                userId: $user->uuid,
+                preferredLocale: $command->preferredLocale ?? null
             ));
 
             $this->bankHandler->handle(new RegisterBankDetailsCommand(

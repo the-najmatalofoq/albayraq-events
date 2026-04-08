@@ -16,6 +16,8 @@ return [
         'invalid_credentials' => 'بيانات الدخول غير صحيحة',
         'token_mismatch' => 'انتهت صلاحية الجلسة، يرجى تسجيل الدخول مرة أخرى.',
     ],
+    'user' => ['account_not_active' => 'حسابك غير مفعل.',],
+
     'errors' => [
         'validation_failed' => 'البيانات المقدمة غير صالحة.',
         'unauthenticated' => 'أنت غير مصدق.',
@@ -27,5 +29,11 @@ return [
         'service_unavailable' => 'الخدمة غير متوفرة مؤقتاً.',
         'user_already_exists' => 'المستخدم بهذا البريد مسجل مسبقاً.',
         'invalid_credentials' => 'البريد أو كلمة المرور غير صحيحة.',
+        'email_not_verified' => 'البريد الإلكتروني غير مفعل.',
+        'user_not_approved' => 'طلب الانضمام الخاص بك لم تتم الموافقة عليه بعد.',
+        'user_pending' => 'طلب الانضمام الخاص بك قيد المراجعة.',
+        'bank_already_exists' => 'يوجد حساب بنكي مسجل مسبقاً بهذا الآيبان أو رقم الحساب.',
+        'user_not_found' => 'المستخدم المطلوب غير موجود.',
+        'user_not_verified' => 'البريد الإلكتروني غير مفعل.'
     ],
 ];

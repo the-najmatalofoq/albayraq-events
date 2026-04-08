@@ -11,14 +11,21 @@ use Modules\User\Domain\ValueObject\Phone;
 
 final class UserAlreadyExistsException extends DomainException
 {
-    public static function withEmail(string $email): self
+    public static function withEmail(): self
     {
-        return new self("A user with email '{$email}' already exists.");
+        $mainMessage = __('messages.errors.user_already_exists');
+        $e = new self($mainMessage);
+        $e->messageKey = __('messages.user.account_not_active');
+        $e->errors = ['email' => [$mainMessage]];
+        return $e;
     }
 
-    public static function withPhone(Phone $phone): self
+    public static function withPhone(): self
     {
-        return new self("A user with phone '{$phone->value}' already exists.");
+        $mainMessage = __('messages.errors.user_already_exists');
+        $e = new self($mainMessage);
+        $e->errors = empty($errors) ? ['phone' => [$mainMessage]] : $errors;
+        return $e;
     }
 
     public function getErrorCode(): ErrorCodeEnum
@@ -26,4 +33,3 @@ final class UserAlreadyExistsException extends DomainException
         return ErrorCodeEnum::USER_ALREADY_EXISTS;
     }
 }
-

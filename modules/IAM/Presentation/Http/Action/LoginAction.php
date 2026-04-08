@@ -10,12 +10,16 @@ use Modules\IAM\Application\Command\AuthenticateUser\AuthenticateUserHandler;
 use Modules\IAM\Presentation\Http\Presenter\AuthenticationPresenter;
 use Modules\IAM\Presentation\Http\Request\LoginRequest;
 use Modules\Shared\Presentation\Http\JsonResponder;
+use Modules\User\Domain\Repository\UserJoinRequestRepositoryInterface;
+use Modules\User\Domain\Repository\UserRepositoryInterface;
 
 final class LoginAction
 {
     public function __construct(
         private readonly AuthenticateUserHandler $handler,
         private readonly JsonResponder $responder,
+        private readonly UserRepositoryInterface $userRepository,
+        private readonly UserJoinRequestRepositoryInterface $userJoinRequestRepository,
     ) {}
 
     public function __invoke(LoginRequest $request): JsonResponse
@@ -29,7 +33,7 @@ final class LoginAction
 
         return $this->responder->success(
             data: AuthenticationPresenter::fromResult($result),
-            messageKey: 'auth.logged_in'
+            messageKey: __('messages.auth.logged_in')
         );
     }
 }
