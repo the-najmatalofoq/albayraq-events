@@ -14,7 +14,7 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->uuid('schedulable_id');
             $table->string('schedulable_type');
-            $table->json('days_of_week'); // [1, 2, 3, 4, 5]
+            $table->date('date');
             $table->time('start_time');
             $table->time('end_time');
             $table->boolean('is_active')->default(true);

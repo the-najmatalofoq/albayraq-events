@@ -16,6 +16,7 @@ return new class extends Migration
             $table->decimal('default_deduction_amount', 10, 2)->nullable();
             $table->string('default_deduction_currency', 3)->nullable();
             $table->string('severity');
+            $table->uuid('event_id')->nullable()->index();
             $table->boolean('is_active')->default(true);
             $table->timestamps();
         });

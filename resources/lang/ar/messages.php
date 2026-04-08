@@ -3,6 +3,7 @@
 return [
     'success' => 'نجاح',
     'created' => 'تم الإنشاء بنجاح',
+    'updated' => 'تم التحديث بنجاح',
     'not_found' => 'غير موجود',
     'forbidden' => 'ممنوع',
     'unauthorized' => 'غير مصرح',

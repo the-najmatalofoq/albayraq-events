@@ -5,7 +5,7 @@ namespace Modules\Shared\Domain\ValueObject;
 
 use Modules\Shared\Domain\ValueObject;
 
-final class PaginationCriteria extends ValueObject
+final readonly class PaginationCriteria extends ValueObject
 {
     public function __construct(
         public readonly int $page,

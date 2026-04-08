@@ -12,8 +12,8 @@ final class ReportTypePresenter
     {
         return [
             'id' => $reportType->uuid->value,
+            'slug' => $reportType->slug,
             'name' => $reportType->name->toArray(),
-            'code' => $reportType->code,
             'is_active' => $reportType->isActive,
         ];
     }

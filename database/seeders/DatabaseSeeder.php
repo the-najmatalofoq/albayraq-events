@@ -8,6 +8,7 @@ use Illuminate\Database\Seeder;
 use Modules\Role\Infrastructure\Persistence\Seeders\RoleSeeder;
 use Modules\User\Infrastructure\Persistence\Seeders\UserSeeder;
 use Modules\Geography\Infrastructure\Persistence\Seeders\NationalitySeeder;
+use Modules\ReportType\Infrastructure\Persistence\Seeders\ReportTypeSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -18,6 +19,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             RoleSeeder::class,
             NationalitySeeder::class,
+            ReportTypeSeeder::class,
             UserSeeder::class,
         ]);
     }

@@ -13,7 +13,7 @@ use Modules\IAM\Presentation\Http\Action\{
     VerifyEmailAction,
 };
 
-Route::middleware(['throttle:auth'])->group(function () {
+Route::prefix('auth')->group(function () {
     Route::post('/register', RegisterAction::class);
     Route::post('/login', LoginAction::class);
 

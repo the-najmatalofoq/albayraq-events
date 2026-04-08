@@ -19,4 +19,12 @@ final readonly class Money extends ValueObject
             && $this->amount === $other->amount 
             && $this->currency === $other->currency;
     }
+
+    public function toArray(): array
+    {
+        return [
+            'amount'   => $this->amount,
+            'currency' => $this->currency,
+        ];
+    }
 }

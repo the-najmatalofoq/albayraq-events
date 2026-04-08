@@ -6,8 +6,10 @@ namespace Modules\ReportType\Infrastructure\Persistence\Eloquent;
 
 use Modules\ReportType\Domain\ReportType;
 use Modules\ReportType\Domain\ValueObject\ReportTypeId;
-use Modules\ReportType\Domain\Repository\ReportTypeRepositoryInterface;
+
 use Modules\ReportType\Infrastructure\Persistence\ReportTypeReflector;
+use Modules\Shared\Domain\ValueObject\PaginationCriteria;
+use Modules\ReportType\Domain\Repository\ReportTypeRepositoryInterface;
 
 final class EloquentReportTypeRepository implements ReportTypeRepositoryInterface
 {
@@ -22,7 +24,7 @@ final class EloquentReportTypeRepository implements ReportTypeRepositoryInterfac
             ['id' => $reportType->uuid->value],
             [
                 'name' => $reportType->name->toArray(),
-                'code' => $reportType->code,
+                'slug' => $reportType->slug,
                 'is_active' => $reportType->isActive,
             ]
         );
@@ -34,9 +36,9 @@ final class EloquentReportTypeRepository implements ReportTypeRepositoryInterfac
         return $model ? ReportTypeReflector::fromModel($model) : null;
     }
 
-    public function findByCode(string $code): ?ReportType
+    public function findBySlug(string $slug): ?ReportType
     {
-        $model = ReportTypeModel::where('code', $code)->first();
+        $model = ReportTypeModel::where('slug', $slug)->first();
         return $model ? ReportTypeReflector::fromModel($model) : null;
     }
 
@@ -45,5 +47,29 @@ final class EloquentReportTypeRepository implements ReportTypeRepositoryInterfac
         return ReportTypeModel::all()
             ->map(fn($model) => ReportTypeReflector::fromModel($model))
             ->toArray();
+    }
+
+    public function paginate(
+        PaginationCriteria $criteria,
+        ?string $search = null,
+        ?bool $isActive = null
+    ): array {
+        $query = ReportTypeModel::query();
+        $total = $query->count();
+        $items = $query->offset($criteria->offset())
+            ->limit($criteria->perPage)
+            ->get()
+            ->map(fn($model) => ReportTypeReflector::fromModel($model))
+            ->toArray();
+
+        return [
+            'items' => $items,
+            'total' => $total,
+        ];
+    }
+
+    public function delete(ReportTypeId $id): void
+    {
+        ReportTypeModel::destroy($id->value);
     }
 }

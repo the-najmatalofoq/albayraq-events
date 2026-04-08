@@ -26,11 +26,12 @@ final class EloquentViolationTypeRepository implements ViolationTypeRepositoryIn
         ViolationTypeModel::query()->updateOrCreate(
             ['id' => $violationType->uuid->value],
             [
-                'name' => $violationType->name->toArray(),
-                'default_deduction_amount' => $violationType->defaultDeduction?->amount,
+                'name'                       => $violationType->name->toArray(),
+                'default_deduction_amount'   => $violationType->defaultDeduction?->amount,
                 'default_deduction_currency' => $violationType->defaultDeduction?->currency,
-                'severity' => $violationType->severity->value,
-                'is_active' => $violationType->isActive,
+                'severity'                   => $violationType->severity->value,
+                'event_id'                   => $violationType->eventId?->value,
+                'is_active'                  => $violationType->isActive,
             ]
         );
     }
