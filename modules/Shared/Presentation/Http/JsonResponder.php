@@ -17,7 +17,7 @@ final readonly class JsonResponder
         private TranslatorInterface $translator
     ) {
     }
-
+    
     public function paginated(
         array $items,
         int $total,
