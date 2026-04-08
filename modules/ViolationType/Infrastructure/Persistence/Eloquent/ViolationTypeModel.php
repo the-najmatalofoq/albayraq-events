@@ -5,43 +5,27 @@ declare(strict_types=1);
 namespace Modules\ViolationType\Infrastructure\Persistence\Eloquent;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
-use Carbon\Carbon;
 
-/**
- * Violation type model
- *
- * @property string $id
- * @property array $name
- * @property float $default_deduction_amount
- * @property string $default_deduction_currency
- * @property string $severity
- * @property bool $is_active
- * @property Carbon $created_at
- * @property Carbon $updated_at
- */
 final class ViolationTypeModel extends Model
 {
-    use HasUuids;
-
     protected $table = 'violation_types';
-    public $incrementing = false;
+
     protected $keyType = 'string';
 
+    public $incrementing = false;
+
     protected $fillable = [
+        'id',
         'name',
         'default_deduction_amount',
         'default_deduction_currency',
         'severity',
+        'event_id',
         'is_active',
     ];
 
-    protected function casts(): array
-    {
-        return [
-            'name' => 'array',
-            'default_deduction_amount' => 'decimal:2',
-            'is_active' => 'boolean',
-        ];
-    }
+    protected $casts = [
+        'name'      => 'array',
+        'is_active' => 'boolean',
+    ];
 }

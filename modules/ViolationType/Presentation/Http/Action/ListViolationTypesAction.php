@@ -18,7 +18,7 @@ final readonly class ListViolationTypesAction
     public function __invoke(): mixed
     {
         $types = $this->repository->listAll();
-        
+
         return $this->responder->success(
             data: array_map(fn($type) => ViolationTypePresenter::fromDomain($type), $types)
         );

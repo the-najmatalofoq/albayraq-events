@@ -6,6 +6,7 @@ namespace Modules\ViolationType\Domain\Repository;
 
 use Modules\ViolationType\Domain\ViolationType;
 use Modules\ViolationType\Domain\ValueObject\ViolationTypeId;
+use Modules\Shared\Domain\ValueObject\PaginationCriteria;
 
 interface ViolationTypeRepositoryInterface
 {
@@ -15,5 +16,18 @@ interface ViolationTypeRepositoryInterface
 
     public function findById(ViolationTypeId $id): ?ViolationType;
 
+    /**
+     * @return ViolationType[]
+     */
     public function listAll(): array;
+
+    /**
+     * @return array{items: ViolationType[], total: int}
+     */
+    public function paginate(
+        PaginationCriteria $criteria,
+        ?string $search = null
+    ): array;
+
+    public function delete(ViolationTypeId $id): void;
 }
