@@ -13,11 +13,11 @@ final class ViolationTypePresenter
         return [
             'id' => $violationType->uuid->value,
             'name' => $violationType->name->toArray(),
-            'default_deduction' => $violationType->defaultDeduction 
+            'default_deduction' => $violationType->defaultDeduction
                 ? [
                     'amount' => $violationType->defaultDeduction->amount,
                     'currency' => $violationType->defaultDeduction->currency,
-                ] 
+                ]
                 : null,
             'severity' => $violationType->severity->value,
             'is_active' => $violationType->isActive,

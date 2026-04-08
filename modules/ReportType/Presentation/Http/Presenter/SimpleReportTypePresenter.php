@@ -1,20 +1,18 @@
 <?php
-// modules/ReportType/Presentation/Http/Presenter/ReportTypePresenter.php
+// modules/ReportType/Presentation/Http/Presenter/SimpleReportTypePresenter.php
 declare(strict_types=1);
 
 namespace Modules\ReportType\Presentation\Http\Presenter;
 
 use Modules\ReportType\Domain\ReportType;
 
-final class ReportTypePresenter
+final class SimpleReportTypePresenter
 {
     public static function fromDomain(ReportType $reportType): array
     {
         return [
             'id' => $reportType->uuid->value,
-            'slug' => $reportType->slug,
-            'name' => $reportType->name->toArray(),
-            'is_active' => $reportType->isActive,
+            'name' => $reportType->name->getFor(),
         ];
     }
 }

@@ -14,23 +14,29 @@ final class ReportType extends AggregateRoot
     public function __construct(
         public readonly ReportTypeId $uuid,
         public private(set) TranslatableText $name,
-        public readonly string $code,
+        public private(set) string $slug,
         public private(set) bool $isActive = true
     ) {}
 
     public static function create(
         ReportTypeId $uuid,
         TranslatableText $name,
-        string $code,
+        string $slug,
         bool $isActive = true
     ): self {
-        return new self($uuid, $name, $code, $isActive);
+        return new self($uuid, $name, $slug, $isActive);
     }
 
-    public function update(TranslatableText $name): void
-    {
+    public function update(
+        ?string $slug = null,
+        ?TranslatableText $name = null,
+        ?bool $isActive = null,
+    ): void {
+        $this->slug = $slug;
         $this->name = $name;
+        $this->isActive = $isActive;
     }
+
 
     public function activate(): void
     {

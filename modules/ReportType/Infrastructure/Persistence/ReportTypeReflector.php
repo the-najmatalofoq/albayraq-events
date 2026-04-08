@@ -19,7 +19,7 @@ final class ReportTypeReflector
         $properties = [
             'uuid'      => ReportTypeId::fromString($model->id),
             'name'      => TranslatableText::fromArray($model->name),
-            'code'      => $model->slug,
+            'slug'      => $model->slug,
             'isActive'  => (bool) $model->is_active,
         ];
 

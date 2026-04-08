@@ -3,6 +3,7 @@
 return [
     'success' => 'Success',
     'created' => 'Created successfully',
+    'updated' => 'Updated successfully',
     'not_found' => 'Not found',
     'forbidden' => 'Forbidden',
     'unauthorized' => 'Unauthorized',
