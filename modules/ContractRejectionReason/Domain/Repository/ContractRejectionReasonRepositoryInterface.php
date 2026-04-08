@@ -19,9 +19,7 @@ interface ContractRejectionReasonRepositoryInterface extends FilterableRepositor
 
     public function findById(ContractRejectionReasonId $id): ?ContractRejectionReason;
 
-    public function paginate(FilterCriteria $criteria, int $perPage = 15): LengthAwarePaginator;
-
-    public function all(FilterCriteria $criteria): Collection;
+    public function listAll(): array;
 
     public function delete(ContractRejectionReasonId $id): void;
 }

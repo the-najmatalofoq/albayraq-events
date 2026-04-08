@@ -37,6 +37,13 @@ final class EloquentContractRejectionReasonRepository implements ContractRejecti
         return $model ? $this->toDomain($model) : null;
     }
 
+    public function listAll(): array
+    {
+        return ContractRejectionReasonModel::all()
+            ->map(fn(ContractRejectionReasonModel $model) => $this->toDomain($model))
+            ->toArray();
+    }
+
     public function paginate(FilterCriteria $criteria, int $perPage = 15): LengthAwarePaginator
     {
         $query = ContractRejectionReasonModel::query();

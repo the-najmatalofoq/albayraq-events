@@ -14,5 +14,6 @@ interface EmployeeProfileRepositoryInterface extends FilterableRepositoryInterfa
     public function findByUserId(UserId $userId): ?EmployeeProfile;
     public function findById(EmployeeProfileId $uuid): ?EmployeeProfile;
     public function nextIdentity(): EmployeeProfileId;
+    public function listAll(): array;
     public function delete(EmployeeProfileId $id): void;
 }

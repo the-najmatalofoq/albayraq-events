@@ -17,7 +17,8 @@ final readonly class ListWorkSchedulesPaginationAction
     public function __construct(
         private ListWorkSchedulesHandler $handler,
         private JsonResponder $responder
-    ) {}
+    ) {
+    }
 
     public function __invoke(ListWorkSchedulesPaginationRequest $request): JsonResponse
     {

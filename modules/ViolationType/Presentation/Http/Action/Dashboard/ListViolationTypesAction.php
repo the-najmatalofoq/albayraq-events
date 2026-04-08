@@ -14,13 +14,14 @@ final readonly class ListViolationTypesAction
     public function __construct(
         private ViolationTypeRepositoryInterface $repository,
         private JsonResponder $responder
-    ) {}
+    ) {
+    }
 
     public function __invoke(ViolationTypeFilterRequest $request): mixed
     {
         $criteria = $request->toFilterCriteria();
         $types = $this->repository->all($criteria);
-        
+
         return $this->responder->success(
             data: $types->map(fn($type) => ViolationTypePresenter::fromDomain($type))->toArray()
         );

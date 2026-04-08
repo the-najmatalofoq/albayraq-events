@@ -19,5 +19,7 @@ interface RoleRepository extends FilterableRepositoryInterface
 
     public function nextIdentity(): RoleId;
 
+    public function listAll(): array;
+
     public function delete(RoleId $id): void;
 }

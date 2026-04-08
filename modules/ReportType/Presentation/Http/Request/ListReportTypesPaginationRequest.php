@@ -4,20 +4,8 @@ declare(strict_types=1);
 
 namespace Modules\ReportType\Presentation\Http\Request;
 
-use Illuminate\Foundation\Http\FormRequest;
+use Modules\Shared\Presentation\Http\Request\BaseFilterRequest;
 
-final class ListReportTypesPaginationRequest extends FormRequest
+final class ListReportTypesPaginationRequest extends BaseFilterRequest
 {
-    public function authorize(): bool
-    {
-        return true;
-    }
-
-    public function rules(): array
-    {
-        return [
-            'page'      => ['sometimes', 'integer', 'min:1'],
-            'per_page'  => ['sometimes', 'integer', 'min:1', 'max:100'],
-        ];
-    }
 }

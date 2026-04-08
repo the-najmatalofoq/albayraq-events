@@ -77,6 +77,13 @@ final class EloquentBankDetailRepository implements BankDetailRepositoryInterfac
         return BankDetailId::generate();
     }
 
+    public function listAll(): array
+    {
+        return $this->bankDetailModel->all()
+            ->map(fn(BankDetailModel $model) => $this->toDomain($model))
+            ->toArray();
+    }
+
     public function paginate(FilterCriteria $criteria, int $perPage = 15): LengthAwarePaginator
     {
         $query = $this->bankDetailModel->query();

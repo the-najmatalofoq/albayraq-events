@@ -16,10 +16,10 @@ final class ListWorkSchedulesPaginationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'page'             => ['sometimes', 'integer', 'min:1'],
-            'per_page'         => ['sometimes', 'integer', 'min:1', 'max:100'],
+            'page' => ['sometimes', 'integer', 'min:1'],
+            'per_page' => ['sometimes', 'integer', 'min:1', 'max:100'],
             'schedulable_type' => ['sometimes', 'nullable', 'string', 'max:255'],
-            'schedulable_id'   => ['sometimes', 'nullable', 'uuid'],
+            'schedulable_id' => ['sometimes', 'nullable', 'uuid'],
         ];
     }
 }

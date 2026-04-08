@@ -48,6 +48,13 @@ final class EloquentUserRepository implements UserRepositoryInterface
         return $model ? $this->reflector->toEntity($model) : null;
     }
 
+    public function listAll(): array
+    {
+        return $this->model->with('roles')->get()
+            ->map(fn(UserModel $model) => $this->reflector->toEntity($model))
+            ->toArray();
+    }
+
     public function save(User $user, ?string $avatarPath = null): void
     {
         $data = $this->reflector->fromEntity($user);

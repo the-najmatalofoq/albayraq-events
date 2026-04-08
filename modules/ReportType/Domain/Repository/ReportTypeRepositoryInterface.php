@@ -4,10 +4,14 @@ declare(strict_types=1);
 
 namespace Modules\ReportType\Domain\Repository;
 
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 use Modules\ReportType\Domain\ReportType;
 use Modules\ReportType\Domain\ValueObject\ReportTypeId;
+use Modules\Shared\Domain\Repository\FilterableRepositoryInterface;
+use Modules\Shared\Domain\ValueObject\FilterCriteria;
 
-interface ReportTypeRepositoryInterface
+interface ReportTypeRepositoryInterface extends FilterableRepositoryInterface
 {
     public function nextIdentity(): ReportTypeId;
 
@@ -18,13 +22,10 @@ interface ReportTypeRepositoryInterface
     public function findBySlug(string $slug): ?ReportType;
 
     public function listAll(): array;
-    /**
-     * @return array{items: ReportType[], total: int}
-     */
-    public function paginate(
-        \Modules\Shared\Domain\ValueObject\PaginationCriteria $criteria,
-        ?string $search = null,
-        ?bool $isActive = null
-    ): array;
+
+    public function paginate(FilterCriteria $criteria, int $perPage = 15): LengthAwarePaginator;
+
+    public function all(FilterCriteria $criteria): Collection;
+
     public function delete(ReportTypeId $id): void;
 }

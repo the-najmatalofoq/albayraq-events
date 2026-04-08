@@ -6,7 +6,6 @@ namespace Modules\User\Presentation\Http\Action\Dashboard;
 use Illuminate\Http\JsonResponse;
 use Modules\Shared\Presentation\Http\JsonResponder;
 use Modules\Shared\Presentation\Http\Request\BaseFilterRequest;
-use Modules\Shared\Domain\ValueObject\PaginationCriteria;
 use Modules\User\Domain\Repository\ContactPhoneRepositoryInterface;
 use Modules\User\Presentation\Http\Presenter\ContactPhonePresenter;
 
@@ -20,20 +19,16 @@ final readonly class ListContactPhonesAction
 
     public function __invoke(BaseFilterRequest $request): JsonResponse
     {
-        $filters = $request->toFilterCriteria()->toArray();
+        $criteria = $request->toFilterCriteria();
         $perPage = $request->getPerPage();
 
-        $paginator = $this->contactRepository->paginate($perPage, $filters);
+        $paginator = $this->contactRepository->paginate($criteria, $perPage);
 
         return $this->responder->paginated(
-            $paginator->items(),
-            $paginator->total(),
-            new PaginationCriteria(
-                $paginator->currentPage(),
-                $paginator->perPage()
-            ),
-            fn($contact) => ContactPhonePresenter::fromDomain($contact)
+            items: $paginator->items(),
+            total: $paginator->total(),
+            pagination: $request->toPaginationCriteria(),
+            presenter: fn($contact) => ContactPhonePresenter::fromDomain($contact)
         );
-
     }
 }

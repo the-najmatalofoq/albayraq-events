@@ -43,6 +43,13 @@ final class EloquentViolationTypeRepository implements ViolationTypeRepositoryIn
         return $record ? $this->toDomain($record) : null;
     }
 
+    public function listAll(): array
+    {
+        return ViolationTypeModel::all()
+            ->map(fn(ViolationTypeModel $model) => $this->toDomain($model))
+            ->toArray();
+    }
+
     public function paginate(FilterCriteria $criteria, int $perPage = 15): LengthAwarePaginator
     {
         $query = ViolationTypeModel::query();
@@ -94,8 +101,8 @@ final class EloquentViolationTypeRepository implements ViolationTypeRepositoryIn
         return ViolationType::create(
             uuid: ViolationTypeId::fromString($record->id),
             name: TranslatableText::fromArray($record->name),
-            defaultDeduction: $record->default_deduction_amount 
-                ? new Money((float)$record->default_deduction_amount, $record->default_deduction_currency ?? 'SAR') 
+            defaultDeduction: $record->default_deduction_amount
+                ? new Money((float)$record->default_deduction_amount, $record->default_deduction_currency ?? 'SAR')
                 : null,
             severity: ViolationSeverityEnum::from($record->severity),
             isActive: $record->is_active,

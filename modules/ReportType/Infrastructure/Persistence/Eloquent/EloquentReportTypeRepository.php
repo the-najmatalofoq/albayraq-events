@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Modules\ReportType\Infrastructure\Persistence\Eloquent;
 
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 use Modules\ReportType\Domain\ReportType;
 use Modules\ReportType\Domain\ValueObject\ReportTypeId;
-
 use Modules\ReportType\Infrastructure\Persistence\ReportTypeReflector;
-use Modules\Shared\Domain\ValueObject\PaginationCriteria;
+use Modules\Shared\Domain\ValueObject\FilterCriteria;
 use Modules\ReportType\Domain\Repository\ReportTypeRepositoryInterface;
 
 final class EloquentReportTypeRepository implements ReportTypeRepositoryInterface
@@ -49,27 +50,44 @@ final class EloquentReportTypeRepository implements ReportTypeRepositoryInterfac
             ->toArray();
     }
 
-    public function paginate(
-        PaginationCriteria $criteria,
-        ?string $search = null,
-        ?bool $isActive = null
-    ): array {
+    public function paginate(FilterCriteria $criteria, int $perPage = 15): LengthAwarePaginator
+    {
         $query = ReportTypeModel::query();
-        $total = $query->count();
-        $items = $query->offset($criteria->offset())
-            ->limit($criteria->perPage)
-            ->get()
-            ->map(fn($model) => ReportTypeReflector::fromModel($model))
-            ->toArray();
+        $this->applyCriteria($query, $criteria);
 
-        return [
-            'items' => $items,
-            'total' => $total,
-        ];
+        $paginator = $query->paginate($perPage);
+
+        $paginator->getCollection()->transform(fn(ReportTypeModel $model) => ReportTypeReflector::fromModel($model));
+
+        return $paginator;
+    }
+
+    public function all(FilterCriteria $criteria): Collection
+    {
+        $query = ReportTypeModel::query();
+        $this->applyCriteria($query, $criteria);
+
+        return $query->get()->map(fn(ReportTypeModel $model) => ReportTypeReflector::fromModel($model));
     }
 
     public function delete(ReportTypeId $id): void
     {
         ReportTypeModel::destroy($id->value);
+    }
+
+    private function applyCriteria($query, FilterCriteria $criteria): void
+    {
+        if ($criteria->search) {
+            $query->where('name', 'like', "%{$criteria->search}%")
+                  ->orWhere('slug', 'like', "%{$criteria->search}%");
+        }
+
+        if ($criteria->has('is_active')) {
+            $query->where('is_active', (bool)$criteria->get('is_active'));
+        }
+
+        $sortBy = $criteria->sortBy ?: 'created_at';
+        $sortDir = $criteria->sortDirection ?: 'desc';
+        $query->orderBy($sortBy, $sortDir);
     }
 }

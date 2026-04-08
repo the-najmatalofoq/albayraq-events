@@ -15,6 +15,7 @@ interface BankDetailRepositoryInterface extends FilterableRepositoryInterface
     public function findByUserId(UserId $userId): ?BankDetail;
     public function findById(BankDetailId $id): ?BankDetail;
     public function nextIdentity(): BankDetailId;
+    public function listAll(): array;
     public function existsWithIban(string $iban): bool;
     public function updateOrCreate(
         UserId $userId,

@@ -48,6 +48,13 @@ final class EloquentRoleRepository implements RoleRepository
         return RoleId::generate();
     }
 
+    public function listAll(): array
+    {
+        return RoleModel::all()
+            ->map(fn(RoleModel $model) => $this->toDomain($model))
+            ->toArray();
+    }
+
     public function paginate(FilterCriteria $criteria, int $perPage = 15): LengthAwarePaginator
     {
         $query = RoleModel::query();

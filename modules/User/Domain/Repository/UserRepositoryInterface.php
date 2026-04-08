@@ -14,5 +14,6 @@ interface UserRepositoryInterface extends FilterableRepositoryInterface
     public function findByEmail(string $email): ?User;
     public function findByPhone(Phone $phone): ?User;
     public function findById(UserId $id): ?User;
+    public function listAll(): array;
     public function delete(UserId $id): void;
 }

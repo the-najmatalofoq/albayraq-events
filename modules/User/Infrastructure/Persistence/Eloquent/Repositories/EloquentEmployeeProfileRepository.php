@@ -55,6 +55,13 @@ final class EloquentEmployeeProfileRepository implements EmployeeProfileReposito
         $model->save();
     }
 
+    public function listAll(): array
+    {
+        return $this->model->with('nationality')->get()
+            ->map(fn(EmployeeProfileModel $model) => $this->reflector->toEntity($model))
+            ->toArray();
+    }
+
     public function paginate(FilterCriteria $criteria, int $perPage = 15): LengthAwarePaginator
     {
         $query = $this->model->with('nationality');

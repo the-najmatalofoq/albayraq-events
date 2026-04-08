@@ -51,6 +51,13 @@ final class EloquentContactPhoneRepository implements ContactPhoneRepositoryInte
         return ContactPhoneId::generate();
     }
 
+    public function listAll(): array
+    {
+        return $this->model->all()
+            ->map(fn(ContactPhoneModel $model) => $this->toDomain($model))
+            ->toArray();
+    }
+
     public function delete(ContactPhoneId $uuid): void
     {
         $this->model->where('id', $uuid->value)->delete();

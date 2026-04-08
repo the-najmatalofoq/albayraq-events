@@ -12,5 +12,6 @@ final readonly class ListWorkSchedulesQuery
         public PaginationCriteria $pagination,
         public ?string $schedulableType = null,
         public ?string $schedulableId = null
-    ) {}
+    ) {
+    }
 }
