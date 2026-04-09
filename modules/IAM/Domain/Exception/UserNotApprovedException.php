@@ -9,11 +9,10 @@ use Modules\Shared\Domain\Enum\ErrorCodeEnum;
 
 final class UserNotApprovedException extends DomainException
 {
-    public static function forUser(): self
+    public static function forUser(string $messageKey, string $mainMessage): self
     {
-        $mainMessage = __('messages.errors.user_not_approved');
         $e = new self($mainMessage);
-        $e->messageKey = __('message.user.account_not_active');
+        $e->messageKey = $messageKey;
         $e->errors = [$mainMessage];
         return $e;
     }

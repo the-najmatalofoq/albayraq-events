@@ -6,6 +6,6 @@ namespace Modules\User\Domain\ValueObject;
 
 use Modules\Shared\Domain\Identity;
 
-final class EmployeeNationalityId extends Identity
+final  readonly class EmployeeNationalityId extends Identity
 {
 }

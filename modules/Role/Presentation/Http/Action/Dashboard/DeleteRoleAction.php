@@ -13,8 +13,7 @@ final class DeleteRoleAction
     public function __construct(
         private readonly RoleRepository $repository,
         private readonly JsonResponder $responder,
-    ) {
-    }
+    ) {}
 
     public function __invoke(string $id)
     {
@@ -22,11 +21,11 @@ final class DeleteRoleAction
         $role = $this->repository->findById($roleId);
 
         if (!$role) {
-            return $this->responder->notFound('messages.role_not_found');
+            return $this->responder->notFound(__('messages.not_found'));
         }
 
         $this->repository->delete($roleId);
 
-        return $this->responder->success(null, 200, 'messages.role_deleted');
+        return $this->responder->noContent();
     }
 }

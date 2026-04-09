@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Modules\User\Application\Command\DeleteAccount;
@@ -11,16 +12,14 @@ final readonly class DeleteAccountHandler
 {
     public function __construct(
         private UserRepositoryInterface $userRepository,
-    ) {
-    }
+    ) {}
 
     public function handle(DeleteAccountCommand $command): void
     {
-        $userId = UserId::fromString($command->userId);
-        $user = $this->userRepository->findById($userId);
+        $user = $this->userRepository->findById($command->userId);
 
         if ($user === null) {
-            throw UserNotFoundException::withId($userId);
+            throw UserNotFoundException::withId($command->userId);
         }
 
         $user->softDelete();

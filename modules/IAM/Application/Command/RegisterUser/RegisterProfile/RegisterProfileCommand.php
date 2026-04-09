@@ -6,12 +6,13 @@ namespace Modules\IAM\Application\Command\RegisterUser\RegisterProfile;
 
 use Modules\Geography\Domain\ValueObject\NationalityId;
 use Modules\User\Domain\ValueObject\UserId;
+use Modules\Shared\Domain\ValueObject\TranslatableText;
 
 final readonly class RegisterProfileCommand
 {
     public function __construct(
         public UserId $userId,
-        public string $fullName,
+        public TranslatableText $fullName,
         public string $identityNumber,
         public NationalityId $nationalityId,
         public ?string $birthDate = null,

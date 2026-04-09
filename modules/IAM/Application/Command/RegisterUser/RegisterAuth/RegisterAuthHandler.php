@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Modules\IAM\Application\Command\RegisterUser\RegisterAuth;
 
 use DateTimeImmutable;
-use Modules\IAM\Domain\Exception\UserAlreadyExistsException;
 use Modules\Role\Domain\Enum\RoleSlugEnum;
 use Modules\Role\Domain\Repository\RoleRepository;
 use Modules\User\Domain\Repository\UserRepositoryInterface;
@@ -13,7 +12,7 @@ use Modules\User\Domain\User;
 
 use Modules\IAM\Domain\Service\PasswordHasher;
 use Modules\Shared\Domain\Service\FileStorageInterface;
-use Modules\Shared\Domain\ValueObject\TranslatableText;
+use Modules\IAM\Domain\Service\UserAccessValidator;
 
 final readonly class RegisterAuthHandler
 {
@@ -22,6 +21,7 @@ final readonly class RegisterAuthHandler
         private RoleRepository $roleRepository,
         private PasswordHasher $passwordHasher,
         private FileStorageInterface $fileStorage,
+        private UserAccessValidator $accessValidator,
     ) {}
 
     public function handle(RegisterAuthCommand $command)
@@ -31,12 +31,15 @@ final readonly class RegisterAuthHandler
         if (!$role) {
             throw new \RuntimeException('Employee role not found.');
         }
-        if ($this->userRepository->findByPhone($command->phone)) {
-            throw UserAlreadyExistsException::withPhone();
-        }
 
-        if ($command->email && $this->userRepository->findByEmail($command->email)) {
-            throw UserAlreadyExistsException::withEmail();
+        $user = $this->userRepository->findByPhone($command->phone);
+        if ($user) {
+            $this->accessValidator->validateRegister($user);
+        } else {
+            $user = $this->userRepository->findByEmail($command->email);
+            if ($user) {
+                $this->accessValidator->validateRegister($user);
+            }
         }
 
         $user = User::register(

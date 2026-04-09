@@ -1,5 +1,5 @@
 <?php
-// modules/ReportType/Presentation/Http/Action/ListReportTypesAction.php
+// modules/ReportType/Presentation/Http/Action/ListReportTypesPaginationAction.php
 declare(strict_types=1);
 
 namespace Modules\ReportType\Presentation\Http\Action;

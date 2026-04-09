@@ -6,7 +6,9 @@ namespace Modules\ReportType\Infrastructure\Persistence\Eloquent;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Carbon\Carbon;
+use Modules\ReportType\Infrastructure\Persistence\Factories\ReportTypeFactory;
 
 /**
  * Report type model
@@ -20,7 +22,12 @@ use Carbon\Carbon;
  */
 final class ReportTypeModel extends Model
 {
-    use HasUuids;
+    use HasFactory, HasUuids;
+
+    protected static function newFactory()
+    {
+        return ReportTypeFactory::new();
+    }
 
     protected $table = 'report_types';
     public $incrementing = false;

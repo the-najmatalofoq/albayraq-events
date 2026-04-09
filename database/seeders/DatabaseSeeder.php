@@ -10,6 +10,10 @@ use Modules\User\Infrastructure\Persistence\Seeders\UserSeeder;
 use Modules\Geography\Infrastructure\Persistence\Seeders\NationalitySeeder;
 use Modules\ReportType\Infrastructure\Persistence\Seeders\ReportTypeSeeder;
 
+use Modules\ViolationType\Infrastructure\Persistence\Seeders\ViolationTypeSeeder;
+use Modules\ContractRejectionReason\Infrastructure\Persistence\Seeders\ContractRejectionReasonSeeder;
+use Modules\User\Infrastructure\Persistence\Seeders\EmployeeSeeder;
+
 class DatabaseSeeder extends Seeder
 {
     use WithoutModelEvents;
@@ -18,9 +22,12 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             RoleSeeder::class,
+            UserSeeder::class,
             NationalitySeeder::class,
             ReportTypeSeeder::class,
-            UserSeeder::class,
+            ViolationTypeSeeder::class,
+            ContractRejectionReasonSeeder::class,
+            EmployeeSeeder::class,
         ]);
     }
 }

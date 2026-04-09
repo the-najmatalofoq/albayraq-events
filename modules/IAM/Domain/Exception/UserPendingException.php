@@ -9,11 +9,10 @@ use Modules\Shared\Domain\Enum\ErrorCodeEnum;
 
 final class UserPendingException extends DomainException
 {
-    public static function create(): self
+    public static function create(string $messageKey, string $mainMessage): self
     {
-        $mainMessage = __('messages.errors.user_pending');
         $e = new self($mainMessage);
-        $e->messageKey = __('messages.user.account_not_active');
+        $e->messageKey = $messageKey;
         $e->errors = [$mainMessage];
         return $e;
     }

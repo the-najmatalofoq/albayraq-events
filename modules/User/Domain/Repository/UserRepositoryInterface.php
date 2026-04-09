@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Modules\User\Domain\Repository;
@@ -13,6 +14,7 @@ interface UserRepositoryInterface extends FilterableRepositoryInterface
     public function save(User $user, ?string $avatarPath = null): void;
     public function findByEmail(string $email): ?User;
     public function findByPhone(Phone $phone): ?User;
+    public function nextIdentity(): UserId;
     public function findById(UserId $id): ?User;
     public function delete(UserId $id): void;
 }

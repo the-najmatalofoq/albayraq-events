@@ -64,7 +64,6 @@ class UserSeeder extends Seeder
                 password: $this->hasher->hash('password'),
                 roleIds: [$role->uuid],
                 createdAt: new DateTimeImmutable(),
-                isActive: true
             );
             $this->repository->save($user);
             }

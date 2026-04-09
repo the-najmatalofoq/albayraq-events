@@ -15,6 +15,8 @@ use Modules\Role\Infrastructure\Persistence\Eloquent\RoleModel;
 use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Database\Eloquent\Collection;
 use Carbon\Carbon;
+use Modules\Shared\Infrastructure\Laravel\Casts\TranslatableTextCast;
+use Modules\User\Infrastructure\Persistence\Factories\UserFactory;
 
 /**
  * User model - Primary authentication and authorization model
@@ -25,7 +27,6 @@ use Carbon\Carbon;
  * @property string $phone
  * @property string $password
  * @property string|null $avatar
- * @property bool $is_active
  * @property Carbon|null $email_verified_at
  * @property string|null $remember_token
  * @property Carbon $created_at
@@ -57,9 +58,15 @@ final class UserModel extends Authenticatable implements JWTSubject
         'remember_token',
     ];
 
+    protected static function newFactory()
+    {
+        return UserFactory::new();
+    }
+
     protected function casts(): array
     {
         return [
+            'name' => TranslatableTextCast::class,
             'password' => 'hashed',
             'email_verified_at' => 'datetime',
         ];
@@ -106,9 +113,13 @@ final class UserModel extends Authenticatable implements JWTSubject
         return $this->hasOne(UserSettingsModel::class, 'user_id');
     }
 
-    public function getJWTIdentifier(): mixed
+    // public function getJWTIdentifier(): mixed
+    // {
+    //     return $this->id;
+    // }
+    public function getJWTIdentifier()
     {
-        return $this->id;
+        return $this->getKey(); // لضمان إرجاع الـ UUID
     }
 
     public function getJWTCustomClaims(): array

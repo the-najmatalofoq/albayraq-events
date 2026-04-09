@@ -20,6 +20,7 @@ use Modules\Geography\Infrastructure\Persistence\Eloquent\Models\{
 };
 use Modules\Shared\Infrastructure\Laravel\Casts\TranslatableTextCast;
 use Modules\Shared\Domain\ValueObject\TranslatableText;
+use Modules\User\Infrastructure\Persistence\Factories\EmployeeProfileFactory;
 
 /**
  * Employee profile model - Extended user profile with personal details
@@ -60,9 +61,16 @@ final class EmployeeProfileModel extends Model
         'weight',
     ];
 
+
+    protected static function newFactory()
+    {
+        return EmployeeProfileFactory::new();
+    }
+
     protected function casts(): array
     {
         return [
+            'full_name' => TranslatableTextCast::class,
             'birth_date' => 'date',
             'height' => 'float',
             'weight' => 'float',

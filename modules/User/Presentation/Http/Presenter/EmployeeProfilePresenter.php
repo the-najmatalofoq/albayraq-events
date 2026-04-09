@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Modules\User\Presentation\Http\Presenter;
@@ -15,7 +16,7 @@ final class EmployeeProfilePresenter
 
         return [
             'id' => $profile->uuid->value,
-            'full_name' => $profile->fullName,
+            'full_name' => $profile->fullName->getFor(),
             'identity_number' => $profile->identityNumber,
             'nationality_id' => $profile->nationalityId?->value,
             'birth_date' => $profile->birthDate,

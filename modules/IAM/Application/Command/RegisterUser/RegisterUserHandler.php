@@ -13,10 +13,14 @@ use Modules\IAM\Application\Command\RegisterUser\RegisterBankDetails\RegisterBan
 use Modules\IAM\Application\Command\RegisterUser\RegisterBankDetails\RegisterBankDetailsHandler;
 use Modules\IAM\Application\Command\RegisterUser\RegisterContactPhone\RegisterContactPhoneCommand;
 use Modules\IAM\Application\Command\RegisterUser\RegisterContactPhone\RegisterContactPhoneHandler;
+use Modules\IAM\Application\Command\RegisterUser\RegisterMedicalRecord\RegisterMedicalRecordCommand;
+use Modules\IAM\Application\Command\RegisterUser\RegisterMedicalRecord\RegisterMedicalRecordHandler;
 use Modules\IAM\Application\Command\RegisterUser\RegisterAttachment\RegisterAttachmentCommand;
 use Modules\IAM\Application\Command\RegisterUser\RegisterAttachment\RegisterAttachmentHandler;
 use Modules\IAM\Application\Command\RegisterUser\RegisterUserSettings\RegisterUserSettingsCommand;
 use Modules\IAM\Application\Command\RegisterUser\RegisterUserSettings\RegisterUserSettingsHandler;
+use Modules\Shared\Domain\ValueObject\TranslatableText;
+use Modules\User\Domain\Enum\BloodTypeEnum;
 use Modules\User\Domain\User;
 use Modules\User\Domain\ValueObject\Phone;
 
@@ -29,6 +33,7 @@ final readonly class RegisterUserHandler
         private RegisterContactPhoneHandler $contactPhoneHandler,
         private RegisterAttachmentHandler $attachmentHandler,
         private RegisterUserSettingsHandler $settingsHandler,
+        private RegisterMedicalRecordHandler $medicalRecordHandler,
     ) {}
 
     public function handle(RegisterUserCommand $command): User
@@ -56,6 +61,14 @@ final readonly class RegisterUserHandler
             $this->settingsHandler->handle(new RegisterUserSettingsCommand(
                 userId: $user->uuid,
                 preferredLocale: $command->preferredLocale ?? null
+            ));
+
+            $this->medicalRecordHandler->handle(new RegisterMedicalRecordCommand(
+                userId: $user->uuid,
+                bloodType: $command->bloodType,
+                chronicDiseases: $command->chronicDiseases,
+                allergies: $command->allergies,
+                medications: $command->medications
             ));
 
             $this->bankHandler->handle(new RegisterBankDetailsCommand(

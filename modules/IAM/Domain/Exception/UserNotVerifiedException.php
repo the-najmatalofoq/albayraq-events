@@ -9,11 +9,10 @@ use Modules\Shared\Domain\Enum\ErrorCodeEnum;
 
 final class UserNotVerifiedException extends DomainException
 {
-    public static function forEmail(): self
+    public static function forEmail(string $messageKey, string $mainMessage): self
     {
-        $mainMessage = __('messages.errors.user_not_verified');
         $e = new self($mainMessage);
-        $e->messageKey = __('messages.user.account_not_active');
+        $e->messageKey = $messageKey;
         $e->errors = ['email' => [$mainMessage]];
         return $e;
     }

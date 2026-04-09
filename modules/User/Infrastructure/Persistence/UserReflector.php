@@ -7,6 +7,7 @@ namespace Modules\User\Infrastructure\Persistence;
 use DateTimeImmutable;
 use Modules\Role\Domain\ValueObject\RoleId;
 use Modules\Shared\Domain\ValueObject\FilePath;
+use Modules\Shared\Domain\ValueObject\TranslatableText;
 use Modules\User\Domain\User;
 use Modules\User\Domain\ValueObject\HashedPassword;
 use Modules\User\Domain\ValueObject\Phone;
@@ -44,7 +45,7 @@ final class UserReflector
 
         return User::reconstitute(
             uuid: new UserId($model->id),
-            name: $model->name,
+            name: TranslatableText::fromMixed($model->name),
             email: $model->email,
             phone: new Phone($model->phone),
             password: new HashedPassword($model->password),

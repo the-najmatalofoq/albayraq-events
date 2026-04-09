@@ -20,9 +20,7 @@ final class StoreRoleRequest extends FormRequest
     {
         return [
             'slug' => ['required', 'string', 'max:50', 'unique:roles,slug'],
-            'name' => ['required', 'array'],
-            'name.ar' => ['required', 'string', 'max:100'],
-            'name.en' => ['required', 'string', 'max:100'],
+            'name' => ['required', 'json'],
             'level' => ['required', Rule::enum(RoleLevelEnum::class)],
             'is_global' => ['required', 'boolean'],
         ];

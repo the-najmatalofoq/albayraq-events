@@ -6,16 +6,18 @@ namespace Modules\IAM\Application\Command\RegisterUser;
 
 use Illuminate\Http\UploadedFile;
 use Modules\Geography\Domain\ValueObject\NationalityId;
+use Modules\Shared\Domain\ValueObject\TranslatableText;
+use Modules\User\Domain\Enum\BloodTypeEnum;
 use Modules\User\Domain\ValueObject\Phone;
 
 final readonly class RegisterUserCommand
 {
     public function __construct(
-        public string $name,
+        public TranslatableText $name,
         public ?string $email,
         public Phone $phone,
         public string $password,
-        public string $fullName,
+        public TranslatableText $fullName,
         public string $identityNumber,
         public NationalityId $nationalityId,
         public ?string $birthDate,
@@ -28,10 +30,13 @@ final readonly class RegisterUserCommand
         public string $contactName,
         public string $contactPhone,
         public string $contactRelation,
+        public BloodTypeEnum $bloodType,
+        public ?string $chronicDiseases = null,
+        public ?string $allergies = null,
+        public ?string $medications = null,
         public ?UploadedFile $avatar = null,
         public ?UploadedFile $cv = null,
         public ?UploadedFile $personalIdentity = null,
         public ?UploadedFile $medicalReport = null,
-    ) {
-    }
+    ) {}
 }
