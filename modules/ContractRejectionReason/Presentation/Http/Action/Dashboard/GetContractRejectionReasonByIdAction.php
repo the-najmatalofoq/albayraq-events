@@ -21,7 +21,7 @@ final readonly class GetContractRejectionReasonByIdAction
         $reason = $this->repository->findById(ContractRejectionReasonId::fromString($id));
 
         if (!$reason) {
-            return $this->responder->notFound('messages.contract_rejection_reason_not_found');
+            return $this->responder->notFound('messages.not_found');
         }
 
         return $this->responder->success(ContractRejectionReasonPresenter::fromDomain($reason));

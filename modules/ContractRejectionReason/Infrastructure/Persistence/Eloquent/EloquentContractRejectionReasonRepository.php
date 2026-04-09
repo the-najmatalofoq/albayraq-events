@@ -81,7 +81,7 @@ final class EloquentContractRejectionReasonRepository implements ContractRejecti
     {
         return ContractRejectionReason::create(
             uuid: ContractRejectionReasonId::fromString($model->id),
-            reason: TranslatableText::fromArray($model->reason),
+            reason: TranslatableText::fromMixed($model->reason),
             isActive: $model->is_active
         );
     }

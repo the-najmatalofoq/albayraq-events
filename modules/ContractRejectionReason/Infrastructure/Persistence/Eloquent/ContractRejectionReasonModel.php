@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Carbon\Carbon;
 use Modules\ContractRejectionReason\Infrastructure\Persistence\Factories\ContractRejectionReasonFactory;
+use Modules\Shared\Infrastructure\Laravel\Casts\TranslatableTextCast;
 
 /**
  * Contract rejection reason model
@@ -40,7 +41,7 @@ final class ContractRejectionReasonModel extends Model
     protected function casts(): array
     {
         return [
-            'reason' => 'array',
+            'reason' => TranslatableTextCast::class,
             'is_active' => 'boolean',
         ];
     }

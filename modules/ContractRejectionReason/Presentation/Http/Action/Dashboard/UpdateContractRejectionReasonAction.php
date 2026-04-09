@@ -6,7 +6,6 @@ namespace Modules\ContractRejectionReason\Presentation\Http\Action\Dashboard;
 
 use Modules\ContractRejectionReason\Domain\Repository\ContractRejectionReasonRepositoryInterface;
 use Modules\ContractRejectionReason\Domain\ValueObject\ContractRejectionReasonId;
-use Modules\ContractRejectionReason\Presentation\Http\Presenter\ContractRejectionReasonPresenter;
 use Modules\ContractRejectionReason\Presentation\Http\Request\Dashboard\UpdateContractRejectionReasonRequest;
 use Modules\Shared\Domain\ValueObject\TranslatableText;
 use Modules\Shared\Presentation\Http\JsonResponder;
@@ -24,12 +23,14 @@ final readonly class UpdateContractRejectionReasonAction
         $reason = $this->repository->findById($reasonId);
 
         if (!$reason) {
-            return $this->responder->notFound('messages.contract_rejection_reason_not_found');
+            return $this->responder->notFound('messages.not_found');
         }
 
         $reasonText = $request->has('reason') ? TranslatableText::fromArray($request->validated('reason')) : $reason->reason;
-        
-        $reason->update($reasonText);
+
+        $mergedTranslations = array_merge($reason->reason->values, $reasonText->values);
+
+        $reason->update(TranslatableText::fromArray($mergedTranslations));
 
         if ($request->has('is_active')) {
             $request->validated('is_active') ? $reason->activate() : $reason->deactivate();
@@ -38,9 +39,9 @@ final readonly class UpdateContractRejectionReasonAction
         $this->repository->save($reason);
 
         return $this->responder->success(
-            data: ContractRejectionReasonPresenter::fromDomain($reason),
+            data: ['id' => $reason->uuid->value],
             status: 200,
-            messageKey: 'messages.contract_rejection_reason_updated'
+            messageKey: 'messages.updated'
         );
     }
 }

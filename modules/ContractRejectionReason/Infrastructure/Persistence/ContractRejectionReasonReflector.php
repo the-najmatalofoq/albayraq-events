@@ -9,6 +9,7 @@ use Modules\ContractRejectionReason\Domain\ValueObject\ContractRejectionReasonId
 use Modules\Shared\Domain\ValueObject\TranslatableText;
 use Modules\ContractRejectionReason\Infrastructure\Persistence\Eloquent\ContractRejectionReasonModel;
 use ReflectionClass;
+
 final class ContractRejectionReasonReflector
 {
     public static function fromModel(ContractRejectionReasonModel $model): ContractRejectionReason
