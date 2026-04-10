@@ -10,13 +10,16 @@ use Modules\Shared\Presentation\Http\JsonResponder;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
+// fix: use the FormRequest direct in the invoke, and then fix the return type of the method to match the jsonResponser:
+// Return value of __invoke() is expected to be of type Psr\Http\Message\ResponseInterface, Illuminate\Http\JsonResponse returnedPHP(PHP0408)
 final readonly class CreateDigitalSignatureAction
 {
     public function __construct(
         private CreateDigitalSignatureHandler $handler,
         private CreateDigitalSignatureRequest $request,
         private JsonResponder $responder,
-    ) {}
+    ) {
+    }
 
     public function __invoke(ServerRequestInterface $request): ResponseInterface
     {

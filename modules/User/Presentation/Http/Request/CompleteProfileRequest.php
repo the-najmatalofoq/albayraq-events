@@ -11,7 +11,8 @@ final readonly class CompleteProfileRequest
 {
     public function __construct(
         private InputValidator $validator,
-    ) {}
+    ) {
+    }
 
     public function validated(Request $request): array
     {
@@ -26,8 +27,8 @@ final readonly class CompleteProfileRequest
                 'medical_record' => ['nullable', 'json'],
                 'height' => ['nullable', 'numeric', 'min:50', 'max:250'],
                 'weight' => ['nullable', 'numeric', 'min:20', 'max:300'],
-                'cv' => ['nullable', 'file', 'mimes:pdf,doc,docx', 'max:5120'], // 5MB
-                'identity_personal' => ['nullable', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:5120'], // 5MB
+                'cv' => ['nullable', 'file', 'mimes:pdf,doc,docx', 'max:5120'],
+                'identity_personal' => ['nullable', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:5120'],
             ]
         );
     }

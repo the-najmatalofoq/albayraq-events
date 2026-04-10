@@ -11,6 +11,7 @@ use Modules\User\Application\Command\UpdateUserAvatar\UpdateUserAvatarHandler;
 use Illuminate\Http\Request;
 use Modules\Shared\Presentation\Http\JsonResponder;
 
+// fix: we have many issues, we must make the UpdateAvatar FormRequest and we must resolve the issue of the token interface
 final readonly class UpdateAvatarAction
 {
     public function __construct(
