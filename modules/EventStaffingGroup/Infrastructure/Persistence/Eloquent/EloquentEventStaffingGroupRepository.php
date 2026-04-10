@@ -9,6 +9,9 @@ use Modules\EventStaffingGroup\Domain\ValueObject\GroupId;
 use Modules\Event\Domain\ValueObject\EventId;
 use Modules\EventStaffingGroup\Domain\Repository\EventStaffingGroupRepositoryInterface;
 use Modules\EventStaffingGroup\Infrastructure\Persistence\EventStaffingGroupReflector;
+use Modules\Shared\Domain\ValueObject\HexColor;
+use Modules\Shared\Domain\ValueObject\TranslatableText;
+use Modules\User\Domain\ValueObject\UserId;
 
 final class EloquentEventStaffingGroupRepository implements EventStaffingGroupRepositoryInterface
 {
@@ -24,9 +27,9 @@ final class EloquentEventStaffingGroupRepository implements EventStaffingGroupRe
             [
                 'event_id' => $group->eventId->value,
                 'name' => $group->name->toArray(),
-                'leader_id' => $group->leaderId->value,
+                'leader_id' => $group->leaderId?->value,
                 'color' => $group->color->value,
-                'is_active' => $group->isActive,
+                'is_locked' => $group->isLocked,
             ]
         );
     }
@@ -34,16 +37,32 @@ final class EloquentEventStaffingGroupRepository implements EventStaffingGroupRe
     public function findById(GroupId $id): ?EventStaffingGroup
     {
         $model = EventStaffingGroupModel::find($id->value);
-        return $model ? EventStaffingGroupReflector::fromModel($model) : null;
+        return $model instanceof EventStaffingGroupModel ? $this->toEntity($model) : null;
     }
 
     public function findByEventId(EventId $eventId): array
     {
         return EventStaffingGroupModel::where('event_id', $eventId->value)
             ->get()
-            ->map(function (EventStaffingGroupModel $model) {
-                return EventStaffingGroupReflector::fromModel($model);
-            })
+            ->map(fn(EventStaffingGroupModel $m) => $this->toEntity($m))
             ->toArray();
+    }
+
+    public function delete(GroupId $id): void
+    {
+        EventStaffingGroupModel::where('id', $id->value)->delete();
+    }
+
+    private function toEntity(EventStaffingGroupModel $m): EventStaffingGroup
+    {
+        return EventStaffingGroup::reconstitute(
+            uuid: GroupId::fromString($m->id),
+            eventId: EventId::fromString($m->event_id),
+            name: TranslatableText::fromArray($m->name),
+            color: HexColor::fromString((string) $m->color),
+            isActive: true,
+            isLocked: (bool) $m->is_locked,
+            leaderId: $m->leader_id ? UserId::fromString($m->leader_id) : null,
+        );
     }
 }

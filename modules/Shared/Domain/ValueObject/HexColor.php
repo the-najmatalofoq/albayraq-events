@@ -16,6 +16,11 @@ final readonly class HexColor extends ValueObject
         }
     }
 
+    public static function fromString(string $value): self
+    {
+        return new self($value);
+    }
+
     public function equals(ValueObject $other): bool
     {
         return $other instanceof self && strtolower($this->value) === strtolower($other->value);

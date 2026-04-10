@@ -9,9 +9,9 @@ use Modules\Shared\Domain\Enum\ErrorCodeEnum;
 
 final class DuplicateJoinRequestException extends DomainException
 {
-    public static function create(string $detail = ''): self
+    public static function create(string $userId, string $eventId): self
     {
-        return new self("Duplicate join request: " . $detail);
+        return new self("User {$userId} already has a pending or active request for event {$eventId}");
     }
 
     public function getErrorCode(): ErrorCodeEnum

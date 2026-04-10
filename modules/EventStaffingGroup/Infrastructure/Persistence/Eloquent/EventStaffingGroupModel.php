@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\Collection;
  *
  * @property string $id
  * @property string $event_id
+ * @property string|null $leader_id
  * @property array $name
  * @property string|null $color
  * @property bool $is_locked

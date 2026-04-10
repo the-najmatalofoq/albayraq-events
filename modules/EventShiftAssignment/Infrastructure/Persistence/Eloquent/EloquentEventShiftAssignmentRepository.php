@@ -11,7 +11,6 @@ use Modules\EventShiftAssignment\Domain\Repository\EventShiftAssignmentRepositor
 use Modules\EventShiftAssignment\Domain\ValueObject\ShiftAssignmentId;
 use Modules\EventShift\Domain\ValueObject\ShiftId;
 use Modules\EventParticipation\Domain\ValueObject\ParticipationId;
-use Modules\User\Domain\ValueObject\UserId;
 
 final class EloquentEventShiftAssignmentRepository implements EventShiftAssignmentRepositoryInterface
 {
@@ -25,41 +24,43 @@ final class EloquentEventShiftAssignmentRepository implements EventShiftAssignme
         EventShiftAssignmentModel::updateOrCreate(
             ['id' => $assignment->uuid->value],
             [
-                'shift_id' => $assignment->shiftId->value,
                 'participation_id' => $assignment->participationId->value,
+                'shift_id' => $assignment->shiftId->value,
                 'status' => $assignment->status->value,
-                'assigned_by' => $assignment->assignedBy->value,
-                'notes' => $assignment->notes,
             ]
         );
     }
 
     public function findById(ShiftAssignmentId $id): ?EventShiftAssignment
     {
-        $model = EventShiftAssignmentModel::find($id->value);
-        return $model ? $this->toEntity($model) : null;
+        $m = EventShiftAssignmentModel::find($id->value);
+        return $m ? $this->toEntity($m) : null;
     }
 
-    public function findByShiftId(ShiftId $shiftId): array
+    public function findByParticipationId(ParticipationId $id): array
     {
-        return EventShiftAssignmentModel::where('shift_id', $shiftId->value)
-            ->get()
-            ->map(fn ($m) => $this->toEntity($m))
-            ->toArray();
+        return EventShiftAssignmentModel::where('participation_id', $id->value)
+            ->get()->map(fn(EventShiftAssignmentModel $m) => $this->toEntity($m))->toArray();
     }
 
-    public function findByParticipationId(ParticipationId $participationId): array
+    public function findByShiftId(ShiftId $id): array
     {
-        return EventShiftAssignmentModel::where('participation_id', $participationId->value)
-            ->get()
-            ->map(fn ($m) => $this->toEntity($m))
-            ->toArray();
+        return EventShiftAssignmentModel::where('shift_id', $id->value)
+            ->get()->map(fn(EventShiftAssignmentModel $m) => $this->toEntity($m))->toArray();
+    }
+
+    public function findByParticipationAndShift(ParticipationId $participationId, ShiftId $shiftId): ?EventShiftAssignment
+    {
+        $m = EventShiftAssignmentModel::where('participation_id', $participationId->value)
+            ->where('shift_id', $shiftId->value)
+            ->first();
+        return $m ? $this->toEntity($m) : null;
     }
 
     public function countActiveByShiftId(ShiftId $shiftId): int
     {
         return EventShiftAssignmentModel::where('shift_id', $shiftId->value)
-            ->where('status', ShiftAssignmentStatusEnum::ASSIGNED->value)
+            ->where('status', ShiftAssignmentStatusEnum::ACTIVE->value)
             ->count();
     }
 
@@ -67,11 +68,9 @@ final class EloquentEventShiftAssignmentRepository implements EventShiftAssignme
     {
         return EventShiftAssignment::reconstitute(
             uuid: ShiftAssignmentId::fromString($m->id),
-            shiftId: ShiftId::fromString($m->shift_id),
             participationId: ParticipationId::fromString($m->participation_id),
+            shiftId: ShiftId::fromString($m->shift_id),
             status: ShiftAssignmentStatusEnum::from($m->status),
-            assignedBy: UserId::fromString($m->assigned_by),
-            notes: $m->notes,
             createdAt: new DateTimeImmutable($m->created_at->toDateTimeString()),
             updatedAt: $m->updated_at ? new DateTimeImmutable($m->updated_at->toDateTimeString()) : null,
         );

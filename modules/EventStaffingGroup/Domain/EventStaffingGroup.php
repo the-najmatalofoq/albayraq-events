@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace Modules\EventStaffingGroup\Domain;
 
+use Modules\EventStaffingGroup\Domain\ValueObject\GroupId;
 use Modules\Shared\Domain\AggregateRoot;
 use Modules\Shared\Domain\Identity;
 use Modules\Shared\Domain\ValueObject\TranslatableText;
 use Modules\Shared\Domain\ValueObject\HexColor;
 use Modules\Event\Domain\ValueObject\EventId;
-use Modules\EventStaffingGroup\Domain\ValueObject\GroupId;
+use Modules\User\Domain\ValueObject\UserId;
 
 final class EventStaffingGroup extends AggregateRoot
 {
@@ -20,7 +21,9 @@ final class EventStaffingGroup extends AggregateRoot
         public private(set) HexColor $color,
         public private(set) bool $isLocked = false,
         public private(set) bool $isActive = true,
-    ) {}
+        public private(set) ?UserId $leaderId = null,
+    ) {
+    }
 
     public static function create(
         GroupId $uuid,
@@ -28,9 +31,22 @@ final class EventStaffingGroup extends AggregateRoot
         TranslatableText $name,
         HexColor $color,
         bool $isActive = true,
-        bool $isLocked = false
+        bool $isLocked = false,
+        ?UserId $leaderId = null
     ): self {
-        return new self($uuid, $eventId, $name, $color, $isLocked, $isActive);
+        return new self($uuid, $eventId, $name, $color, $isLocked, $isActive, $leaderId);
+    }
+
+    public static function reconstitute(
+        GroupId $uuid,
+        EventId $eventId,
+        TranslatableText $name,
+        HexColor $color,
+        bool $isActive,
+        bool $isLocked,
+        ?UserId $leaderId = null
+    ): self {
+        return new self($uuid, $eventId, $name, $color, $isLocked, $isActive, $leaderId);
     }
 
     public function update(

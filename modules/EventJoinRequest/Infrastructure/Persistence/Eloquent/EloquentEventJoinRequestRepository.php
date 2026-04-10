@@ -50,13 +50,27 @@ final class EloquentEventJoinRequestRepository implements EventJoinRequestReposi
         return $model ? $this->toEntity($model) : null;
     }
 
-    public function findByEventId(EventId $eventId, ?string $status = null): array
+    /** @return EventJoinRequest[] */
+    public function findByEventId(EventId $eventId): array
     {
-        $query = EventJoinRequestModel::where('event_id', $eventId->value);
-        if ($status !== null) {
-            $query->where('status', $status);
-        }
-        return $query->get()->map(fn ($m) => $this->toEntity($m))->toArray();
+        return EventJoinRequestModel::where('event_id', $eventId->value)
+            ->get()
+            ->map(fn(EventJoinRequestModel $m) => $this->toEntity($m))
+            ->toArray();
+    }
+
+    /** @return EventJoinRequest[] */
+    public function findByUserId(UserId $userId): array
+    {
+        return EventJoinRequestModel::where('user_id', $userId->value)
+            ->get()
+            ->map(fn(EventJoinRequestModel $m) => $this->toEntity($m))
+            ->toArray();
+    }
+
+    public function delete(JoinRequestId $id): void
+    {
+        EventJoinRequestModel::where('id', $id->value)->delete();
     }
 
     private function toEntity(EventJoinRequestModel $m): EventJoinRequest

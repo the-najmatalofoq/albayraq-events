@@ -9,13 +9,13 @@ use Modules\Shared\Domain\Enum\ErrorCodeEnum;
 
 final class ShiftAssignmentNotFoundException extends DomainException
 {
-    public static function create(string $detail = ''): self
+    public static function create(string $id): self
     {
-        return new self("Assignment: " . $detail);
+        return new self("Shift assignment {$id} not found.");
     }
 
     public function getErrorCode(): ErrorCodeEnum
     {
-        return ErrorCodeEnum::NOT_FOUND;
+        return ErrorCodeEnum::SHIFT_ASSIGNMENT_NOT_FOUND;
     }
 }

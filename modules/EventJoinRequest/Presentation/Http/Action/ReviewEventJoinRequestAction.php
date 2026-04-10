@@ -1,5 +1,5 @@
 <?php
-// modules/EventJoinRequest/Presentation/Http/Action/ReviewJoinRequestAction.php
+// modules/EventJoinRequest/Presentation/Http/Action/ReviewEventJoinRequestAction.php
 declare(strict_types=1);
 
 namespace Modules\EventJoinRequest\Presentation\Http\Action;
@@ -10,19 +10,20 @@ use Modules\EventJoinRequest\Application\Command\ReviewJoinRequest\ReviewJoinReq
 use Modules\EventJoinRequest\Application\Command\ReviewJoinRequest\ReviewJoinRequestHandler;
 use Modules\Shared\Presentation\Http\JsonResponder;
 
-final readonly class ReviewJoinRequestAction
+final readonly class ReviewEventJoinRequestAction
 {
     public function __construct(
         private ReviewJoinRequestHandler $handler,
         private JsonResponder $responder,
-    ) {}
+    ) {
+    }
 
     public function __invoke(Request $request, string $eventId, string $id): JsonResponse
     {
         $this->handler->handle(new ReviewJoinRequestCommand(
             joinRequestId: $id,
-            reviewerId: $request->user()->id,
-            approved: $request->boolean('approved'),
+            reviewerId: (string) $request->user()->id,
+            approved: (bool) $request->input('approved'),
             rejectionReason: $request->input('rejection_reason'),
         ));
 

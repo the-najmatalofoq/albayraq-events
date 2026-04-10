@@ -22,17 +22,15 @@ final class EloquentEventRepository implements EventRepositoryInterface
             ['id' => $event->uuid->value],
             [
                 'name' => $event->name->toArray(),
-                'slug' => $event->slug,
-                'description' => $event->description->toArray(),
-                'type' => $event->type,
+                'description' => $event->description?->toArray(),
                 'start_date' => $event->startDate->format('Y-m-d H:i:s'),
                 'end_date' => $event->endDate->format('Y-m-d H:i:s'),
-                'latitude' => $event->location->latitude,
-                'longitude' => $event->location->longitude,
-                'price_amount' => $event->price->amount,
-                'price_currency' => $event->price->currency,
+                'latitude' => $event->latitude,
+                'longitude' => $event->longitude,
+                'geofence_radius' => $event->geofenceRadius,
+                'address' => $event->address,
                 'status' => $event->status->value,
-                'banner_id' => $event->bannerId,
+                'created_by' => $event->createdBy->value,
             ]
         );
     }
@@ -54,5 +52,18 @@ final class EloquentEventRepository implements EventRepositoryInterface
         return EventModel::all()
             ->map(fn($model) => EventReflector::fromModel($model))
             ->toArray();
+    }
+
+    public function findByIds(array $ids): array
+    {
+        return EventModel::whereIn('id', $ids)
+            ->get()
+            ->map(fn(EventModel $m) => EventReflector::fromModel($m))
+            ->toArray();
+    }
+
+    public function delete(EventId $id): void
+    {
+        EventModel::where('id', $id->value)->delete();
     }
 }

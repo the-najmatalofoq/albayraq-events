@@ -25,8 +25,10 @@ final class EloquentEventStaffingPositionRepository implements EventStaffingPosi
                 'event_id' => $position->eventId->value,
                 'title' => $position->title->toArray(),
                 'requirements' => $position->requirements->toArray(),
-                'quantity' => $position->quantity,
-                'is_active' => $position->isActive,
+                'wage_amount' => $position->wage?->amount,
+                'wage_type' => $position->wage?->currency,
+                'headcount' => $position->headcount,
+                'is_announced' => $position->isActive,
             ]
         );
     }
@@ -41,9 +43,12 @@ final class EloquentEventStaffingPositionRepository implements EventStaffingPosi
     {
         return EventStaffingPositionModel::where('event_id', $eventId->value)
             ->get()
-            ->map(function (EventStaffingPositionModel $model) {
-                return EventStaffingPositionReflector::fromModel($model);
-            })
+            ->map(fn(EventStaffingPositionModel $model) => EventStaffingPositionReflector::fromModel($model))
             ->toArray();
+    }
+
+    public function delete(PositionId $id): void
+    {
+        EventStaffingPositionModel::where('id', $id->value)->delete();
     }
 }

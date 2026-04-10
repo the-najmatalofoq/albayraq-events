@@ -3,8 +3,12 @@
 declare(strict_types=1);
 
 use Illuminate\Support\Facades\Route;
-use Modules\EventShiftAssignment\Presentation\Http\Action\AssignToShiftAction;
+use Modules\EventShiftAssignment\Presentation\Http\Action\CreateShiftAssignmentAction;
+use Modules\EventShiftAssignment\Presentation\Http\Action\ListShiftAssignmentsAction;
+use Modules\EventShiftAssignment\Presentation\Http\Action\CancelShiftAssignmentAction;
 
-Route::prefix('events/{eventId}')->group(function () {
-    Route::post('/shifts/{shiftId}/assignments', AssignToShiftAction::class);
+Route::prefix('event-participations/{participationId}/shift-assignments')->group(function () {
+    Route::post('/', CreateShiftAssignmentAction::class);
+    Route::get('/', ListShiftAssignmentsAction::class);
+    Route::delete('/{id}', CancelShiftAssignmentAction::class);
 });

@@ -11,5 +11,6 @@ final readonly class ReviewJoinRequestCommand
         public string $reviewerId,
         public bool $approved,
         public ?string $rejectionReason = null,
-    ) {}
+    ) {
+    }
 }

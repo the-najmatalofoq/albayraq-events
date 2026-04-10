@@ -17,4 +17,6 @@ interface EventStaffingPositionRepositoryInterface
     public function findById(PositionId $id): ?EventStaffingPosition;
 
     public function findByEventId(EventId $eventId): array;
+
+    public function delete(PositionId $id): void;
 }

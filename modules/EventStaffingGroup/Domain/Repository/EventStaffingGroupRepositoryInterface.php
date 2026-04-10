@@ -17,4 +17,6 @@ interface EventStaffingGroupRepositoryInterface
     public function findById(GroupId $id): ?EventStaffingGroup;
 
     public function findByEventId(EventId $eventId): array;
+
+    public function delete(GroupId $id): void;
 }

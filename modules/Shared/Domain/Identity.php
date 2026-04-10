@@ -11,7 +11,7 @@ abstract readonly class Identity extends ValueObject
     public function __construct(
         public readonly string $value,
     ) {
-        if (! Uuid::isValid($value)) {
+        if (!Uuid::isValid($value)) {
             throw new \InvalidArgumentException("Invalid UUID: {$value}");
         }
     }

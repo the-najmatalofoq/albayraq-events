@@ -16,5 +16,6 @@ interface EventShiftAssignmentRepositoryInterface
     public function findById(ShiftAssignmentId $id): ?EventShiftAssignment;
     public function findByShiftId(ShiftId $shiftId): array;
     public function findByParticipationId(ParticipationId $participationId): array;
+    public function findByParticipationAndShift(ParticipationId $participationId, ShiftId $shiftId): ?EventShiftAssignment;
     public function countActiveByShiftId(ShiftId $shiftId): int;
 }

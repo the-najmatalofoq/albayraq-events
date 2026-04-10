@@ -6,4 +6,6 @@ namespace Modules\EventShiftAssignment\Domain\ValueObject;
 
 use Modules\Shared\Domain\Identity;
 
-final readonly class ShiftAssignmentId extends Identity {}
+final readonly class ShiftAssignmentId extends Identity
+{
+}

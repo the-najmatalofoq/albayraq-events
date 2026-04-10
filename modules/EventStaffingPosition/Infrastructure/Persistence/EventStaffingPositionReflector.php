@@ -19,13 +19,13 @@ final class EventStaffingPositionReflector
         $position = $reflection->newInstanceWithoutConstructor();
 
         $properties = [
-            'uuid'          => PositionId::fromString($model->id),
-            'eventId'       => EventId::fromString($model->event_id),
-            'title'         => TranslatableText::fromArray($model->title),
-            'requirements'  => TranslatableText::fromArray($model->requirements),
-            'headcount'     => (int) $model->headcount,
-            'wage'          => $model->wage_amount ? new Money((float)$model->wage_amount, $model->currency) : null,
-            'isActive'      => (bool) $model->is_active,
+            'uuid' => PositionId::fromString($model->id),
+            'eventId' => EventId::fromString($model->event_id),
+            'title' => TranslatableText::fromArray($model->title),
+            'requirements' => TranslatableText::fromArray($model->requirements),
+            'headcount' => (int) $model->headcount,
+            'wage' => $model->wage_amount ? new Money((float) $model->wage_amount, $model->wage_type) : null,
+            'isActive' => (bool) $model->is_announced,
         ];
 
         foreach ($properties as $field => $value) {

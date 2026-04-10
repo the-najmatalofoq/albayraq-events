@@ -6,8 +6,6 @@ namespace Modules\EventShiftAssignment\Domain\Enum;
 
 enum ShiftAssignmentStatusEnum: string
 {
-    case ASSIGNED = 'assigned';
-    case COMPLETED = 'completed';
-    case MISSED = 'missed';
+    case ACTIVE = 'active';
     case CANCELLED = 'cancelled';
 }

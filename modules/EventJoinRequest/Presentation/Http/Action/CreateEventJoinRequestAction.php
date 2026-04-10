@@ -1,5 +1,5 @@
 <?php
-// modules/EventJoinRequest/Presentation/Http/Action/CreateJoinRequestAction.php
+// modules/EventJoinRequest/Presentation/Http/Action/CreateEventJoinRequestAction.php
 declare(strict_types=1);
 
 namespace Modules\EventJoinRequest\Presentation\Http\Action;
@@ -10,17 +10,18 @@ use Modules\EventJoinRequest\Application\Command\CreateJoinRequest\CreateJoinReq
 use Modules\EventJoinRequest\Application\Command\CreateJoinRequest\CreateJoinRequestHandler;
 use Modules\Shared\Presentation\Http\JsonResponder;
 
-final readonly class CreateJoinRequestAction
+final readonly class CreateEventJoinRequestAction
 {
     public function __construct(
         private CreateJoinRequestHandler $handler,
         private JsonResponder $responder,
-    ) {}
+    ) {
+    }
 
     public function __invoke(Request $request, string $eventId): JsonResponse
     {
         $id = $this->handler->handle(new CreateJoinRequestCommand(
-            userId: $request->user()->id,
+            userId: (string) $request->user()->id,
             eventId: $eventId,
             positionId: $request->input('position_id'),
         ));

@@ -11,6 +11,7 @@ use Modules\EventShift\Domain\Repository\EventShiftRepositoryInterface;
 use Modules\EventShift\Domain\ValueObject\ShiftId;
 use Modules\Event\Domain\ValueObject\EventId;
 use Modules\EventStaffingPosition\Domain\ValueObject\PositionId;
+use Modules\User\Domain\ValueObject\UserId;
 
 final class EloquentEventShiftRepository implements EventShiftRepositoryInterface
 {
@@ -46,7 +47,7 @@ final class EloquentEventShiftRepository implements EventShiftRepositoryInterfac
         return EventShiftModel::where('event_id', $eventId->value)
             ->orderBy('start_at')
             ->get()
-            ->map(fn ($m) => $this->toEntity($m))
+            ->map(fn(EventShiftModel $m) => $this->toEntity($m))
             ->toArray();
     }
 
@@ -56,7 +57,7 @@ final class EloquentEventShiftRepository implements EventShiftRepositoryInterfac
             ->where('position_id', $positionId->value)
             ->orderBy('start_at')
             ->get()
-            ->map(fn ($m) => $this->toEntity($m))
+            ->map(fn(EventShiftModel $m) => $this->toEntity($m))
             ->toArray();
     }
 
@@ -72,7 +73,26 @@ final class EloquentEventShiftRepository implements EventShiftRepositoryInterfac
             $query->where('id', '!=', $excludeId->value);
         }
 
-        return $query->get()->map(fn ($m) => $this->toEntity($m))->toArray();
+        return $query->get()->map(fn(EventShiftModel $m) => $this->toEntity($m))->toArray();
+    }
+
+    public function findActiveByUserId(UserId $userId): array
+    {
+        return EventShiftModel::query()
+            ->join('event_shift_assignments', 'event_shifts.id', '=', 'event_shift_assignments.shift_id')
+            ->join('event_participations', 'event_shift_assignments.participation_id', '=', 'event_participations.id')
+            ->where('event_participations.user_id', $userId->value)
+            ->where('event_participations.status', 'active')
+            ->where('event_shift_assignments.status', 'active')
+            ->select('event_shifts.*')
+            ->get()
+            ->map(fn(EventShiftModel $m) => $this->toEntity($m))
+            ->toArray();
+    }
+
+    public function delete(ShiftId $id): void
+    {
+        EventShiftModel::where('id', $id->value)->delete();
     }
 
     private function toEntity(EventShiftModel $m): EventShift
