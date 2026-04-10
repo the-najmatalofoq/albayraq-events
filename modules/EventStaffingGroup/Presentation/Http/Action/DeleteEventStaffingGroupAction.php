@@ -5,21 +5,21 @@ declare(strict_types=1);
 namespace Modules\EventStaffingGroup\Presentation\Http\Action;
 
 use Illuminate\Http\JsonResponse;
-use Modules\EventStaffingGroup\Domain\Repository\EventStaffingGroupRepositoryInterface;
-use Modules\EventStaffingGroup\Domain\ValueObject\GroupId;
+use Modules\EventStaffingGroup\Application\Command\DeleteGroup\DeleteGroupHandler;
 use Modules\Shared\Presentation\Http\JsonResponder;
 
 final readonly class DeleteEventStaffingGroupAction
 {
     public function __construct(
-        private EventStaffingGroupRepositoryInterface $repository,
+        private DeleteGroupHandler $handler,
         private JsonResponder $responder,
     ) {
     }
 
     public function __invoke(string $eventId, string $id): JsonResponse
     {
-        $this->repository->delete(GroupId::fromString($id));
+        $this->handler->handle($id);
+
         return $this->responder->noContent();
     }
 }

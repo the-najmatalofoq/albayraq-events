@@ -19,8 +19,8 @@ final class EventStaffingGroupServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->loadMigrationsFrom(__DIR__ . '/../Persistence/Migrations');
-        
-        Route::prefix('api/v1/event-staffing-groups')
+
+        Route::prefix('api/v1/events')
             ->middleware(['api', 'auth:api'])
             ->group(__DIR__ . '/../Routes/api.php');
     }
