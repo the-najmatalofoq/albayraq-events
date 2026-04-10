@@ -18,6 +18,8 @@ final readonly class CreateWageAction
     ) {
     }
 
+    // fix: make the (CreateWage) formRequest for validation
+    // fix: we must have the currencies table and module,
     public function __invoke(Request $request): JsonResponse
     {
         $id = $this->handler->handle(new CreateWageCommand(

@@ -10,12 +10,14 @@ use Modules\User\Domain\ValueObject\BankDetailId;
 use Modules\User\Presentation\Http\Presenter\BankDetailPresenter;
 use Modules\User\Presentation\Http\Request\Dashboard\UpdateBankDetailRequest;
 
+// fix: make the same as the notes in the CreateUserAction, and make the validation of the iban better.
 final readonly class UpdateBankDetailAction
 {
     public function __construct(
         private BankDetailRepositoryInterface $bankRepository,
         private JsonResponder $responder,
-    ) {}
+    ) {
+    }
 
     public function __invoke(UpdateBankDetailRequest $request, string $id): JsonResponse
     {

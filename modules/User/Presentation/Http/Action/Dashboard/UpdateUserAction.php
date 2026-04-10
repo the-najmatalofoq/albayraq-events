@@ -12,6 +12,7 @@ use Modules\User\Domain\ValueObject\UserId;
 use Modules\User\Presentation\Http\Presenter\UserPresenter;
 use Modules\User\Presentation\Http\Request\Dashboard\UpdateUserRequest;
 
+// fix: I think this class only update (email, phone, email, name, password)
 final readonly class UpdateUserAction
 {
     public function __construct(

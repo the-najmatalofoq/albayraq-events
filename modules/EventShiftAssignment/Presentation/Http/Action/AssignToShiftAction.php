@@ -15,8 +15,10 @@ final readonly class AssignToShiftAction
     public function __construct(
         private AssignToShiftHandler $handler,
         private JsonResponder $responder,
-    ) {}
+    ) {
+    }
 
+    // fix: make the (AssignToShiftAction) formRequest for validation
     public function __invoke(Request $request, string $eventId, string $shiftId): JsonResponse
     {
         $id = $this->handler->handle(new AssignToShiftCommand(

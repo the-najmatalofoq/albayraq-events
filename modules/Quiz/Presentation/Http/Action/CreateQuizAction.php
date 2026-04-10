@@ -18,6 +18,8 @@ final readonly class CreateQuizAction
     ) {
     }
 
+    // fix: make the (CreateQuiz) formRequest for validation
+
     public function __invoke(Request $request, string $eventId): JsonResponse
     {
         $id = $this->handler->handle(new CreateQuizCommand(

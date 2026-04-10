@@ -18,6 +18,7 @@ final readonly class UpdateEventStaffingPositionAction
     ) {
     }
 
+    // fix: make the (UpdateEventStaffingPosition) formRequest for validation
     public function __invoke(Request $request, string $eventId, string $id): JsonResponse
     {
         $this->handler->handle(new UpdatePositionCommand(

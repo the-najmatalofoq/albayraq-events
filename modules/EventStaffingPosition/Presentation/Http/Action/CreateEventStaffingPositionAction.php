@@ -17,6 +17,7 @@ final readonly class CreateEventStaffingPositionAction
         private JsonResponder $responder,
     ) {
     }
+    // fix: make the (CreateEventStaffingPosition) formRequest for validation
 
     public function __invoke(Request $request, string $eventId): JsonResponse
     {

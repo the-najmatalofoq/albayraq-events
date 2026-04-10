@@ -18,6 +18,8 @@ final readonly class UpdateWageAction
     ) {
     }
 
+    // fix: make the (UpdateWage) formRequest for validation
+    // fix: make the (currenies) module 
     public function __invoke(Request $request, string $id): JsonResponse
     {
         $this->handler->handle(new UpdateWageCommand(

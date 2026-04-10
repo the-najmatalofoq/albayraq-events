@@ -18,6 +18,8 @@ final readonly class CreateEventStaffingGroupAction
     ) {
     }
 
+    // fix: make the (CreateEventStaffingGroup) formRequest for validation
+
     public function __invoke(Request $request, string $eventId): JsonResponse
     {
         $id = $this->handler->handle(new CreateGroupCommand(

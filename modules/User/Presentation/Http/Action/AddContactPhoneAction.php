@@ -12,6 +12,10 @@ use Illuminate\Http\Request;
 use Modules\Shared\Presentation\Http\JsonResponder;
 use Modules\Shared\Infrastructure\Validation\Rules\SaudiPhoneRule;
 
+// we have many issues in this file:
+// fix: Use of unknown class: 'Modules\IAM\Domain\Service\TokenManagerInterface'PHP(PHP0413)
+// fix: Argument '3' passed to __construct() is expected to be of type Modules\User\Domain\ValueObject\Phone, string givenPHP(PHP0406)
+// fix: make AddContactPhone FormRequest to move the logic from the validations
 final readonly class AddContactPhoneAction
 {
     public function __construct(

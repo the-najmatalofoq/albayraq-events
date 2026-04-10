@@ -18,6 +18,7 @@ final readonly class UpdateShiftAction
     ) {
     }
 
+    // fix: make the (UpdateShiftAction) formRequest for validation
     public function __invoke(Request $request, string $eventId, string $id): JsonResponse
     {
         $this->handler->handle(new UpdateShiftCommand(

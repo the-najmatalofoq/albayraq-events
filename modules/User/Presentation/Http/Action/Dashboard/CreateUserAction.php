@@ -11,12 +11,15 @@ use Modules\Shared\Presentation\Http\JsonResponder;
 use Modules\User\Domain\ValueObject\Phone;
 use Modules\User\Presentation\Http\Request\Dashboard\CreateUserRequest;
 
+// fix: make a php DOCs in the CreateUserRequest and use the correct method from the CreateUserRequest, don't always use the input. 
+// fix: search for the method of the formRequest to get the better resutl and data types.
 final readonly class CreateUserAction
 {
     public function __construct(
         private RegisterUserHandler $handler,
         private JsonResponder $responder,
-    ) {}
+    ) {
+    }
 
     public function __invoke(CreateUserRequest $request): JsonResponse
     {

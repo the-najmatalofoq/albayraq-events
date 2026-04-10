@@ -17,6 +17,7 @@ final readonly class UpdateEventStaffingGroupAction
         private JsonResponder $responder,
     ) {
     }
+    // fix: make the (UpdateEventStaffingGroup) formRequest for validation
 
     public function __invoke(Request $request, string $eventId, string $id): JsonResponse
     {

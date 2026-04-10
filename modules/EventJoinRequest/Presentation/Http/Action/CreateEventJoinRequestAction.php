@@ -18,6 +18,7 @@ final readonly class CreateEventJoinRequestAction
     ) {
     }
 
+    // fix: make CreateEventJoinRequestRequest.php for validation
     public function __invoke(Request $request, string $eventId): JsonResponse
     {
         $id = $this->handler->handle(new CreateJoinRequestCommand(

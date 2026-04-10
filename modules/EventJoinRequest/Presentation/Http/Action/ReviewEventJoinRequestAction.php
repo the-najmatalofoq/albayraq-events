@@ -17,7 +17,7 @@ final readonly class ReviewEventJoinRequestAction
         private JsonResponder $responder,
     ) {
     }
-
+    // fix: make (ReviewEventJoinRequestAction) FormRequest for validation.
     public function __invoke(Request $request, string $eventId, string $id): JsonResponse
     {
         $this->handler->handle(new ReviewJoinRequestCommand(

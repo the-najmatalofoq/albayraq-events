@@ -17,6 +17,7 @@ final readonly class CreateShiftAssignmentAction
         private JsonResponder $responder,
     ) {
     }
+    // fix: make the (CreateShiftAssignment) formRequest for validation
 
     public function __invoke(Request $request, string $participationId): JsonResponse
     {
