@@ -43,6 +43,9 @@ use Modules\{
     Discount\Infrastructure\Providers\DiscountServiceProvider,
     DigitalSignature\Infrastructure\Providers\DigitalSignatureServiceProvider,
     HealthModule\Infrastructure\Providers\HealthModuleServiceProvider,
+    EventJoinRequest\Infrastructure\Providers\EventJoinRequestServiceProvider,
+    EventShift\Infrastructure\Providers\EventShiftServiceProvider,
+    EventShiftAssignment\Infrastructure\Providers\EventShiftAssignmentServiceProvider,
 };
 
 return [
@@ -88,4 +91,7 @@ return [
     EmployeeAnswerServiceProvider::class,
     DiscountServiceProvider::class,
     HealthModuleServiceProvider::class,
+    EventJoinRequestServiceProvider::class,
+    EventShiftServiceProvider::class,
+    EventShiftAssignmentServiceProvider::class,
 ];

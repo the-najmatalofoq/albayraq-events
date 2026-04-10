@@ -13,6 +13,8 @@ use Modules\User\Infrastructure\Persistence\Eloquent\Models\UserModel;
 use Modules\EventStaffingPosition\Infrastructure\Persistence\Eloquent\EventStaffingPositionModel;
 use Modules\EventStaffingGroup\Infrastructure\Persistence\Eloquent\EventStaffingGroupModel;
 use Modules\EventParticipation\Infrastructure\Persistence\Eloquent\EventParticipationModel;
+use Modules\EventJoinRequest\Infrastructure\Persistence\Eloquent\EventJoinRequestModel;
+use Modules\EventShift\Infrastructure\Persistence\Eloquent\EventShiftModel;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 
@@ -98,5 +100,15 @@ final class EventModel extends Model
     public function participations(): HasMany
     {
         return $this->hasMany(EventParticipationModel::class, 'event_id');
+    }
+
+    public function shifts(): HasMany
+    {
+        return $this->hasMany(EventShiftModel::class, 'event_id');
+    }
+
+    public function joinRequests(): HasMany
+    {
+        return $this->hasMany(EventJoinRequestModel::class, 'event_id');
     }
 }

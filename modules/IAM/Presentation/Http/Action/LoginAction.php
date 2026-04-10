@@ -18,8 +18,6 @@ final class LoginAction
     public function __construct(
         private readonly AuthenticateUserHandler $handler,
         private readonly JsonResponder $responder,
-        private readonly UserRepositoryInterface $userRepository,
-        private readonly UserJoinRequestRepositoryInterface $userJoinRequestRepository,
     ) {}
 
     public function __invoke(LoginRequest $request): JsonResponse

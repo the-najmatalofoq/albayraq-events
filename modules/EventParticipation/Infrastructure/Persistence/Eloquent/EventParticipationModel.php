@@ -20,6 +20,7 @@ use Modules\ParticipationEvaluation\Infrastructure\Persistence\Eloquent\Particip
 use Modules\ParticipationViolation\Infrastructure\Persistence\Eloquent\ParticipationViolationModel;
 use Modules\EventParticipationBadge\Infrastructure\Persistence\Eloquent\EventParticipationBadgeModel;
 use Modules\EventExperienceCertificate\Infrastructure\Persistence\Eloquent\EventExperienceCertificateModel;
+use Modules\EventShiftAssignment\Infrastructure\Persistence\Eloquent\EventShiftAssignmentModel;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 
@@ -124,5 +125,10 @@ final class EventParticipationModel extends Model
     public function certificate(): HasOne
     {
         return $this->hasOne(EventExperienceCertificateModel::class, 'event_participation_id');
+    }
+
+    public function shiftAssignments(): HasMany
+    {
+        return $this->hasMany(EventShiftAssignmentModel::class, 'participation_id');
     }
 }
