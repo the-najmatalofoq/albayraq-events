@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Modules\User\Presentation\Http\Action\Dashboard;
@@ -18,8 +19,7 @@ final readonly class UpdateUserAction
         private UserRepositoryInterface $userRepository,
         private PasswordHasher $passwordHasher,
         private JsonResponder $responder,
-    ) {
-    }
+    ) {}
 
     public function __invoke(UpdateUserRequest $request, string $id): JsonResponse
     {

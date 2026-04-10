@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Modules\User\Presentation\Http\Request;
@@ -11,8 +12,8 @@ final class UpdateProfileRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'full_name' => ['required', 'string', 'max:255'],
-            'identity_number' => ['required', 'string', 'max:20'],
+            'full_name' => ['nullable', 'string', 'max:255'],
+            'identity_number' => ['nullable', 'string', 'max:20'],
             'nationality_id' => ['nullable', 'string', 'uuid'],
             'birth_date' => ['nullable', 'date', 'before:today'],
             'gender' => ['nullable', 'string', 'in:male,female'],

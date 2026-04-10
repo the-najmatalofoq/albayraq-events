@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Modules\User\Presentation\Http\Action\EmployeeProfile;
@@ -15,8 +16,7 @@ final readonly class DeleteProfileAction
         private TokenManager $tokenManager,
         private DeleteUserProfileHandler $handler,
         private JsonResponder $responder,
-    ) {
-    }
+    ) {}
 
     public function __invoke(): JsonResponse
     {
@@ -30,8 +30,6 @@ final readonly class DeleteProfileAction
             userId: $userId->value
         ));
 
-        return $this->responder->success(
-            messageKey: 'user.profile_deleted'
-        );
+        return $this->responder->noContent();
     }
 }

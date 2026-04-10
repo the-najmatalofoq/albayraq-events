@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Modules\User\Presentation\Http\Middleware;
@@ -16,8 +17,7 @@ final readonly class EnsureRoleLevelMiddleware
         private TokenManager $tokenManager,
         private UserRepositoryInterface $userRepository,
         private JsonResponder $responder,
-    ) {
-    }
+    ) {}
 
     /** @param list<string> $roles */
     public function handle(Request $request, Closure $next, ...$roles): mixed
@@ -33,7 +33,7 @@ final readonly class EnsureRoleLevelMiddleware
         }
 
         $userRoles = array_map(fn($roleId) => $roleId->value, $user->roleIds);
-        
+
         $hasRole = false;
         foreach ($roles as $role) {
             if (in_array($role, $userRoles, true)) {

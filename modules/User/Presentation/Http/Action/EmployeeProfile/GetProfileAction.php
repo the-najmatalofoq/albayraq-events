@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Modules\User\Presentation\Http\Action\EmployeeProfile;
@@ -15,8 +16,7 @@ final readonly class GetProfileAction
         private TokenManager $tokenManager,
         private EmployeeProfileRepositoryInterface $profileRepository,
         private JsonResponder $responder,
-    ) {
-    }
+    ) {}
 
     public function __invoke(): JsonResponse
     {

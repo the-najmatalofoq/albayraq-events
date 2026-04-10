@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Modules\User\Application\Command\DeleteUserProfile;
@@ -11,8 +12,7 @@ final readonly class DeleteUserProfileHandler
 {
     public function __construct(
         private EmployeeProfileRepositoryInterface $profileRepository,
-    ) {
-    }
+    ) {}
 
     public function handle(DeleteUserProfileCommand $command): void
     {
