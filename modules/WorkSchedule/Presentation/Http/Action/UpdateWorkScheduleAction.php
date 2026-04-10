@@ -15,7 +15,8 @@ final readonly class UpdateWorkScheduleAction
     public function __construct(
         private UpdateWorkScheduleHandler $handler,
         private JsonResponder $responder
-    ) {}
+    ) {
+    }
 
     public function __invoke(string $id, UpdateWorkScheduleRequest $request): JsonResponse
     {

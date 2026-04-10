@@ -35,51 +35,54 @@ Defining the organization and roles required for a specific event.
 14. **Wage Module**: Pay rates and types (Daily/Monthly) linked to positions.
 15. **Quiz Module**: Assessments used for worker recruitment.
 16. **EventStaffingGroup**: Teams/Sectors within an event.
-17. **EventRoleAssignment**: Event-scoped permissions (e.g., Project Manager relative to Event X).
-18. **EventRoleCapability**: Specific permissions for event roles.
+17. **EventShift**: Temporal shifts defined for specific positions (Wave 3).
+18. **EventRoleAssignment**: Event-scoped permissions (e.g., Project Manager).
+19. **EventRoleCapability**: Specific permissions for event roles.
 
 ---
 
 ## 📝 Wave 4: Candidates & Recruitment
 Handling the transition from candidate to potential worker.
 
-19. **Question Module**: The question bank for recruitment quizzes.
-20. **EventPositionApplication**: Tracks candidates applying for specific event positions.
+20. **Question Module**: The question bank for recruitment quizzes.
+21. **EventPositionApplication**: Tracks candidates applying for specific event positions.
+22. **EventJoinRequest**: Direct request from staff to join an event with conflict validation.
 
 ---
 
 ## 🤝 Wave 5: Participation & Legal
 Closing the loop on hiring and formalizing the worker-event relationship.
 
-21. **EventParticipation**: The central bridge between `User`, `Event`, and `Position`.
-22. **DigitalSignature Module**: Shared service for capturing and storing signatures.
-23. **EventContract Module**: Specific legal agreements for each participation.
-24. **ContractAcceptanceStep**: Workflow steps for contract review and signing.
+23. **EventParticipation**: The central bridge between `User`, `Event`, and `Position`.
+24. **DigitalSignature Module**: Shared service for capturing signatures.
+25. **EventContract Module**: Specific legal agreements for each participation.
+26. **ContractAcceptanceStep**: Workflow steps for contract review and signing.
 
 ---
 
 ## ⚡ Wave 6: Operations & Feedback
 The "Live" phase of an event where work is tracked and evaluated.
 
-25. **EmployeeQuizAttempt**: Performance or training quiz results.
-26. **EventAttendance**: Check-in/out logs mapped to participation.
-27. **AttendanceBarcode**: Tools for physical check-in verification.
-28. **ParticipationEvaluation**: Performance scores and manager qualitative feedback.
-29. **ParticipationViolation**: Records of worker strikes or disciplinary actions.
-30. **Discount Module**: Wage deductions based on violations or other factors.
-31. **EventParticipationBadge**: Visual status indicators for workers.
-32. **EventExperienceCertificate**: Final documents generated upon event closure.
+27. **EventShiftAssignment**: Assigning specific participations to defined shifts.
+28. **EmployeeQuizAttempt**: Performance or training quiz results.
+29. **EventAttendance**: Check-in/out logs mapped to participation.
+30. **AttendanceBarcode**: Tools for physical check-in verification.
+31. **ParticipationEvaluation**: Performance scores and manager feedback.
+32. **ParticipationViolation**: Records of worker disciplinary actions.
+33. **Discount Module**: Wage deductions based on violations or other factors.
+34. **EventParticipationBadge**: Visual status indicators for workers.
+35. **EventExperienceCertificate**: Final documents generated upon event closure.
 
 ---
 
 ## 📊 Wave 7: Event Management & Financials
 Administrative and oversight modules for event health and costs.
 
-33. **EventTask**: Specific assignments given to workers or groups.
-34. **EventOperationalReport**: Daily reports submitted by event management.
-35. **EventAssetCustody**: Tracking equipment provided to workers.
-36. **EventExpenseModule**: Financial claims and costs submitted by managers.
-37. **EventAnnouncement**: Mass communication broadcast to event participants.
+36. **EventTask**: Specific assignments given to workers or groups.
+37. **EventOperationalReport**: Daily reports submitted by event management.
+38. **EventAssetCustody**: Tracking equipment provided to workers.
+39. **EventExpenseModule**: Financial claims and costs submitted by managers.
+40. **EventAnnouncement**: Mass communication broadcast to event participants.
 
 ---
 

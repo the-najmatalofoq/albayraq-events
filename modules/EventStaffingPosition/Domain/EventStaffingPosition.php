@@ -21,7 +21,8 @@ final class EventStaffingPosition extends AggregateRoot
         public private(set) int $headcount,
         public private(set) ?Money $wage,
         public private(set) bool $isActive,
-    ) {}
+    ) {
+    }
 
     public static function create(
         PositionId $uuid,
