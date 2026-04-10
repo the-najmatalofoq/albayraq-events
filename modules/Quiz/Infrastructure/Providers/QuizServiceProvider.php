@@ -21,9 +21,9 @@ final class QuizServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-        $this->loadMigrationsFrom(__DIR__.'/../Persistence/Migrations');
-        Route::prefix('api/v1/quizzes')
+        $this->loadMigrationsFrom(__DIR__ . '/../Persistence/Migrations');
+        Route::prefix('api/v1/events')
             ->middleware(['api'])
-            ->group(__DIR__.'/../Routes/api.php');
+            ->group(__DIR__ . '/../Routes/api.php');
     }
 }

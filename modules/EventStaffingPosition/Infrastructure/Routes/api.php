@@ -9,7 +9,7 @@ use Modules\EventStaffingPosition\Presentation\Http\Action\ShowEventStaffingPosi
 use Modules\EventStaffingPosition\Presentation\Http\Action\UpdateEventStaffingPositionAction;
 use Modules\EventStaffingPosition\Presentation\Http\Action\DeleteEventStaffingPositionAction;
 
-Route::prefix('v1/events/{eventId}/positions')->group(function () {
+Route::prefix('{eventId}/positions')->group(function () {
     Route::post('/', CreateEventStaffingPositionAction::class);
     Route::get('/', ListEventStaffingPositionsAction::class);
     Route::get('/{id}', ShowEventStaffingPositionAction::class);

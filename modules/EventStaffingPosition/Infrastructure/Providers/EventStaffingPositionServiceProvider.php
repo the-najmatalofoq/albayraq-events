@@ -20,7 +20,7 @@ final class EventStaffingPositionServiceProvider extends ServiceProvider
     {
         $this->loadMigrationsFrom(__DIR__ . '/../Persistence/Migrations');
 
-        Route::prefix('api/v1/event-staffing-positions')
+        Route::prefix('api/v1/events')
             ->middleware(['api', 'auth:api'])
             ->group(__DIR__ . '/../Routes/api.php');
     }
