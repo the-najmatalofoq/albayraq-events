@@ -9,13 +9,11 @@ use Modules\User\Domain\ContactPhone;
 use Modules\User\Domain\ValueObject\UserId;
 use Modules\User\Domain\ValueObject\ContactPhoneId;
 
-interface ContactPhoneRepositoryInterface extends FilterableRepositoryInterface
+interface ContactPhoneRepositoryInterface
 {
     public function save(ContactPhone $contactPhone): void;
-    public function findByUserId(UserId $userId): array;
+    public function findByUserId(UserId $userId): ?ContactPhone;
     public function findById(ContactPhoneId $uuid): ?ContactPhone;
     public function nextIdentity(): ContactPhoneId;
     public function delete(ContactPhoneId $uuid): void;
-    /** @param list<ContactPhoneId> $ids */
-    public function deleteBulk(UserId $userId, array $ids): void;
 }

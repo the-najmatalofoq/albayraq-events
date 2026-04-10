@@ -17,14 +17,12 @@ final readonly class DeleteContactPhoneHandler
 
     public function handle(DeleteContactPhoneCommand $command): void
     {
-        $contactPhoneId = ContactPhoneId::fromString($command->contactPhoneId);
-        $contactPhone = $this->contactPhoneRepository->findById($contactPhoneId);
-        
-        if ($contactPhone === null || $contactPhone->userId->value !== $command->userId) {
-            throw ContactPhoneNotFoundException::withId($contactPhoneId);
+        $contactPhone = $this->contactPhoneRepository->findById($command->contactPhoneId);
+
+        if ($contactPhone === null || $contactPhone->userId->value !== $command->userId->value) {
+            throw ContactPhoneNotFoundException::withId($command->contactPhoneId);
         }
 
-        $this->contactPhoneRepository->delete($contactPhoneId);
+        $this->contactPhoneRepository->delete($command->contactPhoneId);
     }
 }
-

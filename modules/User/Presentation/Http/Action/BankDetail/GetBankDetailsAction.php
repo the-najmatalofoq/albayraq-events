@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Modules\User\Presentation\Http\Action\BankDetail;
@@ -15,8 +16,7 @@ final readonly class GetBankDetailsAction
         private TokenManager $tokenManager,
         private BankDetailRepositoryInterface $bankDetailRepository,
         private JsonResponder $responder,
-    ) {
-    }
+    ) {}
 
     public function __invoke(): JsonResponse
     {

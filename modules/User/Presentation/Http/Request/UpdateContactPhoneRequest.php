@@ -11,9 +11,9 @@ final class UpdateContactPhoneRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:255'],
-            'phone' => ['required', 'string', 'max:20'],
-            'relation' => ['required', 'string', 'max:100'],
+            'name' => ['nullable', 'string', 'max:255'],
+            'phone' => ['nullable', 'string', 'max:20'],
+            'relation' => ['nullable', 'string', 'max:100'],
         ];
     }
 }

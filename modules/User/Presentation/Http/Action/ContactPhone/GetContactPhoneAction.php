@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Modules\User\Presentation\Http\Action\ContactPhone;
@@ -6,7 +7,6 @@ namespace Modules\User\Presentation\Http\Action\ContactPhone;
 use Illuminate\Http\JsonResponse;
 use Modules\IAM\Domain\Service\TokenManager;
 use Modules\User\Domain\Repository\ContactPhoneRepositoryInterface;
-use Modules\User\Domain\ValueObject\ContactPhoneId;
 use Modules\User\Presentation\Http\Presenter\ContactPhonePresenter;
 use Modules\Shared\Presentation\Http\JsonResponder;
 
@@ -16,10 +16,9 @@ final readonly class GetContactPhoneAction
         private TokenManager $tokenManager,
         private ContactPhoneRepositoryInterface $contactPhoneRepository,
         private JsonResponder $responder,
-    ) {
-    }
+    ) {}
 
-    public function __invoke(string $id): JsonResponse
+    public function __invoke(): JsonResponse
     {
         $userId = $this->tokenManager->getUserIdFromToken();
 
@@ -27,11 +26,10 @@ final readonly class GetContactPhoneAction
             return $this->responder->unauthorized();
         }
 
-        $contactPhoneId = ContactPhoneId::fromString($id);
-        $contactPhone = $this->contactPhoneRepository->findById($contactPhoneId);
+        $contactPhone = $this->contactPhoneRepository->findByUserId($userId);
 
-        if ($contactPhone === null || $contactPhone->userId->value !== $userId->value) {
-            return $this->responder->notFound();
+        if ($contactPhone === null) {
+            return $this->responder->notFound('messages.not_found');
         }
 
         return $this->responder->success(

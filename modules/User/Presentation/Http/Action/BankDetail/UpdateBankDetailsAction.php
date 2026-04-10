@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Modules\User\Presentation\Http\Action\BankDetail;
@@ -16,8 +17,7 @@ final readonly class UpdateBankDetailsAction
         private TokenManager $tokenManager,
         private UpdateBankDetailsHandler $handler,
         private JsonResponder $responder,
-    ) {
-    }
+    ) {}
 
     public function __invoke(UpdateBankDetailsRequest $request): JsonResponse
     {
@@ -28,14 +28,14 @@ final readonly class UpdateBankDetailsAction
         }
 
         $this->handler->handle(new UpdateBankDetailsCommand(
-            userId: $userId->value,
+            userId: $userId,
             accountOwner: (string) $request->validated('account_owner'),
             bankName: (string) $request->validated('bank_name'),
             iban: (string) $request->validated('iban')
         ));
 
         return $this->responder->success(
-            messageKey: 'user.bank_details_updated'
+            messageKey: 'messages.updated'
         );
     }
 }
