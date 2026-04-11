@@ -19,9 +19,9 @@ final class EventRoleCapabilityServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->loadMigrationsFrom(__DIR__ . '/../Persistence/Migrations');
-        
-        Route::prefix('api/v1/event-role-capabilities')
+
+        Route::prefix('api/v1/crm/event-role-capabilities')
             ->middleware(['api', 'auth:api'])
-            ->group(__DIR__ . '/../Routes/api.php');
+            ->group(__DIR__ . '/../Routes/Crm/api.php');
     }
 }
