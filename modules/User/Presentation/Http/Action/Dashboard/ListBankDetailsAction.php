@@ -20,10 +20,10 @@ final readonly class ListBankDetailsAction
 
     public function __invoke(BaseFilterRequest $request): JsonResponse
     {
-        $filters = $request->toFilterCriteria()->toArray();
+        $filters = $request->toFilterCriteria();
         $perPage = $request->getPerPage();
 
-        $paginator = $this->bankRepository->paginate($perPage, $filters);
+        $paginator = $this->bankRepository->paginate($filters,$perPage);
 
         return $this->responder->paginated(
             items: $paginator->items(),

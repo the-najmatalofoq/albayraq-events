@@ -26,6 +26,6 @@ final readonly class DeleteUserAction
 
         $this->userRepository->delete($userId);
 
-        return $this->responder->success(messageKey: 'user.deleted');
+        return $this->responder->noContent();
     }
 }

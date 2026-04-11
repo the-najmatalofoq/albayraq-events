@@ -1,31 +1,14 @@
 <?php
-
-declare(strict_types=1);
-
+// modules/IAM/Infrastructure/Routes/api.php
 use Illuminate\Support\Facades\Route;
-use Modules\IAM\Presentation\Http\Action\{
-    LoginAction,
-    LogoutAction,
-    RegisterAction,
-    RefreshTokenAction,
-    ForgotPasswordAction,
-    ResetPasswordAction,
-    SendEmailVerificationAction,
-    VerifyEmailAction,
-};
+use Modules\IAM\Presentation\Http\Action\LoginAction;
+use Modules\IAM\Presentation\Http\Action\LogoutAction;
+use Modules\IAM\Presentation\Http\Action\RegisterAction;
+use Modules\IAM\Presentation\Http\Action\UpdateUserAvatarAction;
 
-
-Route::post('/register', RegisterAction::class);
-Route::post('/login', LoginAction::class);
-
-Route::post('/forgot-password', ForgotPasswordAction::class);
-Route::post('/reset-password', ResetPasswordAction::class);
-
-Route::post('/refresh', RefreshTokenAction::class)->middleware(['api']);
-Route::middleware('auth:api')->group(function () {
-    Route::post('/logout', LogoutAction::class);
-
-
-    Route::post('/email/send-verification', SendEmailVerificationAction::class);
-    Route::post('/email/verify', VerifyEmailAction::class);
+Route::prefix('auth')->group(function () {
+    Route::post('/register', RegisterAction::class);
+    Route::post('/login', LoginAction::class);
+    Route::post('/logout', LogoutAction::class)->middleware('auth:api');
+    // Route::post('/avatar/{userId}', UpdateUserAvatarAction::class)->middleware('auth:sanctum');
 });

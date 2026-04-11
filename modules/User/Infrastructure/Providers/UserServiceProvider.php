@@ -88,8 +88,10 @@ final class UserServiceProvider extends ServiceProvider
 
         $dashboardRouteFile = "{$basePath}/Dashboard/api.php";
         if (file_exists($dashboardRouteFile)) {
-            Route::prefix('api/v1/dashboard/users')
-                ->middleware(['api', 'auth:api', 'role.level:admin,super-admin'])
+            Route::prefix('api/v1/dashboard')
+                ->middleware(['api', 'auth:api',
+                // 'role.level:admin,super-admin'
+                ])
                 ->group($dashboardRouteFile);
         }
     }

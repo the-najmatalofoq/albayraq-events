@@ -20,10 +20,10 @@ final readonly class ListProfilesPaginatedAction
 
     public function __invoke(BaseFilterRequest $request): JsonResponse
     {
-        $filters = $request->toFilterCriteria()->toArray();
+        $filters = $request->toFilterCriteria();
         $perPage = $request->getPerPage();
 
-        $paginator = $this->profileRepository->paginate($perPage, $filters);
+        $paginator = $this->profileRepository->paginate($filters,$perPage);
 
         return $this->responder->paginated(
             items: $paginator->items(),

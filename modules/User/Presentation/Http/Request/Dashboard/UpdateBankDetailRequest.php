@@ -15,9 +15,9 @@ final class UpdateBankDetailRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'account_owner' => ['required', 'string', 'max:255'],
-            'bank_name' => ['required', 'string', 'max:255'],
-            'iban' => ['required', 'string', 'max:34'],
+            'account_owner' => ['sometimes', 'string', 'max:255'],
+            'bank_name' => ['sometimes', 'string', 'max:255'],
+            'iban' => ['sometimes', 'string', 'max:34'],
         ];
     }
 }

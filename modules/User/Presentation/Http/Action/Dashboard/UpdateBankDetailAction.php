@@ -36,7 +36,7 @@ final readonly class UpdateBankDetailAction
 
         return $this->responder->success(
             data: BankDetailPresenter::fromDomain($bankDetail),
-            messageKey: 'bank.updated'
+            messageKey: 'messages.updated'
         );
     }
 }

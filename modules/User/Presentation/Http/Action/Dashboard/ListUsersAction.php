@@ -19,7 +19,7 @@ final readonly class ListUsersAction
 
     public function __invoke(BaseFilterRequest $request): JsonResponse
     {
-        $filters = $request->toFilterCriteria()->toArray();
+        $filters = $request->toFilterCriteria();
 
         $users = $this->userRepository->all($filters);
 

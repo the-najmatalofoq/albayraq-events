@@ -7,7 +7,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Modules\Shared\Domain\ValueObject\FilterCriteria;
 use Modules\Shared\Domain\ValueObject\PaginationCriteria;
 
-abstract class BaseFilterRequest extends FormRequest
+class BaseFilterRequest extends FormRequest
 {
     public function authorize(): bool
     {

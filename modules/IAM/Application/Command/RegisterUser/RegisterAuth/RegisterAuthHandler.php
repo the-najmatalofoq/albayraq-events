@@ -51,11 +51,11 @@ final readonly class RegisterAuthHandler
             roleIds: [$role->uuid],
             createdAt: new DateTimeImmutable(),
         );
-        $filePath = $this->fileStorage->uploadForUser(
-            $command->avatar,
-            $user->uuid,
-            'avatar'
-        );
+            $filePath = $this->fileStorage->uploadForUser(
+                $command->avatar,
+                $user->uuid,
+                'avatar'
+            );
         $this->userRepository->save($user, $filePath->value);
 
         return $user;

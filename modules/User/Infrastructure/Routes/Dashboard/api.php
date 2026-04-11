@@ -17,7 +17,7 @@ use Modules\User\Presentation\Http\Action\Dashboard\{
     ListContactPhonesAction,
 };
 
-Route::prefix('/users')->group(function () {
+Route::prefix('users')->group(function () {
     Route::get('/', ListUsersPaginatedAction::class);
     Route::get('/all', ListUsersAction::class);
     Route::get('/{id}', GetUserByIdAction::class);

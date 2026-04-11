@@ -21,6 +21,7 @@ final readonly class UpdateUserAction
         private JsonResponder $responder,
     ) {}
 
+    // refix for this
     public function __invoke(UpdateUserRequest $request, string $id): JsonResponse
     {
         $userId = new UserId($id);
@@ -35,10 +36,10 @@ final readonly class UpdateUserAction
         }
 
         if ($request->has('name') || $request->has('phone')) {
-            $user->updateInfo(
-                name: (string) $request->input('name', $user->name),
-                phone: $request->has('phone') ? new Phone((string) $request->input('phone')) : $user->phone
-            );
+            // $user->updateInfo(
+            //     // name: (string) $request->input('name', $user->name),
+            //     phone: $request->has('phone') ? new Phone((string) $request->input('phone')) : $user->phone
+            // );
         }
 
         if ($request->has('password')) {
