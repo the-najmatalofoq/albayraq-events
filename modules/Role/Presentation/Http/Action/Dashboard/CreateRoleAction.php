@@ -19,17 +19,16 @@ final class CreateRoleAction
     public function __construct(
         private readonly RoleRepository $repository,
         private readonly JsonResponder $responder,
-    ) {
-    }
+    ) {}
 
     public function __invoke(StoreRoleRequest $request)
-    {
+    {//fix this for slug as enum !!
         $roleId = $this->repository->nextIdentity();
-        
+
         $role = Role::create(
             uuid: $roleId,
             slug: RoleSlugEnum::from($request->validated('slug')),
-            name: TranslatableText::fromArray($request->validated('name')),
+            name: TranslatableText::fromMixed($request->validated('name')),
             isGlobal: (bool)$request->validated('is_global'),
             level: RoleLevelEnum::from($request->validated('level')),
         );
@@ -38,7 +37,7 @@ final class CreateRoleAction
 
         return $this->responder->created(
             RolePresenter::fromDomain($role),
-            'messages.role_created'
+            __('messages.created')
         );
     }
 }

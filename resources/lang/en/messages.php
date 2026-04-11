@@ -24,6 +24,7 @@ return [
     ],
     'user' => [
         'account_not_active' => 'Your account is not active.',
+        'user_already_exists' => 'A user with this information already exists.',
         'join_request' => [
             'approved' => 'Join request approved. User has been notified.',
 
@@ -40,7 +41,7 @@ return [
         'service_unavailable' => 'The service is temporarily unavailable.',
         'user_already_exists' => 'A user with this email already exists.',
         'invalid_credentials' => 'Invalid email or password.',
-        'email_not_verified' => 'Your email address is not verified.',
+        'email_not_verified' => 'Your email address is not verified Please check your email for the verification code.',
         'user_not_approved' => 'Your join request has not been approved yet.',
         'user_pending' => 'Your join request is still pending approval.',
         'bank_already_exists' => 'A bank account with this IBAN or Owner Account already exists.',

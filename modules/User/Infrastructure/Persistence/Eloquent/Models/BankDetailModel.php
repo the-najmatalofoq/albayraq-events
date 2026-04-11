@@ -6,8 +6,10 @@ namespace Modules\User\Infrastructure\Persistence\Eloquent\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Carbon\Carbon;
+use Modules\User\Infrastructure\Persistence\Factories\BankDetailFactory;
 
 /**
  * User bank detail model
@@ -23,7 +25,12 @@ use Carbon\Carbon;
  */
 final class BankDetailModel extends Model
 {
-    use HasUuids;
+    use HasFactory, HasUuids;
+
+    protected static function newFactory()
+    {
+        return BankDetailFactory::new();
+    }
 
     protected $table = 'bank_details';
 

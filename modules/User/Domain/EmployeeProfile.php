@@ -8,6 +8,7 @@ use DateTimeImmutable;
 use Modules\Geography\Domain\ValueObject\NationalityId;
 use Modules\Shared\Domain\Entity;
 use Modules\Shared\Domain\Identity;
+use Modules\Shared\Domain\ValueObject\TranslatableText;
 use Modules\User\Domain\ValueObject\EmployeeProfileId;
 use Modules\User\Domain\ValueObject\UserId;
 
@@ -16,7 +17,7 @@ final class EmployeeProfile extends Entity
     private function __construct(
         public readonly EmployeeProfileId $uuid,
         public readonly UserId $userId,
-        public private(set) string $fullName,
+        public private(set) TranslatableText $fullName,
         public private(set) string $identityNumber,
         public private(set) ?NationalityId $nationalityId,
         public private(set) ?string $birthDate,
@@ -32,7 +33,7 @@ final class EmployeeProfile extends Entity
     public static function create(
         EmployeeProfileId $uuid,
         UserId $userId,
-        string $fullName,
+        TranslatableText $fullName,
         string $identityNumber,
         ?NationalityId $nationalityId = null,
         ?string $birthDate = null,
@@ -57,7 +58,7 @@ final class EmployeeProfile extends Entity
     public static function fromPersistence(
         EmployeeProfileId $uuid,
         UserId $userId,
-        string $fullName,
+        TranslatableText $fullName,
         string $identityNumber,
         ?NationalityId $nationalityId,
         ?string $birthDate,
@@ -85,7 +86,7 @@ final class EmployeeProfile extends Entity
     }
 
     public function update(
-        string $fullName,
+        TranslatableText $fullName,
         string $identityNumber,
         ?NationalityId $nationalityId,
         ?string $birthDate,

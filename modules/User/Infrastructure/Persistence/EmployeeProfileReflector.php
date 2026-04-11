@@ -38,7 +38,7 @@ final class EmployeeProfileReflector
         return EmployeeProfile::fromPersistence(
             uuid: new EmployeeProfileId($model->id),
             userId: new UserId($model->user_id),
-            fullName: (string) $model->full_name,
+            fullName: TranslatableText::fromMixed($model->full_name),
             identityNumber: (string) $model->identity_number,
             nationalityId: $model->nationality_id ? new NationalityId($model->nationality_id) : null,
             birthDate: $model->birth_date ? $model->birth_date->toDateString() : null,

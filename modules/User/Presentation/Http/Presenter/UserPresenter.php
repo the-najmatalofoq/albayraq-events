@@ -12,7 +12,7 @@ final class UserPresenter
     {
         return [
             'id' => $user->uuid->value,
-            'name' => $user->name,
+            'name' => $user->name->getFor(),
             'email' => $user->email,
             'phone' => $user->phone->value,
             'avatar' => $user->avatar?->value,

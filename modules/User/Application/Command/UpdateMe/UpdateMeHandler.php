@@ -17,16 +17,16 @@ final readonly class UpdateMeHandler
 
     public function handle(UpdateMeCommand $command): void
     {
-        $userId = UserId::fromString($command->userId);
-        $user = $this->userRepository->findById($userId);
+       
+        $user = $this->userRepository->findById($command->userId);
 
         if ($user === null) {
-            throw UserNotFoundException::withId($userId);
+            throw UserNotFoundException::withId($command->userId);
         }
 
         $user->updateInfo(
             name: $command->name,
-            phone: new Phone($command->phone)
+            phone: $command->phone
         );
 
         $this->userRepository->save($user);

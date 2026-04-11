@@ -6,8 +6,10 @@ namespace Modules\Role\Infrastructure\Persistence\Eloquent;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Modules\Role\Domain\Enum\RoleLevelEnum;
 use Carbon\Carbon;
+use Modules\Role\Infrastructure\Persistence\Factories\RoleFactory;
 
 /**
  * Role model
@@ -22,7 +24,12 @@ use Carbon\Carbon;
  */
 final class RoleModel extends Model
 {
-    use HasUuids;
+    use HasFactory, HasUuids;
+
+    protected static function newFactory()
+    {
+        return RoleFactory::new();
+    }
 
     protected $table = 'roles';
     public $incrementing = false;

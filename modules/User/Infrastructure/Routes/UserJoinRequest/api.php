@@ -9,8 +9,8 @@ use Modules\User\Presentation\Http\Action\JoinRequest\{
     GetAllJoinRequestsAction,
     GetJoinRequestAction,
     ApproveJoinRequestAction,
-//  ToggleJoinRequestStatusAction,
-//  DeleteJoinRequestAction,
+    //  ToggleJoinRequestStatusAction,
+    //  DeleteJoinRequestAction,
 };
 
 Route::middleware(['role.level:admin,super-admin'])->group(function (): void {
@@ -18,5 +18,5 @@ Route::middleware(['role.level:admin,super-admin'])->group(function (): void {
     Route::get('/', ListJoinRequestsAction::class);
     Route::get('/{id}', GetJoinRequestAction::class);
     Route::post('/{id}/approve', ApproveJoinRequestAction::class);
-    Route::post('/{id}/reject', RejectJoinRequestAction::class);
+    // Route::post('/{id}/reject', RejectJoinRequestAction::class);
 });

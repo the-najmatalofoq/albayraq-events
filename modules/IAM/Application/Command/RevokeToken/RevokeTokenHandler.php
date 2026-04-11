@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Modules\IAM\Application\Command\RevokeToken;
@@ -9,8 +10,7 @@ final readonly class RevokeTokenHandler
 {
     public function __construct(
         private TokenManager $tokenManager,
-    ) {
-    }
+    ) {}
 
     public function handle(RevokeTokenCommand $command): void
     {

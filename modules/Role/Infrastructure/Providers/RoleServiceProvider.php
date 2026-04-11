@@ -20,7 +20,7 @@ final class RoleServiceProvider extends ServiceProvider
     {
         $this->loadMigrationsFrom(__DIR__ . '/../Persistence/Migrations');
 
-        Route::prefix('api/v1/roles')
+        Route::prefix('api/v1/dashboard/roles')
             ->middleware(['api', 'auth:api'])
             ->group(__DIR__ . '/../Routes/api.php');
     }

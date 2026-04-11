@@ -16,9 +16,7 @@ final class StoreContractRejectionReasonRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'reason' => ['required', 'array'],
-            'reason.ar' => ['required', 'string', 'max:255'],
-            'reason.en' => ['required', 'string', 'max:255'],
+            'reason' => ['required', 'json'],
             'is_active' => ['sometimes', 'boolean'],
         ];
     }

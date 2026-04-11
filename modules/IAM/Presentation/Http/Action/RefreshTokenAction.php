@@ -13,8 +13,7 @@ final class RefreshTokenAction
     public function __construct(
         private readonly TokenManager $tokenManager,
         private readonly JsonResponder $responder,
-    ) {
-    }
+    ) {}
 
     public function __invoke(): JsonResponse
     {
@@ -22,7 +21,7 @@ final class RefreshTokenAction
 
         return $this->responder->success(
             data: $tokenData,
-            messageKey: 'auth.token_refreshed'
+            messageKey: __('messages.auth.token_refreshed')
         );
     }
 }

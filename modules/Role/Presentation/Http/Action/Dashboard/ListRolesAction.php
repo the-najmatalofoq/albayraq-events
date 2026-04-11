@@ -14,8 +14,7 @@ final class ListRolesAction
     public function __construct(
         private readonly RoleRepository $repository,
         private readonly JsonResponder $responder,
-    ) {
-    }
+    ) {}
 
     public function __invoke(RoleFilterRequest $request)
     {

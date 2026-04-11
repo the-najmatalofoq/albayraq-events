@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Modules\User\Application\Command\UpdatePassword;
@@ -8,15 +9,13 @@ use Modules\User\Domain\Repository\UserRepositoryInterface;
 use Modules\User\Domain\ValueObject\UserId;
 use Modules\User\Domain\Exception\UserNotFoundException;
 use Modules\User\Domain\Exception\InvalidPasswordException;
-use Modules\User\Domain\ValueObject\HashedPassword;
 
 final readonly class UpdatePasswordHandler
 {
     public function __construct(
         private UserRepositoryInterface $userRepository,
         private PasswordHasher $passwordHasher,
-    ) {
-    }
+    ) {}
 
     public function handle(UpdatePasswordCommand $command): void
     {

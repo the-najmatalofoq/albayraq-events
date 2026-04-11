@@ -6,27 +6,25 @@ namespace Modules\User\Application\Command\UpdateUserAvatar;
 
 use Modules\Shared\Domain\Service\FileStorageInterface;
 use Modules\User\Domain\Repository\UserRepositoryInterface;
-use Modules\User\Domain\ValueObject\UserId;
 
 final readonly class UpdateUserAvatarHandler
 {
     public function __construct(
         private FileStorageInterface $fileStorage,
         private UserRepositoryInterface $userRepository,
-    ) {
-    }
+    ) {}
 
     public function handle(UpdateUserAvatarCommand $command): void
     {
-        $userId = new UserId($command->userId);
-        
+        $user = $this->userRepository->findById($command->userId);
+        $this->fileStorage->delete($user->avatar);
         $filePath = $this->fileStorage->uploadForUser(
             $command->avatar,
-            $userId,
+            $command->userId,
             'avatar'
         );
 
-        $user = $this->userRepository->findById($userId);
+        $user = $this->userRepository->findById($command->userId);
         if ($user) {
             $user->updateAvatar($filePath);
             $this->userRepository->save($user);

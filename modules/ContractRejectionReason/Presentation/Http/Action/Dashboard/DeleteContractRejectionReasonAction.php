@@ -21,15 +21,11 @@ final readonly class DeleteContractRejectionReasonAction
         $reason = $this->repository->findById($reasonId);
 
         if (!$reason) {
-            return $this->responder->notFound('messages.contract_rejection_reason_not_found');
+            return $this->responder->notFound('messages.not_found');
         }
 
         $this->repository->delete($reasonId);
 
-        return $this->responder->success(
-            data: null,
-            status: 200,
-            messageKey: 'messages.contract_rejection_reason_deleted'
-        );
+        return $this->responder->noContent();
     }
 }

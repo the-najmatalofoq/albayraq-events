@@ -12,13 +12,14 @@ use Modules\Shared\Domain\AggregateRoot;
 use Modules\Shared\Domain\Identity;
 use Modules\IAM\Domain\Event\UserRegistered;
 use Modules\Shared\Domain\ValueObject\FilePath;
+use Modules\Shared\Domain\ValueObject\TranslatableText;
 use Modules\User\Domain\ValueObject\Phone;
 
 final class User extends AggregateRoot
 {
     private function __construct(
         public readonly UserId             $uuid,
-        public private(set) string         $name,
+        public private(set) ?TranslatableText $name,
         public private(set) ?string        $email,
         public private(set) Phone          $phone,
         public private(set) HashedPassword $password,
@@ -33,7 +34,7 @@ final class User extends AggregateRoot
 
     public static function register(
         UserId          $uuid,
-        string          $name,
+        TranslatableText   $name,
         ?string         $email,
         Phone           $phone,
         HashedPassword  $password,
@@ -59,7 +60,7 @@ final class User extends AggregateRoot
 
     public static function reconstitute(
         UserId              $uuid,
-        string              $name,
+        ?TranslatableText   $name,
         ?string             $email,
         Phone               $phone,
         HashedPassword      $password,
@@ -85,7 +86,7 @@ final class User extends AggregateRoot
         );
     }
 
-    public function updateInfo(string $name, Phone $phone): void
+    public function updateInfo(TranslatableText $name, Phone $phone): void
     {
         $this->name = $name;
         $this->phone = $phone;

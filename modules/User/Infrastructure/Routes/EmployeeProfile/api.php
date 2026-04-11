@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use Illuminate\Support\Facades\Route;
-use Modules\User\Presentation\Http\Action\{GetProfileAction, UpdateProfileAction, DeleteProfileAction};
+use Modules\User\Presentation\Http\Action\EmployeeProfile\{GetProfileAction, UpdateProfileAction, DeleteProfileAction};
 
 Route::get('/profile', GetProfileAction::class);
 Route::put('/profile', UpdateProfileAction::class);

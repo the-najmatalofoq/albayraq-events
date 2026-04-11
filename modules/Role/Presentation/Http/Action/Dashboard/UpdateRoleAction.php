@@ -19,8 +19,7 @@ final class UpdateRoleAction
     public function __construct(
         private readonly RoleRepository $repository,
         private readonly JsonResponder $responder,
-    ) {
-    }
+    ) {}
 
     public function __invoke(UpdateRoleRequest $request, string $id)
     {
@@ -28,7 +27,7 @@ final class UpdateRoleAction
         $role = $this->repository->findById($roleId);
 
         if (!$role) {
-            return $this->responder->notFound('messages.role_not_found');
+            return $this->responder->notFound(__('messages.not_found'));
         }
 
         $updatedRole = Role::create(
@@ -44,7 +43,7 @@ final class UpdateRoleAction
         return $this->responder->success(
             RolePresenter::fromDomain($updatedRole),
             200,
-            'messages.role_updated'
+            __('messages.updated')
         );
     }
 }

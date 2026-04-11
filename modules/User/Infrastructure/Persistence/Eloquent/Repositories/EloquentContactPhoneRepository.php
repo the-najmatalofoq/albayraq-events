@@ -32,11 +32,11 @@ final class EloquentContactPhoneRepository implements ContactPhoneRepositoryInte
         );
     }
 
-    public function findByUserId(UserId $userId): array
+    public function findByUserId(UserId $userId): ?ContactPhone
     {
-        $models = $this->model->where('user_id', $userId->value)->get();
+        $model = $this->model->where('user_id', $userId->value)->first();
 
-        return $models->map(fn(ContactPhoneModel $model) => $this->toDomain($model))->toArray();
+        return $model ? $this->toDomain($model) : null;
     }
 
     public function findById(ContactPhoneId $uuid): ?ContactPhone
@@ -63,25 +63,7 @@ final class EloquentContactPhoneRepository implements ContactPhoneRepositoryInte
         $this->model->where('id', $uuid->value)->delete();
     }
 
-    public function deleteBulk(UserId $userId, array $ids): void
-    {
-        $this->model->where('user_id', $userId->value)
-            ->whereIn('id', array_map(fn($id) => $id->value, $ids))
-            ->delete();
-    }
 
-    public function paginate(FilterCriteria $criteria, int $perPage = 15): LengthAwarePaginator
-    {
-        $query = $this->model->query();
-
-        $this->applyCriteria($query, $criteria);
-
-        $paginator = $query->paginate($perPage);
-
-        $paginator->getCollection()->transform(fn(ContactPhoneModel $model) => $this->toDomain($model));
-
-        return $paginator;
-    }
 
     public function all(FilterCriteria $criteria): Collection
     {

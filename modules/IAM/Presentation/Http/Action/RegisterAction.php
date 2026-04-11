@@ -13,6 +13,7 @@ use Modules\IAM\Presentation\Http\Request\RegisterRequest;
 use Modules\Shared\Application\EventDispatcher;
 use Modules\Shared\Domain\ValueObject\TranslatableText;
 use Modules\Shared\Presentation\Http\JsonResponder;
+use Modules\User\Domain\Enum\BloodTypeEnum;
 use Modules\User\Domain\ValueObject\Phone;
 
 final class RegisterAction
@@ -25,8 +26,6 @@ final class RegisterAction
 
     public function __invoke(RegisterRequest $request): JsonResponse
     {
-        // fix: name and full_name must send only as string, and our application must handle the header of x-locale to get the locale
-        // fix: we must intruduce the (locale or Language) module, what have the fully CURD operaiotns, and then we must make a middleware to resolve the locale language, and ensure the sended from the client-side as header is exists and active in our project
         $command = new RegisterUserCommand(
             name: TranslatableText::fromMixed($request->validated('name')),
             email: $request->validated('email'),
@@ -45,6 +44,10 @@ final class RegisterAction
             contactName: $request->validated('contact_name', ''),
             contactPhone: $request->validated('contact_phone', ''),
             contactRelation: $request->validated('contact_relation') ?? 'other',
+            bloodType: BloodTypeEnum::from($request->validated('blood_type')),
+            chronicDiseases: $request->validated('chronic_diseases'),
+            allergies: $request->validated('allergies'),
+            medications: $request->validated('medications'),
             avatar: $request->file('avatar'),
             cv: $request->file('cv'),
             personalIdentity: $request->file('personal_identity'),

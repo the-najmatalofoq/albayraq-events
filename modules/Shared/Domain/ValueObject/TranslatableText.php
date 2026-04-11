@@ -15,8 +15,16 @@ final readonly class TranslatableText extends ValueObject
             throw new \InvalidArgumentException('Translatable text must not be empty.');
         }
     }
-    public static function fromMixed(mixed $data): self
+    public static function fromMixed(mixed $data): ?self
     {
+        if ($data === null) {
+            return null;
+        }
+
+        if ($data instanceof self) {
+            return $data;
+        }
+
         if (is_array($data)) {
             return new self($data);
         }
@@ -48,14 +56,23 @@ final readonly class TranslatableText extends ValueObject
         return $this->values;
     }
 
+
     public function getFor(?string $locale = null): string
     {
         $locale = $locale ?? app()->getLocale();
-        return $this->values[$locale]
-            ?? $this->values['en']
-            ?? reset($this->values)
-            ?? '';
+        if (isset($this->values[$locale])) {
+            return (string) $this->values[$locale];
+        }
+
+        if (isset($this->values['en'])) {
+            return (string) $this->values['en'];
+        }
+
+        $valuesOnly = array_values($this->values);
+
+        return !empty($valuesOnly) ? (string) $valuesOnly[0] : '';
     }
+
 
     public function __toString(): string
     {

@@ -17,8 +17,7 @@ final class EloquentBankDetailRepository implements BankDetailRepositoryInterfac
 {
     public function __construct(
         private readonly BankDetailModel $bankDetailModel
-    ) {
-    }
+    ) {}
 
     public function save(BankDetail $bankDetail): void
     {

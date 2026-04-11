@@ -15,8 +15,7 @@ final readonly class JsonResponder
 {
     public function __construct(
         private TranslatorInterface $translator
-    ) {
-    }
+    ) {}
 
     public function paginated(
         array $items,
@@ -85,7 +84,7 @@ final readonly class JsonResponder
         return $this->error(
             errorCode: ErrorCodeEnum::UNAUTHORIZED->value,
             status: 401,
-            messageKey: $messageKey
+            messageKey: __($messageKey)
         );
     }
 
@@ -94,7 +93,7 @@ final readonly class JsonResponder
         return $this->error(
             errorCode: ErrorCodeEnum::FORBIDDEN->value,
             status: 403,
-            messageKey: $messageKey
+            messageKey: __($messageKey)
         );
     }
 
@@ -103,7 +102,7 @@ final readonly class JsonResponder
         return $this->error(
             errorCode: ErrorCodeEnum::NOT_FOUND->value,
             status: 404,
-            messageKey: $messageKey
+            messageKey: __($messageKey)
         );
     }
 }

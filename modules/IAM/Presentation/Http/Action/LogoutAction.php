@@ -22,7 +22,7 @@ final readonly class LogoutAction
 
         return $this->responder->success(
             data: null,
-            messageKey: 'auth.logged_out'
+            messageKey: __('messages.auth.logged_out')
         );
     }
 }

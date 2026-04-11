@@ -21,18 +21,18 @@ final readonly class CreateContractRejectionReasonAction
     public function __invoke(StoreContractRejectionReasonRequest $request): mixed
     {
         $id = $this->repository->nextIdentity();
-        
+
         $reason = ContractRejectionReason::create(
             uuid: $id,
-            reason: TranslatableText::fromArray($request->validated('reason')),
+            reason: TranslatableText::fromMixed($request->validated('reason')),
             isActive: (bool)$request->validated('is_active', true)
         );
 
         $this->repository->save($reason);
 
         return $this->responder->created(
-            ContractRejectionReasonPresenter::fromDomain($reason),
-            'messages.contract_rejection_reason_created'
+            data: ['id' => $reason->uuid->value],
+            messageKey: 'messages.created'
         );
     }
 }

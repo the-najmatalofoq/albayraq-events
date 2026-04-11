@@ -1,9 +1,11 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Modules\User\Presentation\Http\Request;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Modules\Shared\Infrastructure\Validation\Rules\SaudiPhoneRule;
 
 final class UpdateMeRequest extends FormRequest
 {
@@ -12,7 +14,7 @@ final class UpdateMeRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255'],
-            'phone' => ['required', 'string', 'max:20'],
+            'phone' => ['required', 'string', new SaudiPhoneRule()],
         ];
     }
 }

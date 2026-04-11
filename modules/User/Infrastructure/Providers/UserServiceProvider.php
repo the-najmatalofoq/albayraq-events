@@ -16,6 +16,7 @@ use Modules\User\Domain\Repository\{
     UserJoinRequestRepositoryInterface,
     EmployeeNationalityRepositoryInterface,
     UserSettingsRepositoryInterface,
+    MedicalRecordRepositoryInterface,
 };
 use Modules\User\Infrastructure\Persistence\Eloquent\Repositories\{
     EloquentUserRepository,
@@ -25,6 +26,7 @@ use Modules\User\Infrastructure\Persistence\Eloquent\Repositories\{
     EloquentUserJoinRequestRepository,
     EloquentEmployeeNationalityRepository,
     EloquentUserSettingsRepository,
+    EloquentMedicalRecordRepository,
 };
 use Modules\User\Presentation\Http\Middleware\EnsureRoleLevelMiddleware;
 
@@ -39,6 +41,7 @@ final class UserServiceProvider extends ServiceProvider
         $this->app->bind(UserJoinRequestRepositoryInterface::class, EloquentUserJoinRequestRepository::class);
         $this->app->bind(EmployeeNationalityRepositoryInterface::class, EloquentEmployeeNationalityRepository::class);
         $this->app->bind(UserSettingsRepositoryInterface::class, EloquentUserSettingsRepository::class);
+        $this->app->bind(MedicalRecordRepositoryInterface::class, EloquentMedicalRecordRepository::class);
     }
 
     public function boot(): void
