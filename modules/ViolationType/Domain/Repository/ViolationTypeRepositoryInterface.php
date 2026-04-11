@@ -7,6 +7,7 @@ namespace Modules\ViolationType\Domain\Repository;
 use Modules\ViolationType\Domain\ViolationType;
 use Modules\ViolationType\Domain\ValueObject\ViolationTypeId;
 use Modules\Shared\Domain\Repository\FilterableRepositoryInterface;
+// fix: use the fiter in the listAll also.
 
 interface ViolationTypeRepositoryInterface extends FilterableRepositoryInterface
 {

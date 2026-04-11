@@ -7,7 +7,9 @@ namespace Modules\EventStaffingPosition\Domain\Repository;
 use Modules\EventStaffingPosition\Domain\EventStaffingPosition;
 use Modules\EventStaffingPosition\Domain\ValueObject\PositionId;
 use Modules\Event\Domain\ValueObject\EventId;
+// fix: use the fiter in the listAll also.
 
+// fix: use the FilterableRepositoryInterface
 interface EventStaffingPositionRepositoryInterface
 {
     public function nextIdentity(): PositionId;

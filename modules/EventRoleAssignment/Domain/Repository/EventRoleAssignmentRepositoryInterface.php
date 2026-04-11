@@ -8,7 +8,7 @@ use Modules\EventRoleAssignment\Domain\EventRoleAssignment;
 use Modules\EventRoleAssignment\Domain\ValueObject\AssignmentId;
 use Modules\Event\Domain\ValueObject\EventId;
 use Modules\User\Domain\ValueObject\UserId;
-
+// fix: use the FilterableRepositoryInterface
 interface EventRoleAssignmentRepositoryInterface
 {
     public function nextIdentity(): AssignmentId;
@@ -20,4 +20,6 @@ interface EventRoleAssignmentRepositoryInterface
     public function findByEventId(EventId $eventId): array;
 
     public function findByUserAndEvent(UserId $userId, EventId $eventId): array;
+
+    public function delete(AssignmentId $id): void;
 }

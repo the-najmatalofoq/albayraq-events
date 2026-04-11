@@ -7,7 +7,9 @@ namespace Modules\EventAttendance\Domain\Repository;
 use Modules\EventAttendance\Domain\EventAttendance;
 use Modules\EventAttendance\Domain\ValueObject\AttendanceId;
 use Modules\EventParticipation\Domain\ValueObject\ParticipationId;
+// fix: use the fiter in the listAll also.
 
+// fix: use the FilterableRepositoryInterface
 interface EventAttendanceRepositoryInterface
 {
     public function nextIdentity(): AttendanceId;

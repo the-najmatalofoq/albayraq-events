@@ -10,7 +10,7 @@ use Modules\ViolationType\Presentation\Http\Action\Dashboard\GetViolationTypeByI
 use Modules\ViolationType\Presentation\Http\Action\Dashboard\UpdateViolationTypeAction;
 use Modules\ViolationType\Presentation\Http\Action\Dashboard\DeleteViolationTypeAction;
 
-Route::prefix('dashboard')
+Route::prefix('crm')
     ->middleware(['role.level:admin,super-admin'])
     ->group(function () {
         Route::get('/', ListViolationTypesAction::class);

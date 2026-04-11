@@ -38,8 +38,8 @@ final class IAMServiceProvider extends ServiceProvider
             LogOtpNotification::class,
         );
 
-        Route::prefix('api/v1/auth')
+        Route::prefix('api/v1/crm/iam')
             ->middleware(['api'])
-            ->group(__DIR__ . '/../Routes/api.php');
+            ->group(__DIR__ . '/../Routes/Crm/api.php');
     }
 }

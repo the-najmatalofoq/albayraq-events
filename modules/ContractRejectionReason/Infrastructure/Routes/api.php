@@ -10,7 +10,7 @@ use Modules\ContractRejectionReason\Presentation\Http\Action\Dashboard\GetContra
 use Modules\ContractRejectionReason\Presentation\Http\Action\Dashboard\UpdateContractRejectionReasonAction;
 use Modules\ContractRejectionReason\Presentation\Http\Action\Dashboard\DeleteContractRejectionReasonAction;
 
-Route::prefix('dashboard')
+Route::prefix('crm')
     ->middleware(['role.level:admin,super-admin'])
     ->group(function () {
         Route::get('/', ListContractRejectionReasonsAction::class);

@@ -7,6 +7,7 @@ use Modules\Shared\Domain\Repository\FilterableRepositoryInterface;
 use Modules\User\Domain\User;
 use Modules\User\Domain\ValueObject\Phone;
 use Modules\User\Domain\ValueObject\UserId;
+// fix: use the fiter in the listAll also.
 
 interface UserRepositoryInterface extends FilterableRepositoryInterface
 {

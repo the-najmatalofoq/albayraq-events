@@ -6,7 +6,9 @@ namespace Modules\Geography\Domain\Repository;
 use Modules\Geography\Domain\Nationality;
 use Modules\Geography\Domain\ValueObject\NationalityId;
 use Modules\Geography\Domain\ValueObject\CountryId;
+// fix: use the fiter in the listAll also.
 
+// fix: use the FilterableRepositoryInterface
 interface NationalityRepositoryInterface
 {
     public function nextIdentity(): NationalityId;

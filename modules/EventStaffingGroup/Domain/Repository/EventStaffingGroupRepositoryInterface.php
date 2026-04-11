@@ -7,7 +7,9 @@ namespace Modules\EventStaffingGroup\Domain\Repository;
 use Modules\EventStaffingGroup\Domain\EventStaffingGroup;
 use Modules\EventStaffingGroup\Domain\ValueObject\GroupId;
 use Modules\Event\Domain\ValueObject\EventId;
+// fix: use the fiter in the listAll also.
 
+// fix: use the FilterableRepositoryInterface
 interface EventStaffingGroupRepositoryInterface
 {
     public function nextIdentity(): GroupId;

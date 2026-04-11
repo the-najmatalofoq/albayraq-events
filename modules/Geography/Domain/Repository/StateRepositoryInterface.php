@@ -6,7 +6,9 @@ namespace Modules\Geography\Domain\Repository;
 use Modules\Geography\Domain\State;
 use Modules\Geography\Domain\ValueObject\StateId;
 use Modules\Geography\Domain\ValueObject\CountryId;
+// fix: use the fiter in the listAll also.
 
+// fix: use the FilterableRepositoryInterface
 interface StateRepositoryInterface
 {
     public function nextIdentity(): StateId;

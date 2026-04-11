@@ -7,7 +7,9 @@ use Modules\Geography\Domain\City;
 use Modules\Geography\Domain\ValueObject\CityId;
 use Modules\Geography\Domain\ValueObject\CountryId;
 use Modules\Geography\Domain\ValueObject\StateId;
+// fix: use the fiter in the listAll also.
 
+// fix: use the FilterableRepositoryInterface
 interface CityRepositoryInterface
 {
     public function nextIdentity(): CityId;

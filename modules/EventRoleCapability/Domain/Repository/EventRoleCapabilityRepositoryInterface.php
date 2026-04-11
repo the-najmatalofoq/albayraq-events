@@ -7,7 +7,9 @@ namespace Modules\EventRoleCapability\Domain\Repository;
 use Modules\EventRoleCapability\Domain\EventRoleCapability;
 use Modules\EventRoleCapability\Domain\ValueObject\CapabilityId;
 use Modules\EventRoleAssignment\Domain\ValueObject\AssignmentId;
+// fix: use the fiter in the listAll also.
 
+// fix: use the FilterableRepositoryInterface
 interface EventRoleCapabilityRepositoryInterface
 {
     public function nextIdentity(): CapabilityId;

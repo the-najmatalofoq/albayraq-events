@@ -7,7 +7,9 @@ namespace Modules\WorkSchedule\Domain\Repository;
 use Modules\WorkSchedule\Domain\WorkSchedule;
 use Modules\Shared\Domain\ValueObject\ScheduleId;
 use Modules\Shared\Domain\ValueObject\PaginationCriteria;
+// fix: use the fiter in the listAll also.
 
+// fix: use the FilterableRepositoryInterface
 interface WorkScheduleRepositoryInterface
 {
     public function nextIdentity(): ScheduleId;

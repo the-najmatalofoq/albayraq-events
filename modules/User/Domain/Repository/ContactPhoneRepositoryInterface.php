@@ -4,10 +4,10 @@ declare(strict_types=1);
 namespace Modules\User\Domain\Repository;
 
 use Modules\Shared\Domain\Repository\FilterableRepositoryInterface;
-use Modules\Shared\Domain\ValueObject\FilterCriteria;
 use Modules\User\Domain\ContactPhone;
 use Modules\User\Domain\ValueObject\UserId;
 use Modules\User\Domain\ValueObject\ContactPhoneId;
+// fix: use the fiter in the listAll also.
 
 interface ContactPhoneRepositoryInterface extends FilterableRepositoryInterface
 {

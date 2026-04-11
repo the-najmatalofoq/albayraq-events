@@ -16,14 +16,13 @@ use Modules\User\Presentation\Http\Action\Dashboard\{
     ListContactPhonesAction,
 };
 
-Route::prefix('/users')->group(function () {
-    Route::get('/', ListUsersPaginatedAction::class);
-    Route::get('/all', ListUsersAction::class);
-    Route::get('/{id}', GetUserByIdAction::class);
-    Route::post('/', CreateUserAction::class);
-    Route::put('/{id}', UpdateUserAction::class);
-    Route::delete('/{id}', DeleteUserAction::class);
-});
+
+Route::get('/', ListUsersPaginatedAction::class);
+Route::get('/all', ListUsersAction::class);
+Route::get('/{id}', GetUserByIdAction::class);
+Route::post('/', CreateUserAction::class);
+Route::put('/{id}', UpdateUserAction::class);
+Route::delete('/{id}', DeleteUserAction::class);
 
 Route::prefix('/profiles')->group(function () {
     Route::get('/', ListProfilesPaginatedAction::class);

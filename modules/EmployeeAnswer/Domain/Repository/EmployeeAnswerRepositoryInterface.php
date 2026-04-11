@@ -6,7 +6,9 @@ namespace Modules\EmployeeAnswer\Domain\Repository;
 
 use Modules\EmployeeAnswer\Domain\EmployeeAnswer;
 use Modules\EmployeeAnswer\Domain\ValueObject\AnswerId;
+// fix: use the fiter in the listAll also.
 
+// fix: use the FilterableRepositoryInterface
 interface EmployeeAnswerRepositoryInterface
 {
     public function findById(AnswerId $id): ?EmployeeAnswer;

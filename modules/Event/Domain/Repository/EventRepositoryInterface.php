@@ -5,7 +5,9 @@ namespace Modules\Event\Domain\Repository;
 
 use Modules\Event\Domain\Event;
 use Modules\Event\Domain\ValueObject\EventId;
+// fix: use the fiter in the listAll also.
 
+// fix: use the FilterableRepositoryInterface
 interface EventRepositoryInterface
 {
     public function nextIdentity(): EventId;

@@ -8,7 +8,9 @@ use Modules\EventPositionApplication\Domain\EventPositionApplication;
 use Modules\EventPositionApplication\Domain\ValueObject\ApplicationId;
 use Modules\User\Domain\ValueObject\UserId;
 use Modules\EventStaffingPosition\Domain\ValueObject\PositionId;
+// fix: use the fiter in the listAll also.
 
+// fix: use the FilterableRepositoryInterface
 interface EventPositionApplicationRepositoryInterface
 {
     public function nextIdentity(): ApplicationId;

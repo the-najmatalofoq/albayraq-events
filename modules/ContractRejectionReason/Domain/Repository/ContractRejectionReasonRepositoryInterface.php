@@ -7,10 +7,7 @@ namespace Modules\ContractRejectionReason\Domain\Repository;
 use Modules\ContractRejectionReason\Domain\ContractRejectionReason;
 use Modules\ContractRejectionReason\Domain\ValueObject\ContractRejectionReasonId;
 use Modules\Shared\Domain\Repository\FilterableRepositoryInterface;
-use Modules\Shared\Domain\ValueObject\FilterCriteria;
-use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Collection;
-
+// fix: use the fiter in the listAll also.
 interface ContractRejectionReasonRepositoryInterface extends FilterableRepositoryInterface
 {
     public function nextIdentity(): ContractRejectionReasonId;

@@ -8,7 +8,9 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Modules\User\Domain\UserJoinRequest;
 use Modules\User\Domain\ValueObject\UserJoinRequestId;
 use Modules\User\Domain\ValueObject\UserId;
+// fix: use the fiter in the listAll also.
 
+// fix: use the FilterableRepositoryInterface
 interface UserJoinRequestRepositoryInterface
 {
     public function nextIdentity(): UserJoinRequestId;

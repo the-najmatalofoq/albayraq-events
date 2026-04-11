@@ -7,6 +7,7 @@ use Modules\Shared\Domain\Repository\FilterableRepositoryInterface;
 use Modules\User\Domain\EmployeeProfile;
 use Modules\User\Domain\ValueObject\UserId;
 use Modules\User\Domain\ValueObject\EmployeeProfileId;
+// fix: use the fiter in the listAll also.
 
 interface EmployeeProfileRepositoryInterface extends FilterableRepositoryInterface
 {

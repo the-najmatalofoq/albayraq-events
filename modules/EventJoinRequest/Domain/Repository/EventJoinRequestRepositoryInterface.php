@@ -7,7 +7,9 @@ use Modules\EventJoinRequest\Domain\EventJoinRequest;
 use Modules\EventJoinRequest\Domain\ValueObject\JoinRequestId;
 use Modules\User\Domain\ValueObject\UserId;
 use Modules\Event\Domain\ValueObject\EventId;
+// fix: use the fiter in the listAll also.
 
+// fix: use the FilterableRepositoryInterface
 interface EventJoinRequestRepositoryInterface
 {
     public function nextIdentity(): JoinRequestId;

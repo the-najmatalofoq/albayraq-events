@@ -8,7 +8,9 @@ use Modules\EventShift\Domain\ValueObject\ShiftId;
 use Modules\Event\Domain\ValueObject\EventId;
 use Modules\EventStaffingPosition\Domain\ValueObject\PositionId;
 use Modules\User\Domain\ValueObject\UserId;
+// fix: use the fiter in the listAll also.
 
+// fix: use the FilterableRepositoryInterface
 interface EventShiftRepositoryInterface
 {
     public function nextIdentity(): ShiftId;

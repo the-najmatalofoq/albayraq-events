@@ -7,7 +7,9 @@ namespace Modules\EventAssetCustody\Domain\Repository;
 use Modules\EventAssetCustody\Domain\EventAssetCustody;
 use Modules\EventAssetCustody\Domain\ValueObject\CustodyId;
 use Modules\EventParticipation\Domain\ValueObject\ParticipationId;
+// fix: use the fiter in the listAll also.
 
+// fix: use the FilterableRepositoryInterface
 interface EventAssetCustodyRepositoryInterface
 {
     public function nextIdentity(): CustodyId;

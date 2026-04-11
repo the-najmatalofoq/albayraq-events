@@ -7,7 +7,9 @@ namespace Modules\Notification\Domain\Repository;
 use Modules\Notification\Domain\DeviceToken;
 use Modules\Notification\Domain\ValueObject\DeviceTokenId;
 use Modules\User\Domain\ValueObject\UserId;
+// fix: use the fiter in the listAll also.
 
+// fix: use the FilterableRepositoryInterface
 interface DeviceTokenRepositoryInterface
 {
     public function save(DeviceToken $token): void;

@@ -56,4 +56,9 @@ final class EloquentEventRoleAssignmentRepository implements EventRoleAssignment
             })
             ->toArray();
     }
+
+    public function delete(AssignmentId $id): void
+    {
+        EventRoleAssignmentModel::where('id', $id->value)->delete();
+    }
 }

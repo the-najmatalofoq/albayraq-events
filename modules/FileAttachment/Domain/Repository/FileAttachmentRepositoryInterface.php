@@ -6,7 +6,9 @@ namespace Modules\FileAttachment\Domain\Repository;
 
 use Modules\FileAttachment\Domain\FileAttachment;
 use Modules\FileAttachment\Domain\ValueObject\AttachmentId;
+// fix: use the fiter in the listAll also.
 
+// fix: use the FilterableRepositoryInterface
 interface FileAttachmentRepositoryInterface
 {
     public function nextIdentity(): AttachmentId;

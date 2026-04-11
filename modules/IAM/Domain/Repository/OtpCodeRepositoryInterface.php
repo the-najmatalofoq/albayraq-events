@@ -7,7 +7,9 @@ use Modules\IAM\Domain\Enum\OtpPurposeEnum;
 use Modules\IAM\Domain\OtpCode;
 use Modules\IAM\Domain\ValueObject\OtpCodeId;
 use Modules\User\Domain\ValueObject\UserId;
+// fix: use the fiter in the listAll also.
 
+// fix: use the FilterableRepositoryInterface
 interface OtpCodeRepositoryInterface
 {
     public function nextIdentity(): OtpCodeId;

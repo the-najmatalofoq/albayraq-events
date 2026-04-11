@@ -10,6 +10,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Modules\User\Infrastructure\Persistence\Eloquent\Models\UserModel;
 use Modules\Event\Infrastructure\Persistence\Eloquent\EventModel;
 use Modules\Role\Infrastructure\Persistence\Eloquent\RoleModel;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Modules\EventRoleAssignment\Infrastructure\Persistence\Eloquent\Factories\EventRoleAssignmentFactory;
 use Carbon\Carbon;
 
 /**
@@ -27,7 +29,7 @@ use Carbon\Carbon;
  */
 final class EventRoleAssignmentModel extends Model
 {
-    use HasUuids;
+    use HasUuids, HasFactory;
 
     protected $table = 'event_role_assignments';
     public $incrementing = false;
@@ -52,5 +54,10 @@ final class EventRoleAssignmentModel extends Model
     public function role(): BelongsTo
     {
         return $this->belongsTo(RoleModel::class, 'role_id');
+    }
+
+    protected static function newFactory(): EventRoleAssignmentFactory
+    {
+        return EventRoleAssignmentFactory::new();
     }
 }

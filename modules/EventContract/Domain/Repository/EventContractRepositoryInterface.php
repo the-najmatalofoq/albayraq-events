@@ -7,7 +7,9 @@ namespace Modules\EventContract\Domain\Repository;
 use Modules\Shared\Domain\PaginatedResult;
 use Modules\EventContract\Domain\EventContract;
 use Modules\EventContract\Domain\ValueObject\ContractId;
+// fix: use the fiter in the listAll also.
 
+// fix: use the FilterableRepositoryInterface
 interface EventContractRepositoryInterface
 {
     public function findById(ContractId $id): ?EventContract;

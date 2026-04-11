@@ -7,7 +7,9 @@ namespace Modules\EventOperationalReport\Domain\Repository;
 use Modules\EventOperationalReport\Domain\EventOperationalReport;
 use Modules\EventOperationalReport\Domain\ValueObject\ReportId;
 use Modules\Event\Domain\ValueObject\EventId;
+// fix: use the fiter in the listAll also.
 
+// fix: use the FilterableRepositoryInterface
 interface EventOperationalReportRepositoryInterface
 {
     public function nextIdentity(): ReportId;

@@ -7,7 +7,9 @@ namespace Modules\ParticipationViolation\Domain\Repository;
 use Modules\ParticipationViolation\Domain\ParticipationViolation;
 use Modules\ParticipationViolation\Domain\ValueObject\ViolationId;
 use Modules\EventParticipation\Domain\ValueObject\ParticipationId;
+// fix: use the fiter in the listAll also.
 
+// fix: use the FilterableRepositoryInterface
 interface ParticipationViolationRepositoryInterface
 {
     public function nextIdentity(): ViolationId;

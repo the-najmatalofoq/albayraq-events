@@ -7,7 +7,9 @@ namespace Modules\ParticipationEvaluation\Domain\Repository;
 use Modules\ParticipationEvaluation\Domain\ParticipationEvaluation;
 use Modules\ParticipationEvaluation\Domain\ValueObject\EvaluationId;
 use Modules\EventParticipation\Domain\ValueObject\ParticipationId;
+// fix: use the fiter in the listAll also.
 
+// fix: use the FilterableRepositoryInterface
 interface ParticipationEvaluationRepositoryInterface
 {
     public function nextIdentity(): EvaluationId;

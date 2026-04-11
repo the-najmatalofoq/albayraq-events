@@ -8,7 +8,9 @@ use Modules\EventShiftAssignment\Domain\EventShiftAssignment;
 use Modules\EventShiftAssignment\Domain\ValueObject\ShiftAssignmentId;
 use Modules\EventShift\Domain\ValueObject\ShiftId;
 use Modules\EventParticipation\Domain\ValueObject\ParticipationId;
+// fix: use the fiter in the listAll also.
 
+// fix: use the FilterableRepositoryInterface
 interface EventShiftAssignmentRepositoryInterface
 {
     public function nextIdentity(): ShiftAssignmentId;

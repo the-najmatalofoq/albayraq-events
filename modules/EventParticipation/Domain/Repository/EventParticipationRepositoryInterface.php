@@ -8,7 +8,9 @@ use Modules\EventParticipation\Domain\EventParticipation;
 use Modules\EventParticipation\Domain\ValueObject\ParticipationId;
 use Modules\User\Domain\ValueObject\UserId;
 use Modules\Event\Domain\ValueObject\EventId;
+// fix: use the fiter in the listAll also.
 
+// fix: use the FilterableRepositoryInterface
 interface EventParticipationRepositoryInterface
 {
     public function nextIdentity(): ParticipationId;

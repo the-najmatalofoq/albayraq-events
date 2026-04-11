@@ -6,7 +6,9 @@ namespace Modules\Wage\Domain\Repository;
 
 use Modules\Wage\Domain\Wage;
 use Modules\Wage\Domain\ValueObject\WageId;
+// fix: use the fiter in the listAll also.
 
+// fix: use the FilterableRepositoryInterface
 interface WageRepositoryInterface
 {
     public function nextIdentity(): WageId;

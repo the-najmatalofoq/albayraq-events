@@ -8,7 +8,9 @@ use Modules\DigitalSignature\Domain\ValueObject\DigitalSignatureId;
 use Modules\Shared\Domain\ValueObject\FilterCriteria;
 use Modules\Shared\Domain\ValueObject\PaginationCriteria;
 use Modules\Shared\Domain\ValueObject\SortCriteria;
+// fix: use the fiter in the listAll also.
 
+// fix: use the FilterableRepositoryInterface
 interface DigitalSignatureRepositoryInterface
 {
     public function nextIdentity(): DigitalSignatureId;

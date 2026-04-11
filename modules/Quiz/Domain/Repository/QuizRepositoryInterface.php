@@ -8,7 +8,9 @@ use Modules\Quiz\Domain\Quiz;
 use Modules\Quiz\Domain\ValueObject\QuizId;
 
 use Modules\Event\Domain\ValueObject\EventId;
+// fix: use the fiter in the listAll also.
 
+// fix: use the FilterableRepositoryInterface
 interface QuizRepositoryInterface
 {
     public function nextIdentity(): QuizId;
