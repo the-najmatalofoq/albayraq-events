@@ -19,6 +19,7 @@ final class Question extends AggregateRoot
         public private(set) string $type,
         public private(set) array $options,
         public private(set) int $scoreWeight,
+        public private(set) ?\DateTimeImmutable $deletedAt = null,
     ) {}
 
     public static function create(
@@ -30,6 +31,33 @@ final class Question extends AggregateRoot
         int $scoreWeight = 1,
     ): self {
         return new self($uuid, $quizId, $content, $type, $options, $scoreWeight);
+    }
+
+    public static function reconstitute(
+        QuestionId $uuid,
+        QuizId $quizId,
+        TranslatableText $content,
+        string $type,
+        array $options,
+        int $scoreWeight,
+        ?\DateTimeImmutable $deletedAt = null,
+    ): self {
+        return new self($uuid, $quizId, $content, $type, $options, $scoreWeight, $deletedAt);
+    }
+
+    public function isDeleted(): bool
+    {
+        return $this->deletedAt !== null;
+    }
+
+    public function softDelete(): void
+    {
+        $this->deletedAt = new \DateTimeImmutable();
+    }
+
+    public function restore(): void
+    {
+        $this->deletedAt = null;
     }
 
     public function update(TranslatableText $content, array $options, string $type, int $scoreWeight): void

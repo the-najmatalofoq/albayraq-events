@@ -1,5 +1,5 @@
 <?php
-// modules/Question/Infrastructure/Persistence/Eloquent/QuestionModel.php
+// filePath: modules/Question/Infrastructure/Persistence/Eloquent/QuestionModel.php
 declare(strict_types=1);
 
 namespace Modules\Question\Infrastructure\Persistence\Eloquent;
@@ -7,8 +7,9 @@ namespace Modules\Question\Infrastructure\Persistence\Eloquent;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Modules\Quiz\Infrastructure\Persistence\Eloquent\QuizModel;
-use Illuminate\Database\Eloquent\Collection;
 use Carbon\Carbon;
 
 /**
@@ -22,11 +23,12 @@ use Carbon\Carbon;
  * @property int $score_weight
  * @property Carbon $created_at
  * @property Carbon $updated_at
+ * @property Carbon|null $deleted_at
  * @property-read QuizModel $quiz
  */
 final class QuestionModel extends Model
 {
-    use HasUuids;
+    use HasUuids, SoftDeletes, HasFactory;
 
     protected $table = 'questions';
     public $incrementing = false;
@@ -52,5 +54,10 @@ final class QuestionModel extends Model
     public function quiz(): BelongsTo
     {
         return $this->belongsTo(QuizModel::class, 'quiz_id');
+    }
+
+    protected static function newFactory()
+    {
+        return \Modules\Question\Infrastructure\Persistence\Eloquent\Factories\QuestionFactory::new();
     }
 }

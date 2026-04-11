@@ -9,12 +9,12 @@ use Modules\Role\Infrastructure\Persistence\Seeders\RoleSeeder;
 use Modules\User\Infrastructure\Persistence\Seeders\UserSeeder;
 use Modules\Geography\Infrastructure\Persistence\Seeders\NationalitySeeder;
 use Modules\ReportType\Infrastructure\Persistence\Seeders\ReportTypeSeeder;
-
 use Modules\ViolationType\Infrastructure\Persistence\Seeders\ViolationTypeSeeder;
 use Modules\ContractRejectionReason\Infrastructure\Persistence\Seeders\ContractRejectionReasonSeeder;
 use Modules\User\Infrastructure\Persistence\Seeders\EmployeeSeeder;
 use Modules\EventRoleAssignment\Infrastructure\Persistence\Seeders\EventRoleAssignmentSeeder;
 use Modules\EventRoleCapability\Infrastructure\Persistence\Seeders\EventRoleCapabilitySeeder;
+use Modules\Question\Infrastructure\Persistence\Seeders\QuestionSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -33,6 +33,7 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             EventRoleAssignmentSeeder::class,
             EventRoleCapabilitySeeder::class,
+            QuestionSeeder::class,
         ]);
     }
 }

@@ -6,12 +6,21 @@ namespace Modules\Question\Domain\Repository;
 
 use Modules\Question\Domain\Question;
 use Modules\Question\Domain\ValueObject\QuestionId;
-// fix: use the fiter in the listAll also.
+use Modules\Shared\Domain\Repository\FilterableRepositoryInterface;
 
-// fix: use the FilterableRepositoryInterface
-interface QuestionRepositoryInterface
+interface QuestionRepositoryInterface extends FilterableRepositoryInterface
 {
+    public function nextIdentity(): QuestionId;
+
     public function findById(QuestionId $id): ?Question;
 
+    public function findByIdWithTrashed(QuestionId $id): ?Question;
+
     public function save(Question $question): void;
+
+    public function delete(QuestionId $id): void;
+
+    public function hardDelete(QuestionId $id): void;
+
+    public function restore(QuestionId $id): void;
 }

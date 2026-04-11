@@ -24,6 +24,7 @@ final class QuestionReflector
             'type'          => $model->type,
             'options'       => $model->options,
             'scoreWeight'   => (int) $model->score_weight,
+            'deletedAt'     => $model->deleted_at ? new \DateTimeImmutable($model->deleted_at->toDateTimeString()) : null,
         ];
 
         foreach ($properties as $field => $value) {

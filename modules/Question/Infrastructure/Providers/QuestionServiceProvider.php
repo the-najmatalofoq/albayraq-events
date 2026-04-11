@@ -21,9 +21,11 @@ final class QuestionServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-        $this->loadMigrationsFrom(__DIR__.'/../Persistence/Migrations');
-        Route::prefix('api/v1/questions')
-            ->middleware(['api'])
-            ->group(__DIR__.'/../Routes/api.php');
+        $this->loadMigrationsFrom(__DIR__ . '/../Persistence/Migrations');
+        $this->loadTranslationsFrom(__DIR__ . '/../../resources/lang', 'question');
+
+        Route::prefix('api/v1/crm/questions')
+            ->middleware(['api', 'auth:api'])
+            ->group(__DIR__ . '/../Routes/Crm/api.php');
     }
 }

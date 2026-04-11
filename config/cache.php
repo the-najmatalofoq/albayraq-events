@@ -1,5 +1,5 @@
 <?php
-
+// config\cache.php
 use Illuminate\Support\Str;
 
 return [

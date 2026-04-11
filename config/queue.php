@@ -1,5 +1,5 @@
 <?php
-
+// config\queue.php
 return [
 
     'default' => env('QUEUE_CONNECTION', 'database'),

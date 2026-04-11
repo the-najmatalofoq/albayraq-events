@@ -1,5 +1,5 @@
 <?php
-
+// config\database.php
 use Illuminate\Support\Str;
 use Pdo\Mysql;
 
