@@ -17,10 +17,11 @@ final class EventRoleCapabilityReflector
         $capability = $reflection->newInstanceWithoutConstructor();
 
         $properties = [
-            'uuid'          => CapabilityId::fromString($model->id),
-            'assignmentId'  => AssignmentId::fromString($model->event_role_assignment_id),
+            'uuid' => CapabilityId::fromString($model->id),
+            'assignmentId' => AssignmentId::fromString($model->event_role_assignment_id),
             'capabilityKey' => $model->capability_key,
-            'isGranted'     => (bool) $model->is_granted,
+            'isGranted' => (bool) $model->is_granted,
+            'deletedAt' => $model->deleted_at ? new \DateTimeImmutable($model->deleted_at->toDateTimeString()) : null,
         ];
 
         foreach ($properties as $field => $value) {

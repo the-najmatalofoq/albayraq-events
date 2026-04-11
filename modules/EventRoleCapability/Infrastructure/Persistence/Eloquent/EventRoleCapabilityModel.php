@@ -7,43 +7,48 @@ namespace Modules\EventRoleCapability\Infrastructure\Persistence\Eloquent;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Modules\User\Infrastructure\Persistence\Eloquent\Models\UserModel;
-use Modules\Event\Infrastructure\Persistence\Eloquent\EventModel;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Modules\EventRoleAssignment\Infrastructure\Persistence\Eloquent\EventRoleAssignmentModel;
 use Carbon\Carbon;
 
 /**
  * Event role capability model
  *
  * @property string $id
- * @property string $event_id
- * @property string $user_id
- * @property string $capability
+ * @property string $event_role_assignment_id
+ * @property string $capability_key
+ * @property bool $is_granted
  * @property Carbon $created_at
  * @property Carbon $updated_at
- * @property-read EventModel $event
- * @property-read UserModel $user
+ * @property Carbon|null $deleted_at
+ * @property-read EventRoleAssignmentModel $assignment
  */
 final class EventRoleCapabilityModel extends Model
 {
-    use HasUuids;
+    use HasUuids, SoftDeletes, HasFactory;
 
     protected $table = 'event_role_capabilities';
     public $incrementing = false;
     protected $keyType = 'string';
 
     protected $fillable = [
-        'event_id',
-        'user_id',
-        'capability',
+        'event_role_assignment_id',
+        'capability_key',
+        'is_granted',
     ];
 
-    public function event(): BelongsTo
+    protected $casts = [
+        'is_granted' => 'boolean',
+    ];
+
+    public function assignment(): BelongsTo
     {
-        return $this->belongsTo(EventModel::class, 'event_id');
+        return $this->belongsTo(EventRoleAssignmentModel::class, 'event_role_assignment_id');
     }
 
-    public function user(): BelongsTo
+    protected static function newFactory()
     {
-        return $this->belongsTo(UserModel::class, 'user_id');
+        return \Modules\EventRoleCapability\Infrastructure\Persistence\Eloquent\Factories\EventRoleCapabilityFactory::new();
     }
 }

@@ -7,10 +7,10 @@ namespace Modules\EventRoleCapability\Domain\Repository;
 use Modules\EventRoleCapability\Domain\EventRoleCapability;
 use Modules\EventRoleCapability\Domain\ValueObject\CapabilityId;
 use Modules\EventRoleAssignment\Domain\ValueObject\AssignmentId;
-// fix: use the fiter in the listAll also.
 
-// fix: use the FilterableRepositoryInterface
-interface EventRoleCapabilityRepositoryInterface
+use Modules\Shared\Domain\Repository\FilterableRepositoryInterface;
+
+interface EventRoleCapabilityRepositoryInterface extends FilterableRepositoryInterface
 {
     public function nextIdentity(): CapabilityId;
 
@@ -18,5 +18,13 @@ interface EventRoleCapabilityRepositoryInterface
 
     public function findById(CapabilityId $id): ?EventRoleCapability;
 
+    public function findByIdWithTrashed(CapabilityId $id): ?EventRoleCapability;
+
     public function findByAssignmentId(AssignmentId $assignmentId): array;
+
+    public function delete(CapabilityId $id): void;
+
+    public function hardDelete(CapabilityId $id): void;
+
+    public function restore(CapabilityId $id): void;
 }

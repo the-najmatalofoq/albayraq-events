@@ -15,7 +15,8 @@ final class EventRoleCapability extends AggregateRoot
         public readonly CapabilityId $uuid,
         public readonly AssignmentId $assignmentId,
         public private(set) string $capabilityKey,
-        public private(set) bool $isGranted = true
+        public private(set) bool $isGranted = true,
+        public private(set) ?\DateTimeImmutable $deletedAt = null
     ) {}
 
     public static function create(
@@ -25,6 +26,31 @@ final class EventRoleCapability extends AggregateRoot
         bool $isGranted = true
     ): self {
         return new self($uuid, $assignmentId, $capabilityKey, $isGranted);
+    }
+
+    public static function reconstitute(
+        CapabilityId $uuid,
+        AssignmentId $assignmentId,
+        string $capabilityKey,
+        bool $isGranted = true,
+        ?\DateTimeImmutable $deletedAt = null
+    ): self {
+        return new self($uuid, $assignmentId, $capabilityKey, $isGranted, $deletedAt);
+    }
+
+    public function isDeleted(): bool
+    {
+        return $this->deletedAt !== null;
+    }
+
+    public function softDelete(): void
+    {
+        $this->deletedAt = new \DateTimeImmutable();
+    }
+
+    public function restore(): void
+    {
+        $this->deletedAt = null;
     }
 
     public function grant(): void
