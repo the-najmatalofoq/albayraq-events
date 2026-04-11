@@ -1,5 +1,5 @@
 <?php
-// modules/EventPositionApplication/Domain/Repository/EventPositionApplicationRepositoryInterface.php
+// filePath: modules/EventPositionApplication/Domain/Repository/EventPositionApplicationRepositoryInterface.php
 declare(strict_types=1);
 
 namespace Modules\EventPositionApplication\Domain\Repository;
@@ -8,10 +8,9 @@ use Modules\EventPositionApplication\Domain\EventPositionApplication;
 use Modules\EventPositionApplication\Domain\ValueObject\ApplicationId;
 use Modules\User\Domain\ValueObject\UserId;
 use Modules\EventStaffingPosition\Domain\ValueObject\PositionId;
-// fix: use the fiter in the listAll also.
+use Modules\Shared\Domain\Repository\FilterableRepositoryInterface;
 
-// fix: use the FilterableRepositoryInterface
-interface EventPositionApplicationRepositoryInterface
+interface EventPositionApplicationRepositoryInterface extends FilterableRepositoryInterface
 {
     public function nextIdentity(): ApplicationId;
 
@@ -19,7 +18,15 @@ interface EventPositionApplicationRepositoryInterface
 
     public function findById(ApplicationId $id): ?EventPositionApplication;
 
+    public function findByIdWithTrashed(ApplicationId $id): ?EventPositionApplication;
+
     public function findByUserId(UserId $userId): array;
 
     public function findByPositionId(PositionId $positionId): array;
+
+    public function delete(ApplicationId $id): void;
+
+    public function hardDelete(ApplicationId $id): void;
+
+    public function restore(ApplicationId $id): void;
 }

@@ -28,6 +28,7 @@ final class EventPositionApplicationReflector
             'appliedAt'     => DateTimeImmutable::createFromInterface($model->applied_at),
             'reviewedAt'    => $model->reviewed_at ? DateTimeImmutable::createFromInterface($model->reviewed_at) : null,
             'reviewedBy'    => $model->reviewed_by ? UserId::fromString($model->reviewed_by) : null,
+            'deletedAt'     => $model->deleted_at ? new DateTimeImmutable($model->deleted_at->toDateTimeString()) : null,
         ];
 
         foreach ($properties as $field => $value) {

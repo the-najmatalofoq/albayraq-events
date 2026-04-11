@@ -15,6 +15,7 @@ use Modules\User\Infrastructure\Persistence\Seeders\EmployeeSeeder;
 use Modules\EventRoleAssignment\Infrastructure\Persistence\Seeders\EventRoleAssignmentSeeder;
 use Modules\EventRoleCapability\Infrastructure\Persistence\Seeders\EventRoleCapabilitySeeder;
 use Modules\Question\Infrastructure\Persistence\Seeders\QuestionSeeder;
+use Modules\EventPositionApplication\Infrastructure\Persistence\Seeders\EventPositionApplicationSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -34,6 +35,7 @@ class DatabaseSeeder extends Seeder
             EventRoleAssignmentSeeder::class,
             EventRoleCapabilitySeeder::class,
             QuestionSeeder::class,
+            EventPositionApplicationSeeder::class,
         ]);
     }
 }

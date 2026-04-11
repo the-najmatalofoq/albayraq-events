@@ -1,5 +1,5 @@
 <?php
-// modules/EventPositionApplication/Infrastructure/Providers/EventPositionApplicationServiceProvider.php
+// filePath: modules/EventPositionApplication/Infrastructure/Providers/EventPositionApplicationServiceProvider.php
 declare(strict_types=1);
 
 namespace Modules\EventPositionApplication\Infrastructure\Providers;
@@ -19,9 +19,10 @@ final class EventPositionApplicationServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->loadMigrationsFrom(__DIR__ . '/../Persistence/Migrations');
-        
-        Route::prefix('api/v1/event-position-applications')
+        $this->loadTranslationsFrom(__DIR__ . '/../../resources/lang', 'event-position-application');
+
+        Route::prefix('api/v1/crm/event-position-applications')
             ->middleware(['api', 'auth:api'])
-            ->group(__DIR__ . '/../Routes/api.php');
+            ->group(__DIR__ . '/../Routes/Crm/api.php');
     }
 }

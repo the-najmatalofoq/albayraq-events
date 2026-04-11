@@ -1,5 +1,5 @@
 <?php
-// modules/EventPositionApplication/Domain/EventPositionApplication.php
+// filePath: modules/EventPositionApplication/Domain/EventPositionApplication.php
 declare(strict_types=1);
 
 namespace Modules\EventPositionApplication\Domain;
@@ -21,9 +21,9 @@ final class EventPositionApplication extends AggregateRoot
         public private(set) float $rankingScore = 0.0,
         public readonly \DateTimeImmutable $appliedAt = new \DateTimeImmutable(),
         public private(set) ?\DateTimeImmutable $reviewedAt = null,
-        public private(set) ?UserId $reviewedBy = null
-    ) {
-    }
+        public private(set) ?UserId $reviewedBy = null,
+        public private(set) ?\DateTimeImmutable $deletedAt = null,
+    ) {}
 
     public static function create(
         ApplicationId $uuid,
@@ -33,6 +33,20 @@ final class EventPositionApplication extends AggregateRoot
         float $rankingScore = 0.0
     ): self {
         return new self($uuid, $userId, $positionId, $status, $rankingScore);
+    }
+
+    public static function reconstitute(
+        ApplicationId $uuid,
+        UserId $userId,
+        PositionId $positionId,
+        ApplicationStatusEnum $status,
+        float $rankingScore,
+        \DateTimeImmutable $appliedAt,
+        ?\DateTimeImmutable $reviewedAt = null,
+        ?UserId $reviewedBy = null,
+        ?\DateTimeImmutable $deletedAt = null,
+    ): self {
+        return new self($uuid, $userId, $positionId, $status, $rankingScore, $appliedAt, $reviewedAt, $reviewedBy, $deletedAt);
     }
 
     public function approve(UserId $reviewerId): void
@@ -52,6 +66,21 @@ final class EventPositionApplication extends AggregateRoot
     public function cancel(): void
     {
         $this->status = ApplicationStatusEnum::CANCELLED;
+    }
+
+    public function isDeleted(): bool
+    {
+        return $this->deletedAt !== null;
+    }
+
+    public function softDelete(): void
+    {
+        $this->deletedAt = new \DateTimeImmutable();
+    }
+
+    public function restore(): void
+    {
+        $this->deletedAt = null;
     }
 
     public function id(): Identity
