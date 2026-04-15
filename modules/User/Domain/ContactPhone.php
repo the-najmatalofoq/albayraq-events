@@ -7,6 +7,7 @@ use DateTimeImmutable;
 use Modules\Shared\Domain\Entity;
 use Modules\Shared\Domain\Identity;
 use Modules\User\Domain\ValueObject\ContactPhoneId;
+use Modules\User\Domain\ValueObject\Phone;
 use Modules\User\Domain\ValueObject\UserId;
 
 final class ContactPhone extends Entity
@@ -15,7 +16,7 @@ final class ContactPhone extends Entity
         public readonly ContactPhoneId $uuid,
         public readonly UserId         $userId,
         public private(set) string     $name,
-        public private(set) string     $phone,
+        public private(set) Phone      $phone,
         public private(set) string     $relation,
         public readonly ?DateTimeImmutable $createdAt = null,
         public private(set) ?DateTimeImmutable $updatedAt = null,
@@ -25,7 +26,7 @@ final class ContactPhone extends Entity
         ContactPhoneId $uuid,
         UserId         $userId,
         string         $name,
-        string         $phone,
+        Phone         $phone,
         string         $relation,
     ): self {
         return new self(
@@ -42,7 +43,7 @@ final class ContactPhone extends Entity
         ContactPhoneId     $uuid,
         UserId             $userId,
         string             $name,
-        string             $phone,
+        Phone             $phone,
         string             $relation,
         ?DateTimeImmutable $createdAt = null,
         ?DateTimeImmutable $updatedAt = null,
@@ -60,7 +61,7 @@ final class ContactPhone extends Entity
 
     public function update(
         string $name,
-        string $phone,
+        Phone $phone,
         string $relation,
     ): void {
         $this->name = $name;

@@ -13,6 +13,5 @@ final readonly class UpdateBankDetailsCommand
         public string $accountOwner,
         public string $bankName,
         public string $iban,
-    ) {
-    }
+    ) {}
 }

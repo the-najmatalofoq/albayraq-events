@@ -38,3 +38,9 @@ Route::prefix('/bank-details')->group(function () {
 Route::prefix('/contact-phones')->group(function () {
     Route::get('/', ListContactPhonesAction::class);
 });
+
+Route::prefix('/update-requests')->group(function () {
+    Route::get('/', \Modules\User\Presentation\Http\Action\UserUpdateRequest\ListAllUpdateRequestsAction::class);
+    Route::get('/{id}', \Modules\User\Presentation\Http\Action\UserUpdateRequest\ShowUpdateRequestAction::class);
+    Route::post('/{id}/review', \Modules\User\Presentation\Http\Action\UserUpdateRequest\ReviewUserUpdateAction::class);
+});

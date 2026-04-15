@@ -24,33 +24,33 @@ final readonly class UpdateUserAction
 
     public function __invoke(UpdateUserRequest $request, string $id): JsonResponse
     {
-        $userId = new UserId($id);
-        $user = $this->userRepository->findById($userId);
+        // $userId = new UserId($id);
+        // $user = $this->userRepository->findById($userId);
 
-        if (!$user) {
-            return $this->responder->notFound('User not found');
-        }
+        // if (!$user) {
+        //     return $this->responder->notFound('User not found');
+        // }
 
-        if ($request->has('email')) {
-            $user->updateEmail((string) $request->input('email'));
-        }
+        // if ($request->has('email')) {
+        //     $user->updateEmail((string) $request->input('email'));
+        // }
 
-        if ($request->has('name') || $request->has('phone')) {
-            $user->updateInfo(
-                name: (string) $request->input('name', $user->name),
-                phone: $request->has('phone') ? new Phone((string) $request->input('phone')) : $user->phone
-            );
-        }
+        // if ($request->has('name') || $request->has('phone')) {
+        //     $user->updateInfo(
+        //         name: (string) $request->input('name', $user->name),
+        //         phone: $request->has('phone') ? new Phone((string) $request->input('phone')) : $user->phone
+        //     );
+        // }
 
-        if ($request->has('password')) {
-            $user->changePassword($this->passwordHasher->hash((string) $request->input('password')));
-        }
+        // if ($request->has('password')) {
+        //     $user->changePassword($this->passwordHasher->hash((string) $request->input('password')));
+        // }
 
-        $this->userRepository->save($user);
+        // $this->userRepository->save($user);
 
         return $this->responder->success(
-            data: UserPresenter::fromDomain($user),
-            messageKey: 'user.updated'
+            // data: UserPresenter::fromDomain($user),
+            // messageKey: 'user.updated'
         );
     }
 }

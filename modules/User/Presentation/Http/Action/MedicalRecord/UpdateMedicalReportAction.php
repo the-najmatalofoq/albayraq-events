@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Modules\User\Presentation\Http\Action\EmployeeProfile;
+namespace Modules\User\Presentation\Http\Action\MedicalRecord;
 
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -11,50 +11,50 @@ use Modules\Shared\Presentation\Http\JsonResponder;
 use Modules\User\Application\Command\SubmitUpdateRequest\SubmitUpdateRequestCommand;
 use Modules\User\Application\Command\SubmitUpdateRequest\SubmitUpdateRequestHandler;
 use Modules\User\Domain\Enum\UpdateRequestStatus;
-use Modules\User\Domain\Repository\EmployeeProfileRepositoryInterface;
+use Modules\User\Domain\Repository\MedicalRecordRepositoryInterface;
 use Modules\User\Domain\Repository\UserUpdateRequestRepositoryInterface;
-use Modules\User\Presentation\Http\Request\UpdateProfileRequest;
+use Modules\User\Presentation\Http\Request\UpdateMedicalReportRequest;
 
-final readonly class UpdateProfileAction
+final readonly class UpdateMedicalReportAction
 {
     public function __construct(
         private TokenManager $tokenManager,
         private SubmitUpdateRequestHandler $handler,
-        private EmployeeProfileRepositoryInterface $profileRepository,
+        private MedicalRecordRepositoryInterface $medicalRecordRepository,
         private UserUpdateRequestRepositoryInterface $updateRequestRepository,
         private JsonResponder $responder,
     ) {}
 
-    public function __invoke(UpdateProfileRequest $request): JsonResponse
+    public function __invoke(UpdateMedicalReportRequest $request): JsonResponse
     {
         $userId = $this->tokenManager->getUserIdFromToken();
 
-        if (!$userId) {
+        if ($userId === null) {
             return $this->responder->unauthorized();
         }
 
-        // Check for an existing pending request for employee_profile
+        // Check for an existing pending request for medical_record
         $existingRequests = $this->updateRequestRepository->findByUserId($userId->value);
         $hasPending = !empty(array_filter($existingRequests, fn($r) =>
             $r->status === UpdateRequestStatus::PENDING &&
-            $r->targetType === 'employee_profile'
+            $r->targetType === 'medical_record'
         ));
 
         if ($hasPending) {
-            throw \Modules\User\Domain\Exception\PendingUpdateRequestException::forTarget('messages.targets.employee_profile');
+            throw \Modules\User\Domain\Exception\PendingUpdateRequestException::forTarget('messages.targets.medical_record');
         }
 
-        // Retrieve the current profile to link the target id
-        $profile = $this->profileRepository->findByUserId($userId);
+        // Retrieve the medical record to link the target id
+        $medicalRecord = $this->medicalRecordRepository->findByUserId($userId);
 
-        if (!$profile) {
-            throw new Exception("لا يوجد ملف شخصي لهذا المستخدم");
+        if (!$medicalRecord) {
+            throw new Exception("لا يوجد سجل طبي لهذا المستخدم");
         }
 
         $command = new SubmitUpdateRequestCommand(
             userId: $userId,
-            targetType: 'employee_profile',
-            targetId: $profile->id()->value,
+            targetType: 'medical_record',
+            targetId: $medicalRecord->id()->value,
             newData: $request->validated(),
         );
 

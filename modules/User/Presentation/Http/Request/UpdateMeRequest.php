@@ -14,6 +14,7 @@ final class UpdateMeRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255'],
             'phone' => ['required', 'string', new SaudiPhoneRule()],
         ];
     }
