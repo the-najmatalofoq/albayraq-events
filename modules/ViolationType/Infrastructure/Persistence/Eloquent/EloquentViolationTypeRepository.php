@@ -10,7 +10,6 @@ use Modules\ViolationType\Domain\Repository\ViolationTypeRepositoryInterface;
 use Modules\ViolationType\Domain\ViolationType;
 use Modules\ViolationType\Domain\ValueObject\ViolationTypeId;
 use Modules\Shared\Domain\ValueObject\TranslatableText;
-use Modules\Shared\Domain\ValueObject\Money;
 use Modules\Shared\Domain\ValueObject\FilterCriteria;
 use Modules\ViolationType\Domain\Enum\ViolationSeverityEnum;
 
@@ -26,12 +25,9 @@ final class EloquentViolationTypeRepository implements ViolationTypeRepositoryIn
         ViolationTypeModel::query()->updateOrCreate(
             ['id' => $violationType->uuid->value],
             [
-                'name'                       => $violationType->name->toArray(),
-                'default_deduction_amount'   => $violationType->defaultDeduction?->amount,
-                'default_deduction_currency' => $violationType->defaultDeduction?->currency,
-                'severity'                   => $violationType->severity->value,
-                'event_id'                   => $violationType->eventId?->value,
-                'is_active'                  => $violationType->isActive,
+                'name'      => $violationType->name->toArray(),
+                'slug'      => $violationType->slug,
+                'is_active' => $violationType->isActive,
             ]
         );
     }
@@ -80,11 +76,10 @@ final class EloquentViolationTypeRepository implements ViolationTypeRepositoryIn
     private function applyCriteria($query, FilterCriteria $criteria): void
     {
         if ($criteria->search) {
-            $query->where('name', 'like', "%{$criteria->search}%");
-        }
-
-        if ($criteria->has('severity')) {
-            $query->where('severity', $criteria->get('severity'));
+            $query->where(function ($q) use ($criteria) {
+                $q->where('name', 'like', "%{$criteria->search}%")
+                  ->orWhere('slug', 'like', "%{$criteria->search}%");
+            });
         }
 
         if ($criteria->has('is_active')) {
@@ -100,11 +95,8 @@ final class EloquentViolationTypeRepository implements ViolationTypeRepositoryIn
     {
         return ViolationType::create(
             uuid: ViolationTypeId::fromString($record->id),
-            name: TranslatableText::fromArray($record->name),
-            defaultDeduction: $record->default_deduction_amount
-                ? new Money((float)$record->default_deduction_amount, $record->default_deduction_currency ?? 'SAR')
-                : null,
-            severity: ViolationSeverityEnum::from($record->severity),
+            slug: $record->slug,
+            name: $record->name,
             isActive: $record->is_active,
         );
     }

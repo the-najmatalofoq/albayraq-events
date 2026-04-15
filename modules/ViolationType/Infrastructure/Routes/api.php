@@ -10,13 +10,12 @@ use Modules\ViolationType\Presentation\Http\Action\Dashboard\GetViolationTypeByI
 use Modules\ViolationType\Presentation\Http\Action\Dashboard\UpdateViolationTypeAction;
 use Modules\ViolationType\Presentation\Http\Action\Dashboard\DeleteViolationTypeAction;
 
-Route::prefix('crm')
-    ->middleware(['role.level:admin,super-admin'])
-    ->group(function () {
-        Route::get('/', ListViolationTypesAction::class);
-        Route::get('/paginated', ListViolationTypesPaginatedAction::class);
-        Route::post('/', CreateViolationTypeAction::class);
-        Route::get('/{id}', GetViolationTypeByIdAction::class);
-        Route::put('/{id}', UpdateViolationTypeAction::class);
-        Route::delete('/{id}', DeleteViolationTypeAction::class);
-    });
+// Route::middleware(['role.level:admin,super-admin'])
+// ->group(function () {
+Route::get('/', ListViolationTypesAction::class);
+Route::get('/paginated', ListViolationTypesPaginatedAction::class);
+Route::post('/', CreateViolationTypeAction::class);
+Route::get('/{id}', GetViolationTypeByIdAction::class);
+Route::put('/{id}', UpdateViolationTypeAction::class);
+Route::delete('/{id}', DeleteViolationTypeAction::class);
+    // });

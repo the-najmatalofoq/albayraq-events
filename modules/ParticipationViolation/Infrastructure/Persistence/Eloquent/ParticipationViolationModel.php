@@ -11,7 +11,9 @@ use Modules\ParticipationViolation\Domain\Enum\ViolationStatusEnum;
 use Modules\User\Infrastructure\Persistence\Eloquent\Models\UserModel;
 use Modules\ViolationType\Infrastructure\Persistence\Eloquent\ViolationTypeModel;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Collection;
+use Modules\EventParticipation\Infrastructure\Persistence\Eloquent\EventParticipationModel;
+use Modules\DeductionType\Infrastructure\Persistence\Eloquent\DeductionTypeModel;
+use Modules\PenaltyType\Infrastructure\Persistence\Eloquent\PenaltyTypeModel;
 
 /**
  * Participation violation model
@@ -19,6 +21,8 @@ use Illuminate\Database\Eloquent\Collection;
  * @property string $id
  * @property string $event_participation_id
  * @property string $violation_type_id
+ * @property string|null $deduction_type_id
+ * @property string|null $penalty_type_id
  * @property string $reported_by
  * @property string $description
  * @property Carbon $date
@@ -31,6 +35,8 @@ use Illuminate\Database\Eloquent\Collection;
  * @property Carbon $updated_at
  * @property-read EventParticipationModel $participation
  * @property-read ViolationTypeModel $type
+ * @property-read DeductionTypeModel|null $deductionType
+ * @property-read PenaltyTypeModel|null $penaltyType
  * @property-read UserModel $reporter
  * @property-read UserModel|null $approver
  */
@@ -45,6 +51,8 @@ final class ParticipationViolationModel extends Model
     protected $fillable = [
         'event_participation_id',
         'violation_type_id',
+        'deduction_type_id',
+        'penalty_type_id',
         'reported_by',
         'description',
         'date',
@@ -74,6 +82,16 @@ final class ParticipationViolationModel extends Model
     public function type(): BelongsTo
     {
         return $this->belongsTo(ViolationTypeModel::class, 'violation_type_id');
+    }
+
+    public function deductionType(): BelongsTo
+    {
+        return $this->belongsTo(DeductionTypeModel::class, 'deduction_type_id');
+    }
+
+    public function penaltyType(): BelongsTo
+    {
+        return $this->belongsTo(PenaltyTypeModel::class, 'penalty_type_id');
     }
 
     public function reporter(): BelongsTo

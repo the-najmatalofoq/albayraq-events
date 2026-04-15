@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace Modules\ViolationType\Application\Command\CreateViolationType;
 
+use Modules\Shared\Domain\ValueObject\TranslatableText;
+
 final readonly class CreateViolationTypeCommand
 {
     public function __construct(
-        public array $name,
-        public ?float $deductionAmount,
-        public ?string $deductionCurrency,
-        public string $severity,
-        public ?string $eventId = null,
+        public TranslatableText $name,
+        public string $slug,
         public bool $isActive = true
     ) {}
 }

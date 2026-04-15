@@ -7,6 +7,7 @@ namespace Modules\ViolationType\Infrastructure\Persistence\Eloquent;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Modules\Shared\Infrastructure\Laravel\Casts\TranslatableTextCast;
 use Modules\ViolationType\Infrastructure\Persistence\Factories\ViolationTypeFactory;
 
 final class ViolationTypeModel extends Model
@@ -24,17 +25,13 @@ final class ViolationTypeModel extends Model
     public $incrementing = false;
 
     protected $fillable = [
-        'id',
         'name',
-        'default_deduction_amount',
-        'default_deduction_currency',
-        'severity',
-        'event_id',
+        'slug',
         'is_active',
     ];
 
     protected $casts = [
-        'name'      => 'array',
+        'name'      => TranslatableTextCast::class,
         'is_active' => 'boolean',
     ];
 }

@@ -4,7 +4,7 @@ namespace Modules\ViolationType\Infrastructure\Persistence\Seeders;
 
 use Illuminate\Database\Seeder;
 use Modules\ViolationType\Infrastructure\Persistence\Eloquent\ViolationTypeModel;
-use Database\Factories\ViolationTypeFactory;
+use Illuminate\Support\Str;
 
 class ViolationTypeSeeder extends Seeder
 {
@@ -13,31 +13,25 @@ class ViolationTypeSeeder extends Seeder
         $types = [
             [
                 'name' => ['en' => 'Late Arrival', 'ar' => 'تأخير في الحضور'],
-                'severity' => 'low',
-                'amount' => 50,
+
             ],
             [
                 'name' => ['en' => 'Absence without Notice', 'ar' => 'غياب بدون إبلاغ'],
-                'severity' => 'medium',
-                'amount' => 150,
             ],
             [
                 'name' => ['en' => 'Safety Protocol Breach', 'ar' => 'مخالفة بروتوكول السلامة'],
-                'severity' => 'high',
-                'amount' => 300,
             ],
             [
                 'name' => ['en' => 'Wilful Damage', 'ar' => 'إتلاف متعمد'],
-                'severity' => 'critical',
-                'amount' => 500,
             ],
         ];
 
         foreach ($types as $type) {
-            ViolationTypeModel::factory()->create([
+            ViolationTypeModel::create([
+                'id' => Str::uuid()->toString(),
                 'name' => $type['name'],
-                'severity' => $type['severity'],
-                'default_deduction_amount' => $type['amount'],
+                'slug' => Str::slug($type['name']['en']),
+                'is_active' => true,
             ]);
         }
     }

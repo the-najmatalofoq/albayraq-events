@@ -21,7 +21,7 @@ final readonly class GetViolationTypeByIdAction
         $type = $this->repository->findById(ViolationTypeId::fromString($id));
 
         if (!$type) {
-            return $this->responder->notFound('messages.violation_type_not_found');
+            return $this->responder->notFound('messages.not_found');
         }
 
         return $this->responder->success(ViolationTypePresenter::fromDomain($type));

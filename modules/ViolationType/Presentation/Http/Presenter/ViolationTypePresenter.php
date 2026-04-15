@@ -11,12 +11,10 @@ final class ViolationTypePresenter
     public static function fromDomain(ViolationType $violationType): array
     {
         return [
-            'id'                => $violationType->uuid->value,
-            'name'              => $violationType->name->toArray(),
-            'default_deduction' => $violationType->defaultDeduction?->toArray(),
-            'severity'          => $violationType->severity->value,
-            'event_id'          => $violationType->eventId?->value,
-            'is_active'         => $violationType->isActive,
+            'id'        => $violationType->uuid->value,
+            'slug'      => $violationType->slug,
+            'name'      => $violationType->name->getFor(),
+            'is_active' => $violationType->isActive,
         ];
     }
 }
