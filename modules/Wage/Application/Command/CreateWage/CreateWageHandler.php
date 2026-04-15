@@ -40,8 +40,9 @@ final readonly class CreateWageHandler
             uuid: $id,
             wageableId: $command->wageableId,
             wageableType: $mappedType,
-            amount: new Money($command->amount, $command->currency),
+            amount: new Money($command->amount),
             period: $command->period,
+            currencyId: $command->currencyId,
         );
 
         $this->repository->save($wage);

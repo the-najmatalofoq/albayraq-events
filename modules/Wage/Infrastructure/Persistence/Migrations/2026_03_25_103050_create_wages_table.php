@@ -15,7 +15,6 @@ return new class extends Migration
             $table->uuid('wageable_id');
             $table->string('wageable_type');
             $table->decimal('amount', 12, 2);
-            $table->string('currency', 3)->default('SAR');
             $table->string('period')->default('hourly'); // hourly, daily, monthly
             $table->timestamps();
 
