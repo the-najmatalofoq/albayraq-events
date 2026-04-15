@@ -6,7 +6,6 @@ namespace Modules\ContractRejectionReason\Presentation\Http\Action\Dashboard;
 
 use Modules\ContractRejectionReason\Domain\Repository\ContractRejectionReasonRepositoryInterface;
 use Modules\ContractRejectionReason\Domain\ContractRejectionReason;
-use Modules\ContractRejectionReason\Presentation\Http\Presenter\ContractRejectionReasonPresenter;
 use Modules\ContractRejectionReason\Presentation\Http\Request\Dashboard\StoreContractRejectionReasonRequest;
 use Modules\Shared\Domain\ValueObject\TranslatableText;
 use Modules\Shared\Presentation\Http\JsonResponder;
