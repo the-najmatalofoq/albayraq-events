@@ -51,6 +51,12 @@ final class RegisterRequest extends FormRequest
             'cv' => ['required', 'file', 'mimes:pdf', 'max:5120'],
             'personal_identity' => ['required', 'file', 'mimes:pdf', 'max:5120'],
             'medical_report' => ['nullable', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:5120'],
+
+            // Device Token
+            'fcm_token' => ['nullable', 'string', 'max:255'],
+            'device_id' => ['required_with:fcm_token', 'string', 'max:255'],
+            'platform' => ['required_with:fcm_token', 'string', 'in:ios,android,web'],
+            'device_name' => ['nullable', 'string', 'max:255'],
         ];
     }
 }

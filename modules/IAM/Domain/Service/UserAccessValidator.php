@@ -38,8 +38,8 @@ final readonly class UserAccessValidator
                 throw UserNotVerifiedException::forEmail(__('messages.user.account_not_active'), 'messages.errors.user_not_verified');
             }
         }
-    }   
-    
+    }
+
     public function validateRegister(User $user): void
     {
         $employeeRole = $this->roleRepository->findBySlug(RoleSlugEnum::EMPLOYEE);
@@ -48,15 +48,15 @@ final readonly class UserAccessValidator
             $latestJoinRequest = $this->userJoinRequestRepository->findLatestByUserId($user->uuid);
             if ($latestJoinRequest) {
                 if ($latestJoinRequest->status->isRejected()) {
-                    throw UserNotApprovedException::forUser(__('messages.user.user_already_exists'), 'messages.errors.user_not_approved');
+                    throw UserNotApprovedException::forUser(__('messages.user.user_already_exists'), __('messages.errors.user_not_approved'));
                 }
                 if ($latestJoinRequest->status->isPending()) {
-                    throw UserPendingException::create(__('messages.user.user_already_exists'), 'messages.errors.user_pending');
+                    throw UserPendingException::create(__('messages.user.user_already_exists'), __('messages.errors.user_pending'));
                 }
             }
 
             if (!$user->emailVerifiedAt) {
-                throw UserNotVerifiedException::forEmail(__('messages.user.user_already_exists'), 'messages.errors.email_not_verified');
+                throw UserNotVerifiedException::forEmail(__('messages.user.user_already_exists'), __('messages.errors.email_not_verified'));
             }
         }
     }

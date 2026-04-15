@@ -9,6 +9,8 @@ use Modules\IAM\Domain\Service\PasswordHasher;
 use Modules\IAM\Domain\Service\TokenManager;
 use Modules\IAM\Domain\Exception\InvalidCredentialsException;
 use Modules\IAM\Domain\Service\UserAccessValidator;
+use Modules\Notification\Application\Command\RegisterDeviceToken\RegisterDeviceTokenCommand;
+use Modules\Notification\Application\Command\RegisterDeviceToken\RegisterDeviceTokenHandler;
 
 final readonly class AuthenticateUserHandler
 {
@@ -17,6 +19,7 @@ final readonly class AuthenticateUserHandler
         private PasswordHasher $passwordHasher,
         private TokenManager $tokenManager,
         private UserAccessValidator $accessValidator,
+        private RegisterDeviceTokenHandler $deviceTokenHandler,
     ) {}
 
     public function handle(AuthenticateUserCommand $command): array
@@ -28,8 +31,20 @@ final readonly class AuthenticateUserHandler
 
         // $this->accessValidator->validateLogin($user);
 
+        if ($command->fcmToken) {
+            $this->deviceTokenHandler->handle(new RegisterDeviceTokenCommand(
+                userId: $user->uuid,
+                token: $command->fcmToken,
+                deviceId: $command->deviceId,
+                platform: $command->platform,
+                deviceName: $command->deviceName,
+            ));
+        }
+
         return [
-            'tokens' => $this->tokenManager->createToken($user->uuid->value),
+            'tokens' => $this->tokenManager->createToken($user->uuid->value, [
+                'device_name' => $command->deviceName
+            ]),
             'user' => $user,
         ];
     }

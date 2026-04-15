@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 use Illuminate\Support\Facades\Route;
@@ -19,7 +20,7 @@ Route::post('/login', LoginAction::class);
 Route::post('/forgot-password', ForgotPasswordAction::class);
 Route::post('/reset-password', ResetPasswordAction::class);
 
-Route::middleware('auth:api')->group(function () {
+Route::middleware(['auth:api', 'session.validate'])->group(function () {
     Route::post('/logout', LogoutAction::class);
     Route::post('/refresh', RefreshTokenAction::class);
 
