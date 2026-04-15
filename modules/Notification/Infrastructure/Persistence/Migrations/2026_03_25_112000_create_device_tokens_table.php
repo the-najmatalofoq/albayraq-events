@@ -13,6 +13,7 @@ final class CreateDeviceTokensTable extends Migration
         Schema::create('device_tokens', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->foreignUuid('user_id')->constrained('users')->cascadeOnDelete();
+            $table->string('device_id');
             $table->string('token');
             $table->enum('platform', ['ios', 'android', 'web']);
             $table->string('device_name')->nullable();
@@ -20,8 +21,9 @@ final class CreateDeviceTokensTable extends Migration
             $table->timestamp('last_used_at')->nullable();
             $table->timestamps();
 
-            $table->unique(['user_id', 'token']);
+            $table->unique(['user_id', 'device_id']);
             $table->index('token');
+            $table->index('device_id');
         });
     }
 

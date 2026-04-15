@@ -17,6 +17,7 @@ final class RegisterDeviceTokenRequest extends FormRequest
     {
         return [
             'token' => ['required', 'string'],
+            'device_id' => ['required', 'string', 'max:255'],
             'platform' => ['required', 'string', 'in:ios,android,web'],
             'device_name' => ['nullable', 'string', 'max:255'],
         ];

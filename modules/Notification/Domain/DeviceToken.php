@@ -11,6 +11,7 @@ final class DeviceToken
 {
     private DeviceTokenId $id;
     private UserId $userId;
+    private string $deviceId;
     private string $token;
     private string $platform;
     private ?string $deviceName;
@@ -20,6 +21,7 @@ final class DeviceToken
     private function __construct(
         DeviceTokenId $id,
         UserId $userId,
+        string $deviceId,
         string $token,
         string $platform,
         ?string $deviceName,
@@ -28,6 +30,7 @@ final class DeviceToken
     ) {
         $this->id = $id;
         $this->userId = $userId;
+        $this->deviceId = $deviceId;
         $this->token = $token;
         $this->platform = $platform;
         $this->deviceName = $deviceName;
@@ -37,6 +40,7 @@ final class DeviceToken
 
     public static function register(
         UserId $userId,
+        string $deviceId,
         string $token,
         string $platform,
         ?string $deviceName,
@@ -44,12 +48,41 @@ final class DeviceToken
         return new self(
             DeviceTokenId::generate(),
             $userId,
+            $deviceId,
             $token,
             $platform,
             $deviceName,
             true,
             null,
         );
+    }
+
+    public static function hydrate(
+        DeviceTokenId $id,
+        UserId $userId,
+        string $deviceId,
+        string $token,
+        string $platform,
+        ?string $deviceName,
+        bool $isActive,
+        ?\DateTimeImmutable $lastUsedAt
+    ): self {
+        return new self(
+            $id,
+            $userId,
+            $deviceId,
+            $token,
+            $platform,
+            $deviceName,
+            $isActive,
+            $lastUsedAt
+        );
+    }
+
+    public function updateToken(string $newToken): void
+    {
+        $this->token = $newToken;
+        $this->isActive = true;
     }
 
     public function revoke(): void
@@ -65,6 +98,11 @@ final class DeviceToken
     public function getId(): DeviceTokenId
     {
         return $this->id;
+    }
+
+    public function getDeviceId(): string
+    {
+        return $this->deviceId;
     }
 
     public function getUserId(): UserId
