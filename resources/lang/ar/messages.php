@@ -40,5 +40,12 @@ return [
         'bank_already_exists' => 'يوجد حساب بنكي مسجل مسبقاً بهذا الآيبان أو رقم الحساب.',
         'user_not_found' => 'المستخدم المطلوب غير موجود.',
         'phone_already_exists' => 'رقم الهاتف مسجل مسبقاً.',
+        'pending_update_request' => 'لديك طلب سابق قيد المراجعة لـ :target.',
+    ],
+    'targets' => [
+        'user_info' => 'بياناتك الشخصية',
+        'employee_profile' => 'بيانات الملف الشخصي',
+        'medical_record' => 'السجل الطبي',
+        'bank_account' => 'الحساب البنكي',
     ],
 ];

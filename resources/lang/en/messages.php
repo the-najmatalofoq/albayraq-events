@@ -17,9 +17,11 @@ return [
         'token_refreshed' => 'Token refreshed successfully',
         'invalid_credentials' => 'Invalid credentials',
         'token_mismatch' => 'Session expired. Please login again.',
+        'session_invalidated' => 'Your session has been terminated or invalidated. Please login again.',
         'unauthorized' => 'You are not authorized to perform this action.',
         'forbidden' => 'You do not have permission to access this resource.',
         'email_not_verified' => 'Your email address is not verified.',
+        'session_invalidated' => 'Your session has been terminated or invalidated. Please login again.',
 
     ],
     'user' => [
@@ -46,6 +48,13 @@ return [
         'user_pending' => 'Your join request is still pending approval.',
         'bank_already_exists' => 'A bank account with this IBAN or Owner Account already exists.',
         'user_not_found' => 'The requested user was not found.',
-        'user_not_verified' => 'Your email address is not verified.'
+        'user_not_verified' => 'Your email address is not verified.',
+        'pending_update_request' => 'You already have a pending update request for :target.',
+    ],
+    'targets' => [
+        'user_info' => 'personal information',
+        'employee_profile' => 'employee profile',
+        'medical_record' => 'medical record',
+        'bank_account' => 'bank account',
     ],
 ];
