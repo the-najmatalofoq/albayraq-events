@@ -16,7 +16,7 @@ enum RoleLevelEnum: string
 
     public function rank(): int
     {
-        return match($this) {
+        return match ($this) {
             self::SYSTEM     => 0,
             self::EXECUTIVE  => 1,
             self::PROJECT    => 3,
