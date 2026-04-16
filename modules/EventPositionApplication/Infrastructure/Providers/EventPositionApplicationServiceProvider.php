@@ -21,8 +21,8 @@ final class EventPositionApplicationServiceProvider extends ServiceProvider
         $this->loadMigrationsFrom(__DIR__ . '/../Persistence/Migrations');
         $this->loadTranslationsFrom(__DIR__ . '/../../resources/lang', 'event-position-application');
 
-        Route::prefix('api/v1/crm/event-position-applications')
+        Route::prefix('api/v1/dashboard/event-position-applications')
             ->middleware(['api', 'auth:api'])
-            ->group(__DIR__ . '/../Routes/Crm/api.php');
+            ->group(__DIR__ . '/../Routes/Dashboard/api.php');
     }
 }
