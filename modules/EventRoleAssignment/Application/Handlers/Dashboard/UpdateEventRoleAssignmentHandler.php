@@ -2,24 +2,24 @@
 // modules/EventRoleAssignment/Application/Handlers/Crm/CrmUpdateEventRoleAssignmentHandler.php
 declare(strict_types=1);
 
-namespace Modules\EventRoleAssignment\Application\Handlers\Crm;
+namespace Modules\EventRoleAssignment\Application\Handlers\Dashboard;
 
 use Modules\EventRoleAssignment\Domain\Repository\EventRoleAssignmentRepositoryInterface;
 use Modules\EventRoleAssignment\Domain\EventRoleAssignment;
 use Modules\EventRoleAssignment\Domain\ValueObject\AssignmentId;
-use Modules\EventRoleAssignment\Application\Commands\Crm\CrmUpdateEventRoleAssignmentCommand;
+use Modules\EventRoleAssignment\Application\Commands\Dashboard\DashboardUpdateEventRoleAssignmentCommand;
 use Modules\Event\Domain\ValueObject\EventId;
 use Modules\User\Domain\ValueObject\UserId;
 use Modules\Role\Domain\ValueObject\RoleId;
 
-final readonly class CrmUpdateEventRoleAssignmentHandler
+final readonly class UpdateEventRoleAssignmentHandler
 {
     public function __construct(
         private EventRoleAssignmentRepositoryInterface $repository,
     ) {
     }
 
-    public function handle(CrmUpdateEventRoleAssignmentCommand $command): void
+    public function handle(UpdateEventRoleAssignmentCommand $command): void
     {
         $assignment = $this->repository->findById(AssignmentId::fromString($command->id));
 

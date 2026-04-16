@@ -2,9 +2,9 @@
 // modules/EventRoleAssignment/Application/Commands/Crm/CrmCreateEventRoleAssignmentCommand.php
 declare(strict_types=1);
 
-namespace Modules\EventRoleAssignment\Application\Commands\Crm;
+namespace Modules\EventRoleAssignment\Application\Commands\Dashboard;
 
-final readonly class CrmCreateEventRoleAssignmentCommand
+final readonly class CreateEventRoleAssignmentCommand
 {
     public function __construct(
         public string $eventId,

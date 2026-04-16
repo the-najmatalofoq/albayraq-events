@@ -2,23 +2,23 @@
 // modules/EventRoleAssignment/Presentation/Http/Action/Crm/CrmCreateEventRoleAssignmentAction.php
 declare(strict_types=1);
 
-namespace Modules\EventRoleAssignment\Presentation\Http\Action\Crm;
+namespace Modules\EventRoleAssignment\Presentation\Http\Action\Dashboard;
 
 use Illuminate\Http\JsonResponse;
-use Modules\EventRoleAssignment\Application\Commands\Crm\CrmCreateEventRoleAssignmentCommand;
-use Modules\EventRoleAssignment\Application\Handlers\Crm\CrmCreateEventRoleAssignmentHandler;
-use Modules\EventRoleAssignment\Presentation\Http\Request\Crm\CrmCreateEventRoleAssignmentRequest;
+use Modules\EventRoleAssignment\Application\Commands\Dashboard\DashboardCreateEventRoleAssignmentCommand;
+use Modules\EventRoleAssignment\Application\Handlers\Dashboard\DashboardCreateEventRoleAssignmentHandler;
+use Modules\EventRoleAssignment\Presentation\Http\Request\Dashboard\DashboardCreateEventRoleAssignmentRequest;
 use Modules\Shared\Presentation\Http\JsonResponder;
 
-final readonly class CrmCreateEventRoleAssignmentAction
+final readonly class CreateEventRoleAssignmentAction
 {
     public function __construct(
-        private CrmCreateEventRoleAssignmentHandler $handler,
+        private CreateEventRoleAssignmentHandler $handler,
         private JsonResponder $responder,
     ) {
     }
 
-    public function __invoke(CrmCreateEventRoleAssignmentRequest $request): JsonResponse
+    public function __invoke(CreateEventRoleAssignmentRequest $request): JsonResponse
     {
         $id = $this->handler->handle(new CrmCreateEventRoleAssignmentCommand(
             eventId: $request->eventId(),

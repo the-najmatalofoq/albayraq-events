@@ -2,19 +2,19 @@
 // modules/EventRoleAssignment/Presentation/Http/Action/Crm/CrmShowEventRoleAssignmentAction.php
 declare(strict_types=1);
 
-namespace Modules\EventRoleAssignment\Presentation\Http\Action\Crm;
+namespace Modules\EventRoleAssignment\Presentation\Http\Action\Dashboard;
 
 use Illuminate\Http\JsonResponse;
-use Modules\EventRoleAssignment\Application\Handlers\Crm\CrmGetEventRoleAssignmentHandler;
-use Modules\EventRoleAssignment\Application\Queries\Crm\CrmGetEventRoleAssignmentQuery;
-use Modules\EventRoleAssignment\Presentation\Http\Presenter\CrmEventRoleAssignmentPresenter;
+use Modules\EventRoleAssignment\Application\Handlers\Dashboard\DashboardGetEventRoleAssignmentHandler;
+use Modules\EventRoleAssignment\Application\Queries\Dashboard\DashboardGetEventRoleAssignmentQuery;
+use Modules\EventRoleAssignment\Presentation\Http\Presenter\DashboardEventRoleAssignmentPresenter;
 use Modules\Shared\Presentation\Http\JsonResponder;
 
-final readonly class CrmShowEventRoleAssignmentAction
+final readonly class ShowEventRoleAssignmentAction
 {
     public function __construct(
-        private CrmGetEventRoleAssignmentHandler $handler,
-        private CrmEventRoleAssignmentPresenter $presenter,
+        private GetEventRoleAssignmentHandler $handler,
+        private EventRoleAssignmentPresenter $presenter,
         private JsonResponder $responder,
     ) {
     }

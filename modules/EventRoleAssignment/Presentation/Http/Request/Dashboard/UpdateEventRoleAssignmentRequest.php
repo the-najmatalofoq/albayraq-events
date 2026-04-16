@@ -1,12 +1,12 @@
 <?php
-// modules/EventRoleAssignment/Presentation/Http/Request/Crm/CrmCreateEventRoleAssignmentRequest.php
+// modules/EventRoleAssignment/Presentation/Http/Request/Crm/CrmUpdateEventRoleAssignmentRequest.php
 declare(strict_types=1);
 
-namespace Modules\EventRoleAssignment\Presentation\Http\Request\Crm;
+namespace Modules\EventRoleAssignment\Presentation\Http\Request\Dashboard;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-final class CrmCreateEventRoleAssignmentRequest extends FormRequest
+final class UpdateEventRoleAssignmentRequest extends FormRequest
 {
     public function authorize(): bool
     {
@@ -15,13 +15,14 @@ final class CrmCreateEventRoleAssignmentRequest extends FormRequest
 
     public function rules(): array
     {
+        $id = $this->route('id');
         return [
             'event_id' => ['required', 'exists:events,id'],
             'user_id' => ['required', 'exists:users,id'],
             'role_id' => [
-                'required',
+                'required', 
                 'exists:roles,id',
-                'unique:event_role_assignments,role_id,NULL,id,event_id,' . $this->input('event_id') . ',user_id,' . $this->input('user_id')
+                'unique:event_role_assignments,role_id,' . $id . ',id,event_id,' . $this->input('event_id') . ',user_id,' . $this->input('user_id')
             ],
         ];
     }

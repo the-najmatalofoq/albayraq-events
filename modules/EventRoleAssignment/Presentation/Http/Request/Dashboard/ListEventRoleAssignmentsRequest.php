@@ -2,11 +2,11 @@
 // modules/EventRoleAssignment/Presentation/Http/Request/Crm/CrmListEventRoleAssignmentsRequest.php
 declare(strict_types=1);
 
-namespace Modules\EventRoleAssignment\Presentation\Http\Request\Crm;
+namespace Modules\EventRoleAssignment\Presentation\Http\Request\Dashboard;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-final class CrmListEventRoleAssignmentsRequest extends FormRequest
+final class ListEventRoleAssignmentsRequest extends FormRequest
 {
     public function authorize(): bool
     {
