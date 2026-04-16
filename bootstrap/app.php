@@ -36,6 +36,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'join-request.active' => EnsureActiveJoinRequest::class,
             'verified' => VerifiedUserMiddleware::class,
             'join-request.approved' => HasApprovedJoinRequestMiddleware::class,
+            'session.validate' => \Modules\IAM\Presentation\Http\Middleware\ValidateJwtSessionMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
@@ -55,7 +56,8 @@ return Application::configure(basePath: dirname(__DIR__))
                     errorCode: $e->getErrorCode()->value,
                     status: $e->getErrorCode()->getHttpStatus(),
                     messageKey: $e->getMessageKey(),
-                    errors: $e->getErrors()
+                    errors: $e->getErrors(),
+                    messageParams: $e->getMessageParams()
                 );
             }
 
