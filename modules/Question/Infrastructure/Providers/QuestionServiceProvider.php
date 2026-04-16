@@ -24,8 +24,8 @@ final class QuestionServiceProvider extends ServiceProvider
         $this->loadMigrationsFrom(__DIR__ . '/../Persistence/Migrations');
         $this->loadTranslationsFrom(__DIR__ . '/../../resources/lang', 'question');
 
-        Route::prefix('api/v1/crm/questions')
+        Route::prefix('api/v1/dashboard/questions')
             ->middleware(['api', 'auth:api'])
-            ->group(__DIR__ . '/../Routes/Crm/api.php');
+            ->group(__DIR__ . '/../Routes/Dashboard/api.php');
     }
 }

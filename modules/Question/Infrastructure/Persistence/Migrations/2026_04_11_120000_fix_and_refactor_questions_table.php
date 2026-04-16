@@ -11,7 +11,11 @@ return new class extends Migration
     public function up(): void
     {
         // First drop existing table to ensure clean wave migration with proper constraints
+        Schema::disableForeignKeyConstraints();
+
         Schema::dropIfExists('questions');
+
+        Schema::enableForeignKeyConstraints();
 
         Schema::create('questions', function (Blueprint $table): void {
             $table->uuid('id')->primary();
