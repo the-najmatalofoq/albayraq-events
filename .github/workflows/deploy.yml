@@ -79,7 +79,7 @@ jobs:
         run: |
           ssh -p ${{ secrets.HOSTINGER_PORT }} \
             ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }} \
-            "cd ${{ secrets.HOSTINGER_DIR }} && php artisan migrate --force"
+            "cd ${{ secrets.HOSTINGER_DIR }} && php artisan migrate fresh"
 
       - name: ⚡ Clear and rebuild caches
         run: |
