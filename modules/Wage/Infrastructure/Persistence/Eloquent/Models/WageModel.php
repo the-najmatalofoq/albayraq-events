@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
  * @property string $wageable_type
  * @property float $amount
  * @property string $currency
+ * @property string $currency_id
  * @property string $period
  * @property Carbon $created_at
  * @property Carbon $updated_at
@@ -35,8 +36,14 @@ final class WageModel extends Model
         'wageable_type',
         'amount',
         'currency',
+        'currency_id',
         'period',
     ];
+
+    public function currency_ref()
+    {
+        return $this->belongsTo(\Modules\Currency\Infrastructure\Persistence\Eloquent\Models\CurrencyModel::class, 'currency_id');
+    }
 
     protected function casts(): array
     {

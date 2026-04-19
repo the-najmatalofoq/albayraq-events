@@ -17,6 +17,7 @@ final class Wage extends AggregateRoot
         public readonly string $wageableType,
         public private(set) Money $amount,
         public private(set) string $period,
+        public private(set) ?string $currencyId = null,
     ) {
     }
 
@@ -25,9 +26,10 @@ final class Wage extends AggregateRoot
         string $wageableId,
         string $wageableType,
         Money $amount,
-        string $period = 'hourly'
+        string $period = 'hourly',
+        ?string $currencyId = null
     ): self {
-        return new self($uuid, $wageableId, $wageableType, $amount, $period);
+        return new self($uuid, $wageableId, $wageableType, $amount, $period, $currencyId);
     }
 
     public static function reconstitute(
@@ -35,15 +37,17 @@ final class Wage extends AggregateRoot
         string $wageableId,
         string $wageableType,
         Money $amount,
-        string $period
+        string $period,
+        ?string $currencyId = null
     ): self {
-        return new self($uuid, $wageableId, $wageableType, $amount, $period);
+        return new self($uuid, $wageableId, $wageableType, $amount, $period, $currencyId);
     }
 
-    public function update(Money $amount, string $period): void
+    public function update(Money $amount, string $period, ?string $currencyId = null): void
     {
         $this->amount = $amount;
         $this->period = $period;
+        $this->currencyId = $currencyId;
     }
 
     public function id(): Identity

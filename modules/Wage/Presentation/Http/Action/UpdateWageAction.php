@@ -9,24 +9,24 @@ use Illuminate\Http\Request;
 use Modules\Wage\Application\Command\UpdateWage\UpdateWageCommand;
 use Modules\Wage\Application\Command\UpdateWage\UpdateWageHandler;
 use Modules\Shared\Presentation\Http\JsonResponder;
+use Modules\Wage\Domain\ValueObject\WageId;
+use Modules\Wage\Presentation\Http\Request\UpdateWageRequest;
+use Modules\Wage\Presentation\Http\Presenter\WagePresenter;
 
 final readonly class UpdateWageAction
 {
     public function __construct(
         private UpdateWageHandler $handler,
         private JsonResponder $responder,
-    ) {
-    }
+    ) {}
 
-    // fix: make the (UpdateWage) formRequest for validation
-    // fix: make the (currenies) module 
-    public function __invoke(Request $request, string $id): JsonResponse
+    public function __invoke(UpdateWageRequest $request, string $id): JsonResponse
     {
         $this->handler->handle(new UpdateWageCommand(
-            id: $id,
-            amount: (float) $request->input('amount'),
-            currency: $request->input('currency', 'SAR'),
-            period: $request->input('period', 'hourly'),
+            id: WageId::fromString($id),
+            amount: (float) $request->validated('amount'),
+            period: $request->validated('period', 'hourly'),
+            currencyId: $request->validated('currency_id'),
         ));
 
         return $this->responder->success(

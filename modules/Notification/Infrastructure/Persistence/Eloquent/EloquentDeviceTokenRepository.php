@@ -14,10 +14,11 @@ final class EloquentDeviceTokenRepository implements DeviceTokenRepositoryInterf
 {
     public function save(DeviceToken $token): void
     {
-        $model = DeviceTokenModel::findOrNew($token->getId()->toString());
+        $model = DeviceTokenModel::findOrNew($token->getId()->value);
         $model->fill([
-            'id' => $token->getId()->toString(),
-            'user_id' => $token->getUserId()->toString(),
+            'id' => $token->getId()->value,
+            'user_id' => $token->getUserId()->value,
+            'device_id' => $token->getDeviceId(),
             'token' => $token->getToken(),
             'platform' => $token->getPlatform(),
             'device_name' => $token->getDeviceName(),
@@ -29,17 +30,26 @@ final class EloquentDeviceTokenRepository implements DeviceTokenRepositoryInterf
 
     public function findById(DeviceTokenId $id): ?DeviceToken
     {
-        $model = DeviceTokenModel::find($id->toString());
+        $model = DeviceTokenModel::find($id->value);
         return $model ? DeviceTokenReflector::reverse($model) : null;
     }
 
     public function findByUser(UserId $userId): array
     {
-        $models = DeviceTokenModel::where('user_id', $userId->toString())
+        $models = DeviceTokenModel::where('user_id', $userId->value)
             ->where('is_active', true)
             ->get();
 
         return $models->map(fn($model) => DeviceTokenReflector::reverse($model))->toArray();
+    }
+
+    public function findByUserAndDevice(UserId $userId, string $deviceId): ?DeviceToken
+    {
+        $model = DeviceTokenModel::where('user_id', $userId->value)
+            ->where('device_id', $deviceId)
+            ->first();
+
+        return $model ? DeviceTokenReflector::reverse($model) : null;
     }
 
     public function findByToken(string $token): ?DeviceToken
@@ -50,12 +60,12 @@ final class EloquentDeviceTokenRepository implements DeviceTokenRepositoryInterf
 
     public function revoke(DeviceTokenId $id): void
     {
-        DeviceTokenModel::where('id', $id->toString())->update(['is_active' => false]);
+        DeviceTokenModel::where('id', $id->value)->update(['is_active' => false]);
     }
 
     public function revokeAllForUser(UserId $userId): void
     {
-        DeviceTokenModel::where('user_id', $userId->toString())->update(['is_active' => false]);
+        DeviceTokenModel::where('user_id', $userId->value)->update(['is_active' => false]);
     }
 
     public function revokeByToken(string $token): void

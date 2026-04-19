@@ -26,6 +26,7 @@ final class EloquentWageRepository implements WageRepositoryInterface
                 'wageable_type' => $wage->wageableType,
                 'amount' => $wage->amount->amount,
                 'currency' => $wage->amount->currency,
+                'currency_id' => $wage->currencyId,
                 'period' => $wage->period,
             ]
         );
@@ -59,6 +60,7 @@ final class EloquentWageRepository implements WageRepositoryInterface
             wageableType: $m->wageable_type,
             amount: new Money((float) $m->amount, $m->currency),
             period: $m->period,
+            currencyId: $m->currency_id,
         );
     }
 }

@@ -6,7 +6,7 @@ use Modules\User\Domain\ValueObject\UserId;
 
 interface TokenManager
 {
-    public function createToken(string $userId): array;
+    public function createToken(string $userId, array $metadata = []): array;
 
     public function revokeAllTokens(string $userId): void;
 

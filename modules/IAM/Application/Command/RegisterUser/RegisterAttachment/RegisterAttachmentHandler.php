@@ -9,6 +9,7 @@ use Modules\User\Domain\Repository\UserRepositoryInterface;
 use Modules\User\Domain\Repository\EmployeeProfileRepositoryInterface;
 use Modules\FileAttachment\Domain\Repository\FileAttachmentRepositoryInterface;
 use Modules\FileAttachment\Domain\FileAttachment;
+use Modules\Shared\Domain\ValueObject\FilePath;
 
 final readonly class RegisterAttachmentHandler
 {
@@ -19,22 +20,13 @@ final readonly class RegisterAttachmentHandler
         private FileAttachmentRepositoryInterface $attachmentRepository,
     ) {}
 
-    public function handle(RegisterAttachmentCommand $command): void
+    public function handle(RegisterAttachmentCommand $command): ?FilePath
     {
         $userId = $command->userId;
 
-
-        //     $user = $this->userRepository->findById($userId);
-        //     if ($user) {
-        //         $user->updateAvatar($filePath);
-        //         $this->userRepository->save($user);
-        //     }
-        //     return;
-        // }
-
         $profile = $this->profileRepository->findByUserId($userId);
         if (!$profile) {
-            return;
+            return null;
         }
 
         $filePath = $this->fileStorage->uploadForUser(
@@ -55,5 +47,7 @@ final readonly class RegisterAttachmentHandler
         );
 
         $this->attachmentRepository->save($attachment);
+
+        return $filePath;
     }
 }

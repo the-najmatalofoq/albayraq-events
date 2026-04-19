@@ -20,8 +20,8 @@ final class EventRoleAssignmentServiceProvider extends ServiceProvider
     {
         $this->loadMigrationsFrom(__DIR__ . '/../Persistence/Migrations');
         
-        Route::prefix('api/v1/crm/event-role-assignments')
+        Route::prefix('api/v1/dashboard/event-role-assignments')
             ->middleware(['api', 'auth:api'])
-            ->group(__DIR__ . '/../Routes/Crm/api.php');
+            ->group(__DIR__ . '/../Routes/Dashboard/api.php');
     }
 }

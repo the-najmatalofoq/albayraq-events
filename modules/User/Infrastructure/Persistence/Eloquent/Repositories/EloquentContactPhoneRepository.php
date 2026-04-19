@@ -12,6 +12,7 @@ use Modules\User\Domain\ValueObject\UserId;
 use Modules\User\Domain\ValueObject\ContactPhoneId;
 use Modules\User\Infrastructure\Persistence\Eloquent\Models\ContactPhoneModel;
 use Modules\Shared\Domain\ValueObject\FilterCriteria;
+use Modules\User\Domain\ValueObject\Phone;
 
 final class EloquentContactPhoneRepository implements ContactPhoneRepositoryInterface
 {
@@ -63,8 +64,6 @@ final class EloquentContactPhoneRepository implements ContactPhoneRepositoryInte
         $this->model->where('id', $uuid->value)->delete();
     }
 
-
-
     public function all(FilterCriteria $criteria): Collection
     {
         $query = $this->model->query();
@@ -74,13 +73,26 @@ final class EloquentContactPhoneRepository implements ContactPhoneRepositoryInte
         return $query->get()->map(fn(ContactPhoneModel $model) => $this->toDomain($model));
     }
 
+    public function paginate(FilterCriteria $criteria, int $perPage = 15): LengthAwarePaginator
+    {
+        $query = $this->model->query();
+
+        $this->applyCriteria($query, $criteria);
+
+        $paginator = $query->paginate($perPage);
+
+        return $paginator->setCollection(
+            $paginator->getCollection()->map(fn(ContactPhoneModel $model) => $this->toDomain($model))
+        );
+    }
+
     private function applyCriteria($query, FilterCriteria $criteria): void
     {
         if ($criteria->search) {
             $query->where(function ($q) use ($criteria) {
                 $q->where('name', 'like', "%{$criteria->search}%")
-                  ->orWhere('phone', 'like', "%{$criteria->search}%")
-                  ->orWhere('relation', 'like', "%{$criteria->search}%");
+                    ->orWhere('phone', 'like', "%{$criteria->search}%")
+                    ->orWhere('relation', 'like', "%{$criteria->search}%");
             });
         }
 
@@ -99,7 +111,7 @@ final class EloquentContactPhoneRepository implements ContactPhoneRepositoryInte
             uuid: ContactPhoneId::fromString($model->id),
             userId: UserId::fromString($model->user_id),
             name: $model->name,
-            phone: $model->phone,
+            phone: new Phone($model->phone),
             relation: $model->relation,
             createdAt: $model->created_at ? new \DateTimeImmutable($model->created_at->toDateTimeString()) : null,
             updatedAt: $model->updated_at ? new \DateTimeImmutable($model->updated_at->toDateTimeString()) : null,

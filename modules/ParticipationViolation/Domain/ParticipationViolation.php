@@ -9,6 +9,8 @@ use Modules\Shared\Domain\AggregateRoot;
 use Modules\Shared\Domain\Identity;
 use Modules\EventParticipation\Domain\ValueObject\ParticipationId;
 use Modules\ViolationType\Domain\ValueObject\ViolationTypeId;
+use Modules\DeductionType\Domain\ValueObject\DeductionTypeId;
+use Modules\PenaltyType\Domain\ValueObject\PenaltyTypeId;
 use Modules\ParticipationViolation\Domain\ValueObject\ViolationId;
 use Modules\ParticipationViolation\Domain\Enum\ViolationStatusEnum;
 use Modules\User\Domain\ValueObject\UserId;
@@ -18,7 +20,9 @@ final class ParticipationViolation extends AggregateRoot
     private function __construct(
         public readonly ViolationId $uuid,
         public readonly ParticipationId $participationId,
-        public readonly ViolationTypeId $violationTypeId,
+        public private(set) ViolationTypeId $violationTypeId,
+        public private(set) ?DeductionTypeId $deductionTypeId,
+        public private(set) ?PenaltyTypeId $penaltyTypeId,
         public readonly UserId $reportedBy,
         public private(set) ?string $description,
         public private(set) DateTimeImmutable $date,
@@ -36,6 +40,8 @@ final class ParticipationViolation extends AggregateRoot
         ViolationTypeId $violationTypeId,
         UserId $reportedBy,
         DateTimeImmutable $date,
+        ?DeductionTypeId $deductionTypeId = null,
+        ?PenaltyTypeId $penaltyTypeId = null,
         ?string $description = null,
         int $currentTier = 1
     ): self {
@@ -43,6 +49,8 @@ final class ParticipationViolation extends AggregateRoot
             uuid: $uuid,
             participationId: $participationId,
             violationTypeId: $violationTypeId,
+            deductionTypeId: $deductionTypeId,
+            penaltyTypeId: $penaltyTypeId,
             reportedBy: $reportedBy,
             description: $description,
             date: $date,
@@ -51,6 +59,20 @@ final class ParticipationViolation extends AggregateRoot
             deductionAmount: null,
             createdAt: new DateTimeImmutable(),
         );
+    }
+
+    public function update(
+        ViolationTypeId $violationTypeId,
+        DateTimeImmutable $date,
+        ?DeductionTypeId $deductionTypeId = null,
+        ?PenaltyTypeId $penaltyTypeId = null,
+        ?string $description = null,
+    ): void {
+        $this->violationTypeId = $violationTypeId;
+        $this->date = $date;
+        $this->deductionTypeId = $deductionTypeId;
+        $this->penaltyTypeId = $penaltyTypeId;
+        $this->description = $description;
     }
 
     public function approve(UserId $approverId, ?float $deductionAmount = null): void

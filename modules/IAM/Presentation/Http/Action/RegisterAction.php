@@ -52,6 +52,10 @@ final class RegisterAction
             cv: $request->file('cv'),
             personalIdentity: $request->file('personal_identity'),
             medicalReport: $request->file('medical_report'),
+            fcmToken: $request->input('fcm_token'),
+            deviceId: $request->input('device_id'),
+            platform: $request->input('platform'),
+            deviceName: $request->input('device_name'),
         );
 
         $user = $this->handler->handle($command);

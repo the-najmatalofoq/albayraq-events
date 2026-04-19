@@ -15,6 +15,7 @@ interface DeviceTokenRepositoryInterface
     public function save(DeviceToken $token): void;
     public function findById(DeviceTokenId $id): ?DeviceToken;
     public function findByUser(UserId $userId): array;
+    public function findByUserAndDevice(UserId $userId, string $deviceId): ?DeviceToken;
     public function findByToken(string $token): ?DeviceToken;
     public function revoke(DeviceTokenId $id): void;
     public function revokeAllForUser(UserId $userId): void;

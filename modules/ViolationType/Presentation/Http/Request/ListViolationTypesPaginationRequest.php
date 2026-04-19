@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Modules\ViolationType\Presentation\Http\Request;
 
-use Illuminate\Foundation\Http\FormRequest;
+use Modules\Shared\Presentation\Http\Request\BaseFilterRequest;
 
-final class ListViolationTypesPaginationRequest extends FormRequest
+final class ListViolationTypesPaginationRequest extends BaseFilterRequest
 {
     public function authorize(): bool
     {
@@ -16,9 +16,7 @@ final class ListViolationTypesPaginationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'page'     => ['sometimes', 'integer', 'min:1'],
-            'per_page' => ['sometimes', 'integer', 'min:1', 'max:100'],
-            'search'   => ['sometimes', 'nullable', 'string', 'max:255'],
+            'is_active' => ['sometimes', 'boolean'],
         ];
     }
 }

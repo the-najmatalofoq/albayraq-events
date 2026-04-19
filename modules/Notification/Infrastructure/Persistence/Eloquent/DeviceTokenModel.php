@@ -14,6 +14,7 @@ use Carbon\Carbon;
  * 
  * @property string $id
  * @property string $user_id
+ * @property string $device_id
  * @property string $token
  * @property string $platform
  * @property string|null $device_name
@@ -31,6 +32,7 @@ final class DeviceTokenModel extends Model
     protected $fillable = [
         'id',
         'user_id',
+        'device_id',
         'token',
         'platform',
         'device_name',

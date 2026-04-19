@@ -9,25 +9,23 @@ use Illuminate\Http\Request;
 use Modules\Wage\Application\Command\CreateWage\CreateWageCommand;
 use Modules\Wage\Application\Command\CreateWage\CreateWageHandler;
 use Modules\Shared\Presentation\Http\JsonResponder;
+use Modules\Wage\Presentation\Http\Request\CreateWageRequest;
 
 final readonly class CreateWageAction
 {
     public function __construct(
         private CreateWageHandler $handler,
         private JsonResponder $responder,
-    ) {
-    }
+    ) {}
 
-    // fix: make the (CreateWage) formRequest for validation
-    // fix: we must have the currencies table and module,
-    public function __invoke(Request $request): JsonResponse
+    public function __invoke(CreateWageRequest $request): JsonResponse
     {
         $id = $this->handler->handle(new CreateWageCommand(
-            wageableId: $request->input('wageable_id'),
-            wageableType: $request->input('wageable_type'),
-            amount: (float) $request->input('amount'),
-            currency: $request->input('currency', 'SAR'),
-            period: $request->input('period', 'hourly'),
+            wageableId: $request->validated('wageable_id'),
+            wageableType: $request->validated('wageable_type'),
+            amount: (float) $request->validated('amount'),
+            period: $request->validated('period'),
+            currencyId: $request->validated('currency_id'),
         ));
 
         return $this->responder->created(

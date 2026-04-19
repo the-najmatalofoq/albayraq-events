@@ -8,14 +8,14 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Modules\Wage\Domain\Repository\WageRepositoryInterface;
 use Modules\Shared\Presentation\Http\JsonResponder;
+use Modules\Wage\Presentation\Http\Presenter\WagePresenter;
 
 final readonly class ListWagesAction
 {
     public function __construct(
         private WageRepositoryInterface $repository,
         private JsonResponder $responder,
-    ) {
-    }
+    ) {}
 
     public function __invoke(Request $request): JsonResponse
     {
@@ -30,14 +30,7 @@ final readonly class ListWagesAction
         }
 
         return $this->responder->success(
-            data: array_map(fn($w) => [
-                'id' => $w->uuid->value,
-                'wageable_id' => $w->wageableId,
-                'wageable_type' => $w->wageableType,
-                'amount' => $w->amount->amount,
-                'currency' => $w->amount->currency,
-                'period' => $w->period,
-            ], $wages)
+            data: array_map(fn($w) => WagePresenter::fromDomain($w), $wages)
         );
     }
 }

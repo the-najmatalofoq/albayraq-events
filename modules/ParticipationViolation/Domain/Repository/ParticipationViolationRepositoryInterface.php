@@ -7,10 +7,9 @@ namespace Modules\ParticipationViolation\Domain\Repository;
 use Modules\ParticipationViolation\Domain\ParticipationViolation;
 use Modules\ParticipationViolation\Domain\ValueObject\ViolationId;
 use Modules\EventParticipation\Domain\ValueObject\ParticipationId;
-// fix: use the fiter in the listAll also.
+use Modules\Shared\Domain\Repository\FilterableRepositoryInterface;
 
-// fix: use the FilterableRepositoryInterface
-interface ParticipationViolationRepositoryInterface
+interface ParticipationViolationRepositoryInterface extends FilterableRepositoryInterface
 {
     public function nextIdentity(): ViolationId;
 
@@ -20,4 +19,6 @@ interface ParticipationViolationRepositoryInterface
 
     /** @return ParticipationViolation[] */
     public function findByParticipationId(ParticipationId $participationId): array;
+
+    public function delete(ViolationId $id): void;
 }

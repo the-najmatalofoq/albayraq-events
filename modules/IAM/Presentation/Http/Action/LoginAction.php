@@ -25,6 +25,10 @@ final class LoginAction
         $command = new AuthenticateUserCommand(
             email: $request->validated('email'),
             password: $request->validated('password'),
+            fcmToken: $request->input('fcm_token'),
+            deviceId: $request->input('device_id'),
+            platform: $request->input('platform'),
+            deviceName: $request->input('device_name'),
         );
 
         $result = $this->handler->handle($command);

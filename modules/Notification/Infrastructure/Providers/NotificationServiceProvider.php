@@ -39,6 +39,9 @@ final class NotificationServiceProvider extends ServiceProvider
             ContractSent::class => [
                 SendContractSentNotification::class,
             ],
+            \Modules\IAM\Domain\Event\UserLoggedIntoNewDevice::class => [
+                \Modules\Notification\Infrastructure\Listeners\SendSessionInvalidatedNotification::class,
+            ],
         ];
 
         foreach ($events as $event => $listeners) {

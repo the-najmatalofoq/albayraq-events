@@ -38,5 +38,9 @@ final readonly class RegisterUserCommand
         public ?UploadedFile $cv = null,
         public ?UploadedFile $personalIdentity = null,
         public ?UploadedFile $medicalReport = null,
+        public ?string $fcmToken = null,
+        public ?string $deviceId = null,
+        public ?string $platform = null,
+        public ?string $deviceName = null,
     ) {}
 }

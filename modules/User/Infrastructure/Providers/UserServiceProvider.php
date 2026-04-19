@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Modules\User\Infrastructure\Providers;
@@ -17,6 +18,7 @@ use Modules\User\Domain\Repository\{
     EmployeeNationalityRepositoryInterface,
     UserSettingsRepositoryInterface,
     MedicalRecordRepositoryInterface,
+    UserUpdateRequestRepositoryInterface,
 };
 use Modules\User\Infrastructure\Persistence\Eloquent\Repositories\{
     EloquentUserRepository,
@@ -27,6 +29,7 @@ use Modules\User\Infrastructure\Persistence\Eloquent\Repositories\{
     EloquentEmployeeNationalityRepository,
     EloquentUserSettingsRepository,
     EloquentMedicalRecordRepository,
+    EloquentUserUpdateRequestRepository,
 };
 use Modules\User\Presentation\Http\Middleware\EnsureRoleLevelMiddleware;
 
@@ -42,6 +45,7 @@ final class UserServiceProvider extends ServiceProvider
         $this->app->bind(EmployeeNationalityRepositoryInterface::class, EloquentEmployeeNationalityRepository::class);
         $this->app->bind(UserSettingsRepositoryInterface::class, EloquentUserSettingsRepository::class);
         $this->app->bind(MedicalRecordRepositoryInterface::class, EloquentMedicalRecordRepository::class);
+        $this->app->bind(UserUpdateRequestRepositoryInterface::class, EloquentUserUpdateRequestRepository::class);
     }
 
     public function boot(): void
@@ -63,7 +67,7 @@ final class UserServiceProvider extends ServiceProvider
 
     private function registerRoutes(): void
     {
-        $sharedMiddleware = ['api', 'auth:api'];
+        $sharedMiddleware = ['api', 'auth:api', 'session.validate'];
         $basePath = __DIR__ . '/../Routes';
 
         $entityRoutes = [
@@ -71,7 +75,9 @@ final class UserServiceProvider extends ServiceProvider
             'EmployeeProfile' => 'api/v1/me',
             'BankDetail' => 'api/v1/me',
             'ContactPhone' => 'api/v1/me',
+            'MedicalRecord' => 'api/v1/me',
             'UserJoinRequest' => 'api/v1/join-requests',
+            'UserUpdateRequest' => 'api/v1/me/update-requests',
         ];
 
         foreach ($entityRoutes as $entity => $prefix) {
@@ -86,9 +92,9 @@ final class UserServiceProvider extends ServiceProvider
                 ->group($routeFile);
         }
 
-        $dashboardRouteFile = "{$basePath}/Crm/api.php";
+        $dashboardRouteFile = "{$basePath}/Dashboard/api.php";
         if (file_exists($dashboardRouteFile)) {
-            Route::prefix('api/v1/crm/users')
+            Route::prefix('api/v1/dashboard/users')
                 ->middleware(['api', 'auth:api', 'role.level:admin,super-admin'])
                 ->group($dashboardRouteFile);
         }

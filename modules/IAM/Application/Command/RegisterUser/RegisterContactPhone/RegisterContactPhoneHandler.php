@@ -6,6 +6,7 @@ namespace Modules\IAM\Application\Command\RegisterUser\RegisterContactPhone;
 
 use Modules\User\Domain\ContactPhone;
 use Modules\User\Domain\Repository\ContactPhoneRepositoryInterface;
+use Modules\User\Domain\ValueObject\Phone;
 
 final readonly class RegisterContactPhoneHandler
 {

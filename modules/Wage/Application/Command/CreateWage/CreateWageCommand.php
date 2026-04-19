@@ -10,8 +10,7 @@ final readonly class CreateWageCommand
         public string $wageableId,
         public string $wageableType,
         public float $amount,
-        public string $currency,
         public string $period,
-    ) {
-    }
+        public ?string $currencyId = null,
+    ) {}
 }
