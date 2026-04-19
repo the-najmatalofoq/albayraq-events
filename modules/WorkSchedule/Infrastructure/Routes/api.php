@@ -7,9 +7,11 @@ use Modules\WorkSchedule\Presentation\Http\Action\CreateWorkScheduleAction;
 use Modules\WorkSchedule\Presentation\Http\Action\UpdateWorkScheduleAction;
 use Modules\WorkSchedule\Presentation\Http\Action\DeleteWorkScheduleAction;
 use Modules\WorkSchedule\Presentation\Http\Action\GetWorkScheduleAction;
-use Modules\WorkSchedule\Presentation\Http\Action\ListWorkSchedulesPaginationAction;
+use Modules\WorkSchedule\Presentation\Http\Action\ListWorkSchedulesAction;
+use Modules\WorkSchedule\Presentation\Http\Action\ListWorkSchedulesPaginatedAction;
 
-Route::get('/', ListWorkSchedulesPaginationAction::class);
+Route::get('/', ListWorkSchedulesAction::class);
+Route::get('/paginated', ListWorkSchedulesPaginatedAction::class);
 Route::post('/', CreateWorkScheduleAction::class);
 Route::get('/{id}', GetWorkScheduleAction::class);
 Route::put('/{id}', UpdateWorkScheduleAction::class);

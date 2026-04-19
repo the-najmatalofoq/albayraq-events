@@ -6,26 +6,15 @@ namespace Modules\WorkSchedule\Domain\Repository;
 
 use Modules\WorkSchedule\Domain\WorkSchedule;
 use Modules\Shared\Domain\ValueObject\ScheduleId;
-use Modules\Shared\Domain\ValueObject\PaginationCriteria;
-// fix: use the fiter in the listAll also.
+use Modules\Shared\Domain\Repository\FilterableRepositoryInterface;
 
-// fix: use the FilterableRepositoryInterface
-interface WorkScheduleRepositoryInterface
+interface WorkScheduleRepositoryInterface extends FilterableRepositoryInterface
 {
     public function nextIdentity(): ScheduleId;
 
     public function save(WorkSchedule $workSchedule): void;
 
     public function findById(ScheduleId $id): ?WorkSchedule;
-
-    /**
-     * @return array{items: WorkSchedule[], total: int}
-     */
-    public function paginate(
-        PaginationCriteria $criteria,
-        ?string $schedulableType = null,
-        ?string $schedulableId = null
-    ): array;
 
     public function delete(ScheduleId $id): void;
 }
