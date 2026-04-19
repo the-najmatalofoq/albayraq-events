@@ -9,6 +9,7 @@ use Modules\Shared\Domain\Enum\ErrorCodeEnum;
 abstract class DomainException extends \Exception
 {
     protected string $messageKey = '';
+    protected array $messageParams = [];
     protected array $errors = [];
 
     abstract public function getErrorCode(): ErrorCodeEnum;
@@ -30,5 +31,10 @@ abstract class DomainException extends \Exception
         }
 
         return 'messages.errors.' . strtolower($this->getErrorCode()->value);
+    }
+
+    public function getMessageParams(): array
+    {
+        return $this->messageParams;
     }
 }

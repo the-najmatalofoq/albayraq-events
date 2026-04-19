@@ -52,10 +52,10 @@ final readonly class JsonResponder
         return $this->success($data, 201, $messageKey);
     }
 
-    public function error(string $errorCode, int $status, ?string $messageKey = null, mixed $errors = null): JsonResponse
+    public function error(string $errorCode, int $status, ?string $messageKey = null, mixed $errors = null, array $messageParams = []): JsonResponse
     {
         return new JsonResponse([
-            'message' => $messageKey ? $this->translator->trans($messageKey) : 'Error',
+            'message' => $messageKey ? $this->translator->trans($messageKey, $messageParams) : 'Error',
             'statusCode' => $status,
             'errorCode' => $errorCode,
             'timestamp' => Carbon::now()->toIso8601String(),
