@@ -8,7 +8,10 @@ use Modules\WorkSchedule\Domain\WorkSchedule;
 use Modules\WorkSchedule\Domain\Repository\WorkScheduleRepositoryInterface;
 use Modules\WorkSchedule\Infrastructure\Persistence\WorkScheduleReflector;
 use Modules\Shared\Domain\ValueObject\ScheduleId;
-use Modules\Shared\Domain\ValueObject\PaginationCriteria;
+use Modules\Shared\Domain\ValueObject\FilterCriteria;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
+use Illuminate\Database\Eloquent\Builder;
 
 final class EloquentWorkScheduleRepository implements WorkScheduleRepositoryInterface
 {
@@ -38,32 +41,49 @@ final class EloquentWorkScheduleRepository implements WorkScheduleRepositoryInte
         return $model ? WorkScheduleReflector::fromModel($model) : null;
     }
 
-    public function paginate(
-        PaginationCriteria $criteria,
-        ?string $schedulableType = null,
-        ?string $schedulableId = null
-    ): array {
+    public function paginate(FilterCriteria $criteria, int $perPage = 15): LengthAwarePaginator
+    {
         $query = WorkScheduleModel::query();
+        $this->applyCriteria($query, $criteria);
 
-        if ($schedulableType !== null) {
-            $query->where('schedulable_type', $schedulableType);
+        $paginator = $query->paginate($perPage);
+
+        $paginator->setCollection(
+            $paginator->getCollection()->map(fn($model) => WorkScheduleReflector::fromModel($model))
+        );
+
+        return $paginator;
+    }
+
+    public function all(FilterCriteria $criteria): Collection
+    {
+        $query = WorkScheduleModel::query();
+        $this->applyCriteria($query, $criteria);
+
+        return $query->get()->map(fn($model) => WorkScheduleReflector::fromModel($model));
+    }
+
+    private function applyCriteria(Builder $query, FilterCriteria $criteria): void
+    {
+        if ($criteria->has('schedulable_type')) {
+            $query->where('schedulable_type', $criteria->get('schedulable_type'));
         }
 
-        if ($schedulableId !== null) {
-            $query->where('schedulable_id', $schedulableId);
+        if ($criteria->has('schedulable_id')) {
+            $query->where('schedulable_id', $criteria->get('schedulable_id'));
         }
 
-        $total = $query->count();
-        $items = $query->offset($criteria->offset())
-            ->limit($criteria->perPage)
-            ->get()
-            ->map(fn($model) => WorkScheduleReflector::fromModel($model))
-            ->toArray();
+        if ($criteria->has('is_active')) {
+            $query->where('is_active', (bool)$criteria->get('is_active'));
+        }
 
-        return [
-            'items' => $items,
-            'total' => $total,
-        ];
+        if ($criteria->search) {
+            $query->where('date', 'like', "%{$criteria->search}%");
+        }
+
+        $sortBy = $criteria->sortBy ?: 'date';
+        $sortDir = $criteria->sortDirection ?: 'desc';
+        $query->orderBy($sortBy, $sortDir);
     }
 
     public function delete(ScheduleId $id): void
