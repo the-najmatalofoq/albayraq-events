@@ -12,6 +12,8 @@ final class UserLoggedIntoNewDevice
     use Dispatchable;
 
     public function __construct(
-        public readonly UserModel $user
+        public readonly UserModel $user,
+        public readonly string $newDeviceName,
+        public readonly string $locale
     ) {}
 }

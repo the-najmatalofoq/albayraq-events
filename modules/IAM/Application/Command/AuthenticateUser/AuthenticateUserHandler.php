@@ -12,6 +12,8 @@ use Modules\IAM\Domain\Service\UserAccessValidator;
 use Modules\Notification\Application\Command\RegisterDeviceToken\RegisterDeviceTokenCommand;
 use Modules\Notification\Application\Command\RegisterDeviceToken\RegisterDeviceTokenHandler;
 
+use Modules\IAM\Domain\Event\UserLoggedIntoNewDevice;
+
 final readonly class AuthenticateUserHandler
 {
     public function __construct(
@@ -30,6 +32,13 @@ final readonly class AuthenticateUserHandler
         }
 
         // $this->accessValidator->validateLogin($user);
+
+        // Notify other devices about login from a new device
+        UserLoggedIntoNewDevice::dispatch(
+            $user,
+            $command->deviceName,
+            $user->preferred_locale ?? 'ar'
+        );
 
         if ($command->fcmToken) {
             $this->deviceTokenHandler->handle(new RegisterDeviceTokenCommand(
