@@ -21,11 +21,14 @@ final class SendSessionInvalidatedNotification implements ShouldQueue
     {
         try {
             // 1. Notify the old devices via FCM that the session has been invalidated
-            $event->user->notify(new SessionInvalidatedNotification());
+            $event->user->notify(new SessionInvalidatedNotification(
+                newDeviceName: $event->newDeviceName,
+                locale: $event->locale
+            ));
 
             // 2. Revoke all existing tokens for this user so they don't receive future notifications
-            // The new device will register its own token shortly after logging in via the /me/device-tokens endpoint
-            $userId = new UserId($event->user->id);
+            // Note: In production, you might want to delay this slightly to ensure the notification is dispatched
+            $userId = UserId::fromString($event->user->id);
             $this->deviceTokenRepository->revokeAllForUser($userId);
         } catch (\Exception $e) {
             Log::error('Failed to process UserLoggedIntoNewDevice: ' . $e->getMessage(), [
